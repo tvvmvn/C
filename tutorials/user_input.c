@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+
 /*
   User input
 
@@ -7,6 +10,8 @@
   stores the memory address of the variable.
 */
 
+
+// basic
 int main() {
   char name[10];
 
@@ -15,4 +20,29 @@ int main() {
   scanf("%s", name);
 
   printf("Hi, %s!", name);
+}
+
+
+// multiple inputs
+int main() {
+  char fname[10];
+  char lname[10];
+
+  // Name
+  printf("What is your first name and last name?\n");
+  scanf("%s %s", fname, lname);
+
+  printf("Hi, %s %s\n!", fname, lname);
+}
+
+// get multiple words
+int main() {
+  char name[50];
+
+  printf("What is your name?\n");
+
+  // use fgets() for multiple words.
+  fgets(name, sizeof(name), stdin);
+
+  printf("Hi, %s", name);
 }

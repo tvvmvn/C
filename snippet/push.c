@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+// Stack
+
 #define length 5
 
 char arr[length];

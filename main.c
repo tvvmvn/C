@@ -1,23 +1,36 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
 
-/*
-  format specifier
+// Tic Tac Toe
+int main() {
 
-  1 integer
-  %d or %i
+  int input;
 
-  2 float
-  %f
+  char arr[9] = {
+    '#', '#', '#',
+    '#', '#', '#',
+    '#', '#', '#',
+  };
 
-  3 double 
-  %lf
+  // Initialization, should only be called once.
+  srand(time(NULL));   
+  // Returns a pseudo-random integer between 0 and RAND_MAX.
 
-  4 character
-  %c
+  for (int i=0; i<9; i++) {
 
-  5 string
-  %s
-*/
+    printf("%c %c %c\n", arr[0], arr[1], arr[2]);
+    printf("%c %c %c\n", arr[3], arr[4], arr[5]);
+    printf("%c %c %c\n", arr[6], arr[7], arr[8]);
 
-int main() {}
+    scanf("%d", &input);
+
+    arr[input] = 'O';
+
+    int r = rand() % 9;     
+    
+    arr[r] = 'X';
+  }
+}

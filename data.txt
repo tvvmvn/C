@@ -1,0 +1,3 @@
+Person
+name: Taemin
+age: 34

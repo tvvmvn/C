@@ -1,20 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
 /*
   Array
   Data type that have values more than one.
+
+  1 Basic
+  2 String array
 */
 
-// Memory wastage
+
+/*
+  Basic array
+*/
+
 int main() {
-  char arr[3][10] = {"foo", "bar", "baz"};
+  char arr[] = {10, 20, 30};
 
-  for (int i=0; i<3; i++)
-    printf("%s\n", arr[i]);
-};
+  for (int i=0; i<sizeof(arr)/4; i++) {
+    printf("%d in %p\n", arr[i], &arr[i]);
+  }
+}
 
-// solution
 int main() {
-  char *arr[] = {"foo", "bar", "baz"};
+  // not able to change the size of the array after creation.
+  int arr[3];
 
-  for (int i=0; i<3; i++)
-    printf("%s\n", arr[i]);
+  arr[0] = 10;
+  arr[1] = 20;
+  arr[2] = 30;
+
+  for (int i=0; i<sizeof(arr)/4; i++) {
+    printf("%d in %p\n", arr[i], &arr[i]);
+  }
+}
+
+
+/*
+  String array
+*/
+
+int main() {
+  char arr[3][5] = {"foo", "bar", "baz"};
+
+  for (int i=0; i<3; i++) {
+    printf("%s in %p\n", arr[i], arr[i]);
+  }
 }
