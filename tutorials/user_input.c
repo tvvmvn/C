@@ -46,3 +46,18 @@ int main() {
 
   printf("Hi, %s", name);
 }
+
+// validation
+int main() {
+  int num;
+
+  printf("Enter a number\n");
+
+  while (scanf("%d", &num) != 1) {
+    printf("Not a number. Enter again\n");
+    // *(asterisk) tells scanf to read and ignore the value
+    scanf("%*s");
+  }
+
+  printf("number: %d\n", num);
+}
