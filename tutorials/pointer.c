@@ -20,7 +20,15 @@ int main() {
   char foo[] = "bar";
   char *p = foo; // pointer
 
-  printf("%p", p);
+  printf("%p\n", p);
+  printf("%s\n", p);
+}
+
+int main() {
+  char *p = "abc";
+
+  printf("%p\n", p);
+  printf("%s\n", p);
 }
 
 // 3 array and address

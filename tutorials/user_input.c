@@ -4,7 +4,8 @@
 /*
   User input
 
-  scanf(format specifier, reference operator)
+  1 scanf(format specifier, reference operator)
+  2 getchar
 
   * reference operator
   stores the memory address of the variable.
@@ -60,4 +61,45 @@ int main() {
   }
 
   printf("number: %d\n", num);
+}
+
+int main() {
+  int a;
+  int b;
+
+  printf("enter two numbers to add\n");
+
+  while (scanf("%d %d", &a, &b) < 2) {
+    printf("try again\n");
+    scanf("%*s");
+  }
+
+  printf("result: %d\n", a + b);
+}
+
+// get single character
+int main()
+{
+    int character;
+    character = getchar();
+ 
+    printf("The entered character is : %c", character);
+    return 0;
+}
+
+// keep getting a single character
+int main() {
+  char c;
+
+  printf("Type a single character\n");
+
+  while (1) {
+    c = getchar();
+
+    if (c != '\n') {
+      printf("The character: ");
+      putchar(c);
+      printf("\nOK. one more\n");
+    }
+  }
 }
