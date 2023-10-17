@@ -144,3 +144,143 @@ int main() {
     // ..
   }
 }
+
+int main() {
+  char pick;
+  char board[] = {
+    '1', '2', '3', 
+    '4', '5', '6', 
+    '7', '8', '9', 
+    '\0'
+  };
+
+  while (1) {
+    printf("choose 1 to 9\n");
+
+    if (pick != '\n') {
+      printf("=====\n");
+      printf("%c %c %c\n", board[0], board[1], board[2]);
+      printf("%c %c %c\n", board[3], board[4], board[5]);
+      printf("%c %c %c\n", board[6], board[7], board[8]);
+      printf("=====\n");
+    }
+
+    pick = getchar();
+
+    if (pick != '\n') {
+      for (int i=0; i<strlen(board); i++) {
+        if (board[i] == pick) {
+          board[i] = 'X';
+          break;
+        }
+      }
+    }
+  }
+}
+
+int main() {
+  char str[] = "123456789";
+  int c;  
+
+  printf("choose a number from 1 to 9\n");
+
+  while (1) {
+    c = getchar(); // a\n -> a + \n
+
+    if (c != '\n') {
+      int ok = 0;
+
+      for (int i=0; i<strlen(str); i++) {
+        if (str[i] == c) {
+          ok = 1;
+        }
+      }
+
+      if (ok) {
+        printf("number: ");
+        putchar(c);
+        break;
+      } else {
+        printf("try again\n");
+      }
+    }
+  }
+
+  printf("\n---END---\n");
+}
+
+int main() {
+  int a = 1;
+  int b = '2'; // '2' -> 50
+  int c = 3;
+  int d = 4;
+
+  // boring 
+  // printf("%d\n", a);
+  // printf("%d\n", b);
+  // printf("%d\n", c);
+  // printf("%d\n", c);
+
+  int r = a + b + c + d;
+
+  printf("%d\n", r);
+}
+
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Tic Tac Toe
+int main() {
+  int input;
+  char arr[9] = {
+    '#', '#', '#',
+    '#', '#', '#',
+    '#', '#', '#',
+  };
+
+  // Initialization, should only be called once.
+  srand(time(NULL));   
+  // Returns a pseudo-random integer between 0 and RAND_MAX.
+
+
+  while (1) {
+    // print board
+    printf("%c %c %c\n", arr[0], arr[1], arr[2]);
+    printf("%c %c %c\n", arr[3], arr[4], arr[5]);
+    printf("%c %c %c\n", arr[6], arr[7], arr[8]);
+    
+    while (scanf("%d", &input) != 1) { // 1 or 0
+      // Tell the user that the entry was invalid
+      printf("enter a valid number\n");
+      /*
+        Asterisk * tells scanf to read and ignore the value
+
+        For scanf, the * indicates that the field is to be read but ignored, 
+        so that e.g. scanf("%*d %d", &i) for the input "12 34" will ignore 12 
+        and read 34 into the integer i.
+      */
+      scanf("%*s");
+    }
+
+    arr[--input] = 'O';
+
+    // counterpart
+    int r;
+
+    while (1) {
+      r = rand() % 9;  
+
+      if (arr[r] == '#') {
+        break;
+      }
+    }
+    
+    arr[r] = 'X';
+  }
+}
+
+

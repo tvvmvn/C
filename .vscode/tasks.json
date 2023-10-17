@@ -2,12 +2,10 @@
   "tasks": [
     {
       "type": "cppbuild",
-      "label": "C/C++: clang build active file",
       "presentation": {
-        "reveal": "silent",
-        "revealProblems": "onProblem",
-        "close": true
+        "reveal": "never"
       },
+      "label": "C/C++: clang build active file",
       "command": "/usr/bin/clang",
       "args": [
         "-fcolor-diagnostics",
