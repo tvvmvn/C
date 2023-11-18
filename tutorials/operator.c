@@ -1,3 +1,10 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
+
 /*
   C Operator
 
@@ -31,6 +38,7 @@ int main() {
   printf("%d", ++x);
   // > 2
 }
+
 
 /*
   Assignment Operator
@@ -72,6 +80,13 @@ int main() {
 */
 
 
+int main() {
+  printf("%d\n", 0 == NULL); // 1
+  printf("%d\n", 0 == false); // 1
+  printf("%d\n", NULL == false); // 1
+}
+
+
 /*
   Logical Operator
 
@@ -86,9 +101,15 @@ int main() {
 */
 
 
+int main() {
+  printf("%d\n", !0); // 1
+}
+
+
 /*
   sizeof
 */
+
 
 int main() {
   char _char;

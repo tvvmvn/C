@@ -43,38 +43,6 @@ int main() {
 }
 
 
-/* 
-  Struct
-*/
-
-// print car list
-struct HybridCar {
-  char model[30];
-  char brand[10];
-  int price;
-};
-
-int main() {
-  struct HybridCar table[3] = {
-    {"Avante", "Hyundai", 2500}, 
-    {"XM3", "Renault", 3000},
-    {"KONA", "Hyundai", 3000}
-  };
-
-  printf("Hybrid Car list\n");
-  for (int i=0; i<3; i++) {
-    printf("%d. %s from %s - %d\n", i+1, table[i].model, table[i].brand, table[i].price);
-  }
-
-  /*
-    Hybrid Car list
-    1. Avante from Hyundai - 2500
-    2. XM3 from Renault - 3000
-    3. KONA from Hyundai - 3000
-  */
-}
-
-
 /*
   User input
 */
