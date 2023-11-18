@@ -1,5 +1,8 @@
 # vscode config
 .vscode
 
+# exe
+/main.dSYM
+
 # misc
 .DS_Store
