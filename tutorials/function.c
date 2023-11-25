@@ -32,3 +32,23 @@ int main() {
 int add(int x, int y) {
   return x + y;
 }
+
+
+/*
+  References
+
+  callback
+*/
+
+
+void f(void callback(int)) {
+  callback(2);
+}
+
+void cb(int n) {
+  printf("%d\n", n);
+}
+
+int main() {
+  f(cb);
+}
