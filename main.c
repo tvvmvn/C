@@ -4,122 +4,79 @@
 #include <stdlib.h>
 #include <time.h>
 
-char board[] = "123456789";
-int n;
-int _n;
-int com;
-int count = 0;
-int symbol;
-int win = 0;
-int turn;
-char start;
 
-void cmp(char a, char b, char c) {
-  if (a == b && b == c) {
-    symbol = a;
-  }
+/*
+Error handling
+Suppose there is an error deep down in a function nested in many other functions and error handling makes sense only in the top level function.
+
+It would be very tedious and awkward if all the functions in between had to return normally and evaluate return values or a global error variable to determine that further processing doesn't make sense or even would be bad.
+
+That's a situation where setjmp/longjmp makes sense. Those situations are similar to situation where exception in other langages (C++, Java) make sense.
+
+Coroutines
+Besides error handling, I can think also of another situation where you need setjmp/longjmp in C:
+
+It is the case when you need to implement coroutines.
+
+Here is a little demo example. I hope it satisfies the request from Sivaprasad Palas for some example code and answers the question of TheBlastOne how setjmp/longjmp supports the implementation of corroutines (as much as I see it doesn't base on any non-standard or new behaviour).
+
+EDIT:
+It could be that it actually is undefined behaviour to do a longjmp down the callstack (see comment of MikeMB; though I have not yet had opportunity to verify that).
+*/
+
+
+#include <stdio.h>
+#include <setjmp.h>
+
+jmp_buf bufferA, bufferB;
+
+void routineB(); // forward declaration 
+
+void routineA()
+{
+    int r ;
+
+    printf("- 12 : (A1)\n");
+
+    r = setjmp(bufferA);
+    if (r == 0) routineB();
+
+    printf("- 17 : (A2) r=%d\n",r);
+
+    r = setjmp(bufferA);
+    if (r == 0) longjmp(bufferB, 20001);
+
+    printf("- 22 : (A3) r=%d\n",r);
+
+    r = setjmp(bufferA);
+    if (r == 0) longjmp(bufferB, 20002);
+
+    printf("- 27 : (A4) r=%d\n",r);
 }
 
-void chkbingo() {
-  cmp(board[3], board[4], board[5]);
-  cmp(board[1], board[4], board[7]);
-  cmp(board[2], board[4], board[6]);
-  cmp(board[0], board[4], board[8]);
-  cmp(board[0], board[3], board[6]);
-  cmp(board[0], board[1], board[2]);
-  cmp(board[2], board[5], board[8]);
-  cmp(board[6], board[7], board[8]);
+void routineB()
+{
+    int r;
+
+    printf("- 34 : (B1)\n");
+
+    r = setjmp(bufferB);
+    if (r == 0) longjmp(bufferA, 10001);
+
+    printf("- 39 : (B2) r=%d\n", r);
+
+    r = setjmp(bufferB);
+    if (r == 0) longjmp(bufferA, 10002);
+
+    printf("- 44 : (B3) r=%d\n", r);
+
+    r = setjmp(bufferB);
+    if (r == 0) longjmp(bufferA, 10003);
 }
 
-void drawboard() {
-  printf("-----\n");
-  printf("%c %c %c\n", board[0], board[1], board[2]);
-  printf("%c %c %c\n", board[3], board[4], board[5]);
-  printf("%c %c %c\n", board[6], board[7], board[8]);
-  printf("-----\n");
-};
 
-int main() {
-  srand(time(NULL));
-
-  // start game
-  printf("Press any key to start game\n");
-
-  scanf("%c", &start);
-
-  turn = (rand() % 2) + 1;
-
-  if (turn == 1) {
-    printf("COM first\n");
-  } else {
-    printf("YOU first\n");
-  }
-  
-  // playing game
-  while (1) {    
-    // set turn
-    turn = turn == 1 ? 2 : 1;
-
-    // user  
-    if (turn == 1) {
-      while (1) { 
-        printf("Choose a number from 1 to 9\n");
-        drawboard(); 
-        
-        scanf("%d", &n);
-
-        _n = n - 1;
-
-        if (board[_n] != 'O' && board[_n] != 'X') {
-          board[_n] = 'O';
-          count++;
-          break;
-        } else {
-          printf("Occupied. try again\n");
-        }
-      }
-    } 
-    
-    // com
-    if (turn == 2) {
-      while (1) { 
-        com = rand() % 9;
-
-        if (board[com] != 'O' && board[com] != 'X') {
-          board[com] = 'X';
-          count++;
-          break;
-        } 
-      }
-    }
-
-    // check 
-    chkbingo();
-
-    if (symbol == 'O') {
-      win = 1;
-      break;
-    }
-    
-    if (symbol == 'X') { 
-      win = 2;
-      break;
-    } 
-
-    if (count > 8) {
-      break;
-    }
-  }
-
-  // game end
-  if (win == 1) {
-    printf("YOU WIN\n");
-  } else if (win == 2) {
-    printf("YOU LOSE\n");
-  } else {
-    printf("DRAW!\n");
-  }
-  drawboard();
- }
-
-
+int main(int argc, char **argv) 
+{
+    routineA();
+    return 0;
+}

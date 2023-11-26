@@ -174,3 +174,13 @@ int main() {
   printf("%d\n", "2023" == 2023); // 0
   printf("%d\n", !0); // 1
 }
+
+int main() {
+  int year = 2023;
+  int* p = &year;
+
+  *p = 2024;
+
+  printf("%d\n", year); // 2024
+}
+
