@@ -42,7 +42,7 @@ void drawboard() {
 int main() {
   srand(time(NULL));
 
-  // start game
+  // 1 start game
   printf("Press any key to start game\n");
 
   scanf("%c", &start);
@@ -55,7 +55,8 @@ int main() {
     printf("YOU first\n");
   }
   
-  // playing game
+
+  // 2 playing game
   while (1) {    
     // set turn
     turn = turn == 1 ? 2 : 1;
@@ -111,7 +112,8 @@ int main() {
     }
   }
 
-  // game end
+
+  // 3 game end
   if (win == 1) {
     printf("YOU WIN\n");
   } else if (win == 2) {
