@@ -4,19 +4,22 @@
 #include <stdlib.h>
 #include <time.h>
 
+enum Player { USER = 1, COM };
+enum Symbol { O = 'O', X = 'X' };
+
 char board[] = "123456789";
+char start;
 int n;
 int _n;
-int com;
-int count = 0;
-int symbol;
-int win = 0;
 int turn;
-char start;
+int com_idx;
+int count = 0;
+int bingo;
+int winner;
 
 void cmp(char a, char b, char c) {
   if (a == b && b == c) {
-    symbol = a;
+    bingo = a;
   }
 }
 
@@ -42,7 +45,8 @@ void drawboard() {
 int main() {
   srand(time(NULL));
 
-  // 1 start game
+
+  // START
   printf("Press any key to start game\n");
 
   scanf("%c", &start);
@@ -56,13 +60,11 @@ int main() {
   }
   
 
-  // 2 playing game
+  // PLAYING
   while (1) {    
-    // set turn
-    turn = turn == 1 ? 2 : 1;
+    turn = (turn == USER) ? COM : USER;
 
-    // user  
-    if (turn == 1) {
+    if (turn == USER) {
       while (1) { 
         printf("Choose a number from 1 to 9\n");
         drawboard(); 
@@ -71,8 +73,8 @@ int main() {
 
         _n = n - 1;
 
-        if (board[_n] != 'O' && board[_n] != 'X') {
-          board[_n] = 'O';
+        if (board[_n] != O && board[_n] != X) {
+          board[_n] = O;
           count++;
           break;
         } else {
@@ -81,29 +83,27 @@ int main() {
       }
     } 
     
-    // com
-    if (turn == 2) {
+    if (turn == COM) {
       while (1) { 
-        com = rand() % 9;
+        com_idx = rand() % 9;
 
-        if (board[com] != 'O' && board[com] != 'X') {
-          board[com] = 'X';
+        if (board[com_idx] != O && board[com_idx] != X) {
+          board[com_idx] = X;
           count++;
           break;
         } 
       }
     }
 
-    // check 
     chkbingo();
 
-    if (symbol == 'O') {
-      win = 1;
+    if (bingo == O) {
+      winner = USER;
       break;
     }
     
-    if (symbol == 'X') { 
-      win = 2;
+    if (bingo == X) { 
+      winner = COM;
       break;
     } 
 
@@ -113,14 +113,15 @@ int main() {
   }
 
 
-  // 3 game end
-  if (win == 1) {
+  // END
+  if (winner == USER) {
     printf("YOU WIN\n");
-  } else if (win == 2) {
+  } else if (winner == COM) {
     printf("YOU LOSE\n");
   } else {
     printf("DRAW!\n");
   }
+
   drawboard();
  }
 
