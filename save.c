@@ -184,3 +184,34 @@ int main() {
   printf("%d\n", year); // 2024
 }
 
+int main() {
+  char board[9];
+
+  /*
+  When a C program is executed, 
+  variables that you don't explicitly initialize 
+  have got unpredictable values.
+
+  You need to set all of your array cells to NULL 
+  (or to 0, or to whatever value represents emptyness 
+  in your program logic)
+  */
+
+  for (int i=0; i<9; i++) {
+    board[i] = ' '; // 32
+  }
+
+  board[5] = 'O';
+  board[6] = 'X';
+
+  printf(" %c | %c | %c \n", board[0], board[1], board[2]);
+  printf("---+---+---\n");
+  printf(" %c | %c | %c \n", board[3], board[4], board[5]);
+  printf("---+---+---\n");
+  printf(" %c | %c | %c \n", board[6], board[7], board[8]);
+
+  printf("%d\n", board[0] == board[1]); // 1
+  printf("%d\n", board[4] == board[5]); // 0
+  printf("%d\n", board[5] == board[6]); // 0
+  printf("%c\n", 32); // ' '
+}

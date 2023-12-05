@@ -4,4 +4,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main() {}
+
+
+void f();
+
+int main() {
+  int year = 2024;
+  f();
+}
+
+void f() {
+  printf("%d\n", year);
+}

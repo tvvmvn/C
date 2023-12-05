@@ -1,0 +1,22 @@
+---
+triple:          'x86_64-apple-darwin'
+binary-path:     '/Users/jintaemin/workspace/C/ttt/main'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _fill_hole, symObjAddr: 0x0, symBinAddr: 0x100003800, symSize: 0x140 }
+  - { offsetInCU: 0x3F, offset: 0x3F, size: 0x8, addend: 0x0, symName: _count, symObjAddr: 0x1518, symBinAddr: 0x100008004, symSize: 0x0 }
+  - { offsetInCU: 0x5B, offset: 0x5B, size: 0x8, addend: 0x0, symName: _target, symObjAddr: 0x6E8, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x8A, offset: 0x8A, size: 0x8, addend: 0x0, symName: _start, symBinAddr: 0x100008024, symSize: 0x0 }
+  - { offsetInCU: 0x9F, offset: 0x9F, size: 0x8, addend: 0x0, symName: _n, symBinAddr: 0x100008020, symSize: 0x0 }
+  - { offsetInCU: 0xB4, offset: 0xB4, size: 0x8, addend: 0x0, symName: __n, symBinAddr: 0x100008008, symSize: 0x0 }
+  - { offsetInCU: 0xC9, offset: 0xC9, size: 0x8, addend: 0x0, symName: _turn, symBinAddr: 0x100008028, symSize: 0x0 }
+  - { offsetInCU: 0xDE, offset: 0xDE, size: 0x8, addend: 0x0, symName: _com_idx, symBinAddr: 0x10000801C, symSize: 0x0 }
+  - { offsetInCU: 0xF3, offset: 0xF3, size: 0x8, addend: 0x0, symName: _bingo, symBinAddr: 0x10000800C, symSize: 0x0 }
+  - { offsetInCU: 0x108, offset: 0x108, size: 0x8, addend: 0x0, symName: _winner, symBinAddr: 0x10000802C, symSize: 0x0 }
+  - { offsetInCU: 0x11D, offset: 0x11D, size: 0x8, addend: 0x0, symName: _board, symBinAddr: 0x100008010, symSize: 0x0 }
+  - { offsetInCU: 0x12D, offset: 0x12D, size: 0x8, addend: 0x0, symName: _fill_hole, symObjAddr: 0x0, symBinAddr: 0x100003800, symSize: 0x140 }
+  - { offsetInCU: 0x16D, offset: 0x16D, size: 0x8, addend: 0x0, symName: _set_alg, symObjAddr: 0x140, symBinAddr: 0x100003940, symSize: 0xA0 }
+  - { offsetInCU: 0x182, offset: 0x182, size: 0x8, addend: 0x0, symName: _cmp, symObjAddr: 0x1E0, symBinAddr: 0x1000039E0, symSize: 0x90 }
+  - { offsetInCU: 0x1C2, offset: 0x1C2, size: 0x8, addend: 0x0, symName: _chkbingo, symObjAddr: 0x270, symBinAddr: 0x100003A70, symSize: 0xA0 }
+  - { offsetInCU: 0x1D7, offset: 0x1D7, size: 0x8, addend: 0x0, symName: _drawboard, symObjAddr: 0x310, symBinAddr: 0x100003B10, symSize: 0xB0 }
+  - { offsetInCU: 0x1EC, offset: 0x1EC, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x3C0, symBinAddr: 0x100003BC0, symSize: 0x326 }
+...
