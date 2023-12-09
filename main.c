@@ -5,14 +5,4 @@
 #include <time.h>
 
 
-
-void f();
-
-int main() {
-  int year = 2024;
-  f();
-}
-
-void f() {
-  printf("%d\n", year);
-}
+int main() {}

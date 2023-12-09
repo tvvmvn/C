@@ -215,3 +215,15 @@ int main() {
   printf("%d\n", board[5] == board[6]); // 0
   printf("%c\n", 32); // ' '
 }
+
+// defining main with arguments
+int main(int argc, char* argv[])
+{
+    // argc(argument count): 4
+    printf("You have entered %d arguments:\n", argc);
+ 
+    for (int i = 0; i < argc; i++) {
+        printf("%s\n", argv[i]);
+    }
+    return 0;
+}
