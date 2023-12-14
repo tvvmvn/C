@@ -227,3 +227,11 @@ int main(int argc, char* argv[])
     }
     return 0;
 }
+
+int main() {
+  int year = 2023;
+  int* p = &year;
+
+  // O.K, variables, memory address, lvalue and rvalue..
+  // Draw it!
+}

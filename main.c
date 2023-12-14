@@ -4,10 +4,5 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main() {
-  int year = 2023;
-  int* p = &year;
+int main() {};
 
-  // O.K, variables, memory address, lvalue and rvalue..
-  // Draw it!
-}
