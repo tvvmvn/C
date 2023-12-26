@@ -235,3 +235,31 @@ int main() {
   // O.K, variables, memory address, lvalue and rvalue..
   // Draw it!
 }
+
+int board[4][4] = {
+    { 1, 0, 2, 0 },
+    { 0, 0, 0, 0 },
+    { 0, 0, 0, 0 },
+    { 0, 3, 0, 4 },
+  };
+
+
+
+  printf("* CLI Chess *\n");
+
+  for (int r=0; r<4; r++) {
+    printf("%d ", row_name[r]);
+
+    for (int c=0; c<4; c++) {
+      printf("%d ", board[r][c]);
+    }
+    printf("\n");
+  }
+
+  printf("  ");
+
+  for (int i=0; i<4; i++) 
+    printf("%c ", col_name[i]);
+  printf("\n");
+
+  printf("Choose a piece to move\n");
