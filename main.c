@@ -8,12 +8,14 @@ struct Piece {
   int id;
   char name;
   int team; // 1 or 2
-  int status; // 0 or 1
-  int selected; // 0 or 1
 };
 
 void printBoard(struct Piece pieces[4], int board[4][4]) {
+
+  printf("==========\n");
   for (int r=0; r<4; r++) {
+    printf("%d ", r);
+
     for (int c=0; c<4; c++) {
       // thare is a piece
       if (board[r][c] != 0) {
@@ -24,27 +26,44 @@ void printBoard(struct Piece pieces[4], int board[4][4]) {
         }
       // empty cell
       } else {
-        printf("# ");
+        printf("∙ ");
       }
     }
     printf("\n");
   }
+
+  printf("  a b c d\n");
+  printf("==========\n");
+}
+
+int f(char _col) {
+  int col;
+
+  if (_col == 'a') col = 0;
+  if (_col == 'b') col = 1;
+  if (_col == 'c') col = 2;
+  if (_col == 'd') col = 3;
+
+  return col;
 }
 
 int main() {
   int row;
-  char col;
+  char _col;
+  int col;
   int row_d;
-  char col_d;
+  char _col_d;
+  int col_d;
   int turn = 1;
-  int n;
-  int m;
+  int end = 1;
+  int win = 0;
 
   struct Piece pieces[4] = {
-    {1, 'a', 1, 1, 0},
-    {2, 'b', 1, 1, 0},
-    {3, 'c', 2, 1, 0},
-    {4, 'd', 2, 1, 0},
+    // id name team
+    {1, 'p', 1},
+    {2, 'k', 1},
+    {3, 'P', 2},
+    {4, 'K', 2},
   };
 
   int board[4][4] = {
@@ -56,34 +75,28 @@ int main() {
 
   // PLAY
   while (1) {
-    // Print board
-    printBoard(pieces, board);
-
     turn = turn == 1 ? 2 : 1;
     
     // Choose a piece
     while (1) {
-      printf("choose a piece to move\n");
+      printBoard(pieces, board);
+      printf("message: %d turn. pick up\n", turn);
 
+      scanf("%d %c", &row, &_col);
 
-      scanf("%d %c", &row, &col);
+      col = f(_col);
 
-      if (col == 'a') n = 0;
-      if (col == 'b') n = 1;
-      if (col == 'c') n = 2;
-      if (col == 'd') n = 3;
-
-      if (board[row][n] == 0) {
-        printf("empty cell. try again\n");
+      if (board[row][col] == 0) {
+        printf("message: empty cell. try again\n");
       } else {
         int stop = 0;
 
         for (int i=0; i<4; i++) {
-          if (board[row][n] == pieces[i].id) {
+          if (pieces[i].id == board[row][col]) {
             if (pieces[i].team == turn) {
               stop = 1;
             } else { // wrong team 
-              printf("not your team. try again\n");
+              printf("message: not your team. try again\n");
             }
           }
         }
@@ -96,34 +109,46 @@ int main() {
 
     // Choose a destination
     while (1) {
-      printf("choose dest\n");
+      printBoard(pieces, board);
+      printf("message: choose dest\n");
 
-      scanf("%d %c", &row_d, &col_d);
+      scanf("%d %c", &row_d, &_col_d);
 
-      if (col_d == 'a') m = 0;
-      if (col_d == 'b') m = 1;
-      if (col_d == 'c') m = 2;
-      if (col_d == 'd') m = 3;
+      col_d = f(_col_d);
+      
+      int r = 0;
 
-      int r = row == row_d && n + 1 == m;
+      if (turn == 2) {
+        if (row - 1 == row_d && col + 1 == col_d) {
+          r = 1;
+        } else if (row - 1 == row_d && col - 1 == col_d) {
+          r = 1;
+        }
+      } else {
+        if (row + 1 == row_d && col + 1 == col_d) {
+          r = 1;
+        } else if (row + 1 == row_d && col - 1 == col_d) {
+          r = 1;
+        }
+      }
 
       // validate dest
       if (r == 0) {
-        printf("Not takeable. try again\n");
+        printf("message: Not takeable. try again\n");
       } else {
         int stop = 0;
-        int id = board[row_d][m];
+        int id = board[row_d][col_d];
 
         if (id == 0) {
           break;
         }
 
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<4; i++) {
           if (pieces[i].id == id) {
             if (pieces[i].team != turn) { // take enemy
               stop = 1;
             } else {
-              printf("already a piece. try again\n");
+              printf("message: already a piece. try again\n");
             }
           }
         }
@@ -135,9 +160,29 @@ int main() {
     }
 
     // move
-    int temp = board[row][n];
+    int temp = board[row][col];
 
-    board[row][n] = 0;
-    board[row_d][m] = temp;
+    board[row][col] = 0;
+    board[row_d][col_d] = temp;
+
+    // get result
+    for (int r=0; r<4; r++) {
+      for (int c=0; c<4; c++) {        
+        if (board[r][c]) {
+          for (int i=0; i<4; i++) {
+            if (pieces[i].id == board[r][c]) {
+              if (pieces[i].team != turn) { // why
+                end = 0; 
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (end) {
+      printf("%d WIN!\n", turn);
+      break;
+    }
   }
 }
