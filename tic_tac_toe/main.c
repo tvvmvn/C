@@ -97,16 +97,14 @@ int main() {
   turn = (rand() % 2) + 1;
 
   if (turn == 1) {
-    printf("COM first\n");
-  } else {
     printf("YOU first\n");
+  } else {
+    printf("COM first\n");
   }
   
 
   // PLAYING
   while (1) {    
-    turn = (turn == USER) ? COM : USER;
-
     if (turn == USER) {
       while (1) { 
         printf("Choose a number from 1 to 9\n");
@@ -161,6 +159,8 @@ int main() {
     if (count > 8) {
       break;
     }
+
+    turn = (turn == USER) ? COM : USER;
   }
 
 

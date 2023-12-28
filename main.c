@@ -47,6 +47,21 @@ int f(char _col) {
   return col;
 }
 
+void foo(char* szType, void *pOut) {
+  switch (szType[0]) {
+    case 'I': *(int*)pOut = 1; break;
+    case 'F': *(float*)pOut = 1; break;
+  }
+}
+
+int _main() {
+  int a;
+  float b;
+
+  foo("I", &a);
+  foo("F", &b);
+};
+
 int main() {
   int row;
   char _col;
@@ -54,9 +69,9 @@ int main() {
   int row_d;
   char _col_d;
   int col_d;
-  int turn = 1;
-  int end = 1;
+  int turn = 2;
   int win = 0;
+  int end;
 
   struct Piece pieces[4] = {
     // id name team
@@ -74,9 +89,7 @@ int main() {
   };
 
   // PLAY
-  while (1) {
-    turn = turn == 1 ? 2 : 1;
-    
+  while (1) {    
     // Choose a piece
     while (1) {
       printBoard(pieces, board);
@@ -165,14 +178,21 @@ int main() {
     board[row][col] = 0;
     board[row_d][col_d] = temp;
 
+    // change turn
+    turn = turn == 1 ? 2 : 1;
+  
     // get result
+    end = 1;
+
     for (int r=0; r<4; r++) {
-      for (int c=0; c<4; c++) {        
-        if (board[r][c]) {
+      for (int c=0; c<4; c++) {
+        int id = board[r][c];
+        
+        if (id) {
           for (int i=0; i<4; i++) {
-            if (pieces[i].id == board[r][c]) {
-              if (pieces[i].team != turn) { // why
-                end = 0; 
+            if (pieces[i].id == id) {
+              if (pieces[i].team == turn) {
+                end = 0;
               }
             }
           }
@@ -180,7 +200,9 @@ int main() {
       }
     }
 
+    // GAME END
     if (end) {
+      printBoard(pieces, board);
       printf("%d WIN!\n", turn);
       break;
     }
