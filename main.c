@@ -78,29 +78,10 @@ int get_col(char _col) {
   return col;
 };
 
-int movement() {
-  int r = 0;
-
-  if (turn == 2) {
-    if (row - 1 == row_d && col + 1 == col_d) {
-      r = 1;
-    } else if (row - 1 == row_d && col - 1 == col_d) {
-      r = 1;
-    }
-  } else {
-    if (row + 1 == row_d && col + 1 == col_d) {
-      r = 1;
-    } else if (row + 1 == row_d && col - 1 == col_d) {
-      r = 1;
-    }
-  }
-
-  return r;
-}
-
 /* run the game */
 
 int main() {
+  
   // PLAY
   while (1) {  
 
@@ -144,32 +125,22 @@ int main() {
 
       col_d = get_col(_col_d);
       
-      int takeable = movement();
-
       // validate dest
-      if (takeable == 0) {
-        printf("message: Not takeable. try again\n");
-      } else {
-        int stop = 0;
-        int id = board[row_d][col_d];
+      int stop = 0;
+      int id = board[row_d][col_d];
 
-        if (id == 0) {
-          break;
-        }
-
-        for (int i=0; i<4; i++) {
-          if (pieces[i].id == id) {
-            if (pieces[i].team != turn) { // take enemy
-              stop = 1;
-            } else {
-              printf("message: already a piece. try again\n");
-            }
+      for (int i=0; i<4; i++) {
+        if (pieces[i].id == id) {
+          if (pieces[i].team != turn) { // take enemy
+            stop = 1;
+          } else {
+            printf("message: already a piece. try again\n");
           }
         }
+      }
 
-        if (stop) {
-          break;
-        }
+      if (stop) {
+        break;
       }
     }
 
@@ -177,9 +148,6 @@ int main() {
     int temp = board[row][col];
     board[row][col] = 0;
     board[row_d][col_d] = temp;
-
-    // change turn
-    turn = turn == 1 ? 2 : 1;
   
     // get result
     end = 1;
@@ -191,7 +159,7 @@ int main() {
         if (id) {
           for (int i=0; i<4; i++) {
             if (pieces[i].id == id) {
-              if (pieces[i].team == turn) {
+              if (pieces[i].team != turn) {
                 end = 0;
               }
             }
@@ -200,8 +168,11 @@ int main() {
       }
     }
 
-    // GAME END
-    if (end) {
+    // keep playing
+    if (!end) {
+      // change turn
+      turn = turn == 1 ? 2 : 1;
+    } else {
       printBoard();
       printf("%d WIN!\n", turn);
       break;
