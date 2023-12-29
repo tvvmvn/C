@@ -4,15 +4,46 @@
 #include <stdlib.h>
 #include <time.h>
 
+/* struct */
+
 struct Piece {
   int id;
   char name;
   int team; // 1 or 2
 };
 
-void printBoard(struct Piece pieces[4], int board[4][4]) {
+/* variables */
 
+struct Piece pieces[4] = {
+    // id name team
+  {1, 'p', 1},
+  {2, 'k', 1},
+  {3, 'P', 2},
+  {4, 'K', 2},
+};
+
+int board[4][4] = {
+  {1, 0, 2, 0},
+  {0, 0, 0, 0},
+  {0, 0, 0, 0},
+  {0, 3, 0, 4},
+};
+
+int row;
+char _col;
+int col;
+int row_d;
+char _col_d;
+int col_d;
+int turn = 2;
+int win = 0;
+int end;
+
+/* functions */
+
+void printBoard() {
   printf("==========\n");
+
   for (int r=0; r<4; r++) {
     printf("%d ", r);
 
@@ -36,7 +67,7 @@ void printBoard(struct Piece pieces[4], int board[4][4]) {
   printf("==========\n");
 }
 
-int f(char _col) {
+int get_col(char _col) {
   int col;
 
   if (_col == 'a') col = 0;
@@ -45,60 +76,44 @@ int f(char _col) {
   if (_col == 'd') col = 3;
 
   return col;
-}
-
-void foo(char* szType, void *pOut) {
-  switch (szType[0]) {
-    case 'I': *(int*)pOut = 1; break;
-    case 'F': *(float*)pOut = 1; break;
-  }
-}
-
-int _main() {
-  int a;
-  float b;
-
-  foo("I", &a);
-  foo("F", &b);
 };
 
+int movement() {
+  int r = 0;
+
+  if (turn == 2) {
+    if (row - 1 == row_d && col + 1 == col_d) {
+      r = 1;
+    } else if (row - 1 == row_d && col - 1 == col_d) {
+      r = 1;
+    }
+  } else {
+    if (row + 1 == row_d && col + 1 == col_d) {
+      r = 1;
+    } else if (row + 1 == row_d && col - 1 == col_d) {
+      r = 1;
+    }
+  }
+
+  return r;
+}
+
+/* run the game */
+
 int main() {
-  int row;
-  char _col;
-  int col;
-  int row_d;
-  char _col_d;
-  int col_d;
-  int turn = 2;
-  int win = 0;
-  int end;
-
-  struct Piece pieces[4] = {
-    // id name team
-    {1, 'p', 1},
-    {2, 'k', 1},
-    {3, 'P', 2},
-    {4, 'K', 2},
-  };
-
-  int board[4][4] = {
-    {1, 0, 2, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 3, 0, 4},
-  };
-
   // PLAY
-  while (1) {    
+  while (1) {  
+
     // Choose a piece
     while (1) {
-      printBoard(pieces, board);
+      printBoard();
       printf("message: %d turn. pick up\n", turn);
 
       scanf("%d %c", &row, &_col);
 
-      col = f(_col);
+      col = get_col(_col);
 
+      // validate
       if (board[row][col] == 0) {
         printf("message: empty cell. try again\n");
       } else {
@@ -122,31 +137,17 @@ int main() {
 
     // Choose a destination
     while (1) {
-      printBoard(pieces, board);
+      printBoard();
       printf("message: choose dest\n");
 
       scanf("%d %c", &row_d, &_col_d);
 
-      col_d = f(_col_d);
+      col_d = get_col(_col_d);
       
-      int r = 0;
-
-      if (turn == 2) {
-        if (row - 1 == row_d && col + 1 == col_d) {
-          r = 1;
-        } else if (row - 1 == row_d && col - 1 == col_d) {
-          r = 1;
-        }
-      } else {
-        if (row + 1 == row_d && col + 1 == col_d) {
-          r = 1;
-        } else if (row + 1 == row_d && col - 1 == col_d) {
-          r = 1;
-        }
-      }
+      int takeable = movement();
 
       // validate dest
-      if (r == 0) {
+      if (takeable == 0) {
         printf("message: Not takeable. try again\n");
       } else {
         int stop = 0;
@@ -174,7 +175,6 @@ int main() {
 
     // move
     int temp = board[row][col];
-
     board[row][col] = 0;
     board[row_d][col_d] = temp;
 
@@ -202,7 +202,7 @@ int main() {
 
     // GAME END
     if (end) {
-      printBoard(pieces, board);
+      printBoard();
       printf("%d WIN!\n", turn);
       break;
     }
