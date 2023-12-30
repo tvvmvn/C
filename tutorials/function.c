@@ -38,6 +38,7 @@ int add(int x, int y) {
   References
 
   callback
+  return multiple values
 */
 
 
@@ -51,4 +52,19 @@ void cb(int n) {
 
 int main() {
   f(cb);
+}
+
+
+
+void f(int* adr1, int* adr2) {
+  *adr1 = 1;
+  *adr2 = 2;
+}
+
+int main() {
+  int x, y;
+
+  f(&x, &y);
+
+  printf("%d %d\n", x, y);
 }

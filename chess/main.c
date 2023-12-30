@@ -4,148 +4,209 @@
 #include <stdlib.h>
 #include <time.h>
 
+/* struct */
 
 struct Piece {
   int id;
   char name;
   int team; // 1 or 2
-  int status; // 0 or 1
-  int selected; // 0 or 1
 };
 
-int main() {
-  int row;
-  char col;
-  int row_d;
-  char col_d;
-  int turn = 2;
-  int n;
-  int m;
+/* variables */
 
-  struct Piece pieces[] = {
-    {1, 'a', 1, 1, 0},
-    {2, 'b', 1, 1, 0},
-    {3, 'c', 2, 1, 0},
-    {4, 'd', 2, 1, 0},
-  };
+struct Piece pieces[4] = {
+    // id name team
+  {1, 'p', 1},
+  {2, 'k', 1},
+  {3, 'P', 2},
+  {4, 'K', 2},
+};
 
-  int board[4][4] = {
-    {1, 0, 2, 0},
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {0, 3, 0, 4},
-  };
+int board[4][4] = {
+  {1, 0, 2, 0},
+  {0, 0, 0, 0},
+  {0, 0, 0, 0},
+  {0, 3, 0, 4},
+};
 
-  // PLAY
-  while (1) {
+int _row;
+char _col;
+int row, col;
+int _row_d;
+char _col_d;
+int row_d, col_d;
+int turn = 2;
 
-    // Print board
-    for (int r=0; r<4; r++) {
-      for (int c=0; c<4; c++) {
-        // thare is a piece
-        if (board[r][c] != 0) {
-          for (int i=0; i<4; i++) {
-            if (pieces[i].id == board[r][c]) {
-              printf("%c ", pieces[i].name);
-            }
-          }
-        // empty cell
-        } else {
-          printf("# ");
+/* functions */
+
+void get_idx(int _row, char _col, int* row, int* col) {
+  if (_row == 4) *row = 0;
+  if (_row == 3) *row = 1;
+  if (_row == 2) *row = 2;
+  if (_row == 1) *row = 3;
+
+  if (_col == 'a') *col = 0;
+  if (_col == 'b') *col = 1;
+  if (_col == 'c') *col = 2;
+  if (_col == 'd') *col = 3;
+}
+
+struct Piece getpiece(int id) {
+  struct Piece piece;
+
+  for (int i = 0; i < 4; i++) {
+    if (pieces[i].id == id) {
+      piece = pieces[i];    
+    }
+  }
+
+  return piece;
+}
+
+int vt() { // validate target
+  int valid;
+  int id = board[row][col]; 
+
+  if (id == 0) {
+    valid = 0;
+  } else {
+    struct Piece piece = getpiece(id);
+
+    if (piece.team == turn) {
+      valid = 1;
+    } else { // pick enemy
+      valid = 0;
+    }
+  }
+
+  return valid;
+}
+
+int vd() { // validate dest
+  int valid;
+  int id = board[row_d][col_d];
+
+  if (id == 0) {
+    valid = 1;
+  } else {
+    struct Piece piece = getpiece(id);
+
+    if (piece.team != turn) { // take enemy
+      valid = 1;
+    } else { // same team
+      valid = 0;
+    }
+  }
+
+  return valid;
+}
+
+int get_end() {
+  int end = 1;
+
+  for (int r = 0; r < 4; r++) {
+    for (int c = 0; c < 4; c++) {
+      int id = board[r][c];
+
+      if (id) {
+        struct Piece piece = getpiece(id);
+
+        if (piece.team != turn) {
+          end = 0;
         }
       }
-      printf("\n");
     }
+  }
 
-    // Choose a piece
-    while (1) {
-      printf("choose a piece to move\n");
+  return end;
+}
 
-      scanf("%d %c", &row, &col);
+/* draw */
 
-      if (col == 'a') n = 0;
-      if (col == 'b') n = 1;
-      if (col == 'c') n = 2;
-      if (col == 'd') n = 3;
+char row_name[] = "4321"; 
 
-      if (board[row][n] == 0) {
-        printf("empty cell. try again\n");
-      } else {
-        int stop = 0;
+void printBoard() {
+  printf("==========\n");
 
+  for (int r = 0; r < 4; r++) {
+    printf("%c ", row_name[r]);
+
+    for (int c = 0; c < 4; c++) {
+      // thare is a piece
+      if (board[r][c] != 0) {
         for (int i=0; i<4; i++) {
-          if (board[row][n] == pieces[i].id) {
-            if (pieces[i].team == 2) {
-              stop = 1;
-            } else { // wrong team 
-              printf("not your team. try again\n");
-            }
+          if (pieces[i].id == board[r][c]) {
+            printf("%c ", pieces[i].name);
           }
         }
-
-        if (stop) {
-          break;
-        }
+      // empty cell
+      } else {
+        printf("∙ ");
       }
     }
+    printf("\n");
+  }
 
-    // Choose a destination
+  printf("  a b c d\n");
+  printf("==========\n");
+}
+
+/* run the game */
+
+int main() {
+  while (1) {  
+    // choose a piece
     while (1) {
-      printf("choose dest\n");
+      printBoard();
+      printf("message: %d turn. pick up\n", turn);
 
-      scanf("%d %c", &row_d, &col_d);
+      // get input 
+      scanf("%c %d", &_col, &_row);
+      get_idx(_row, _col, &row, &col);
 
-      if (col_d == 'a') m = 0;
-      if (col_d == 'b') m = 1;
-      if (col_d == 'c') m = 2;
-      if (col_d == 'd') m = 3;
+      // validate target
+      int valid = vt();
 
-      // validate dest
-      if (board[row_d][m] == 0) {
+      if (valid) {
         break;
       } else {
-        int stop = 0;
-
-        for (int i=0; i<4; i++) {
-          if (board[row_d][m] == pieces[i].id) {
-            if (pieces[i].team == 2) {
-              printf("there is a piece already\n");
-            } else { // wrong team 
-              stop = 1;
-            }
-          }
-        }
-
-        if (stop) {
-          break;
-        }
+        printf("invalid target.\n");
       }
     }
 
-    int temp = board[row][n];
+    // choose destination
+    while (1) {
+      printBoard();
+      printf("message: choose dest\n");
 
-    board[row][n] = 0;
-    board[row_d][m] = temp;
+      // get input
+      scanf(" %c %d", &_col_d, &_row_d);
+      get_idx(_row_d, _col_d, &row_d, &col_d);
+      
+      // validate dest
+      int valid = vd();
 
-    // print board again
-    for (int r=0; r<4; r++) {
-      for (int c=0; c<4; c++) {
-        // there is a piece
-        if (board[r][c] != 0) {
-          for (int i=0; i<4; i++) {
-            if (pieces[i].id == board[r][c]) {
-              printf("%c ", pieces[i].name);
-            }
-          }
-        // empty celll
-        } else {
-          printf("# ");
-        }
+      if (valid) {
+        break;
+      } else {
+        printf("invalid movement.\n");
       }
-      printf("\n");
     }
 
-    //GAME END
-    break;
+    // movement
+    int temp = board[row][col];
+    board[row][col] = 0;
+    board[row_d][col_d] = temp;
+  
+    // get result
+    int end = get_end();
+
+    if (!end) {
+      turn = turn == 1 ? 2 : 1;
+    } else {
+      printBoard();
+      printf("%d WIN!\n", turn);
+      break;
+    }
   }
 }
