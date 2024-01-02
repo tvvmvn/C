@@ -8,26 +8,22 @@
 
 struct Piece {
   int id;
-  char name;
+  char name[10];
+  char symbol[4];
   int team; // 1 or 2
 };
 
-/* variables */
+/* constants */
 
-struct Piece pieces[4] = {
+const struct Piece pieces[4] = {
     // id name team
-  {1, 'p', 1},
-  {2, 'k', 1},
-  {3, 'P', 2},
-  {4, 'K', 2},
+  {1, "pawn", "♙", 1},
+  {2, "knight", "♘", 1},
+  {3, "pawn", "♟", 2},
+  {4, "knight", "♞", 2},
 };
 
-int board[4][4] = {
-  {1, 0, 2, 0},
-  {0, 0, 0, 0},
-  {0, 0, 0, 0},
-  {0, 3, 0, 4},
-};
+/* variables */
 
 int _row;
 char _col;
@@ -37,7 +33,14 @@ char _col_d;
 int row_d, col_d;
 int turn = 2;
 
-/* functions */
+int board[4][4] = {
+  {1, 0, 2, 0},
+  {0, 0, 0, 0},
+  {0, 0, 0, 0},
+  {0, 3, 0, 4},
+};
+
+/* functions */ // message
 
 void get_idx(int _row, char _col, int* row, int* col) {
   if (_row == 4) *row = 0;
@@ -126,20 +129,18 @@ int get_end() {
 char row_name[] = "4321"; 
 
 void printBoard() {
-  printf("==========\n");
+  printf("=========\n");
 
   for (int r = 0; r < 4; r++) {
     printf("%c ", row_name[r]);
 
     for (int c = 0; c < 4; c++) {
-      // thare is a piece
       if (board[r][c] != 0) {
         for (int i=0; i<4; i++) {
           if (pieces[i].id == board[r][c]) {
-            printf("%c ", pieces[i].name);
+            printf("%s ", pieces[i].symbol);
           }
         }
-      // empty cell
       } else {
         printf("∙ ");
       }
@@ -148,7 +149,7 @@ void printBoard() {
   }
 
   printf("  a b c d\n");
-  printf("==========\n");
+  printf("=========\n");
 }
 
 /* run the game */

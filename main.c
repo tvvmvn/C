@@ -4,15 +4,19 @@
 #include <stdlib.h>
 #include <time.h>
 
-void f(int* adr1, int* adr2) {
-  *adr1 = 1;
-  *adr2 = 2;
-}
+struct Piece {
+  char name[10];
+  char symbol[4];
+};
+
+const struct Piece pieces[4] = {
+  {"pawn", "♝"},
+  {"pawn", "♝"},
+  {"pawn", "♝"},
+  {"pawn", "♝"},
+};
 
 int main() {
-  int x, y;
-
-  f(&x, &y);
-
-  printf("%d %d\n", x, y);
+  printf("%s\n", pieces[0].name);
+  printf("%s\n", pieces[0].symbol);
 }
