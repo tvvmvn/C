@@ -25,12 +25,11 @@ const struct Piece pieces[4] = {
 
 /* variables */
 
-int _row;
-char _col;
+char _row, _col;
 int row, col;
-int _row_d;
-char _col_d;
-int row_d, col_d;
+char _trow, _tcol;
+int trow, tcol;
+char nl;
 int turn = 2;
 
 int board[4][4] = {
@@ -42,11 +41,11 @@ int board[4][4] = {
 
 /* functions */ // message
 
-void get_idx(int _row, char _col, int* row, int* col) {
-  if (_row == 4) *row = 0;
-  if (_row == 3) *row = 1;
-  if (_row == 2) *row = 2;
-  if (_row == 1) *row = 3;
+void get_idx(char _row, char _col, int* row, int* col) {
+  if (_row == '4') *row = 0;
+  if (_row == '3') *row = 1;
+  if (_row == '2') *row = 2;
+  if (_row == '1') *row = 3;
 
   if (_col == 'a') *col = 0;
   if (_col == 'b') *col = 1;
@@ -66,43 +65,37 @@ struct Piece getpiece(int id) {
   return piece;
 }
 
-int vt() { // validate target
-  int valid;
+int vp() { // validate piece
+  int valid = 0;
   int id = board[row][col]; 
 
-  if (id == 0) {
-    valid = 0;
-  } else {
+  if (id != 0) {
     struct Piece piece = getpiece(id);
 
     if (piece.team == turn) {
       valid = 1;
-    } else { // pick enemy
-      valid = 0;
-    }
+    } 
   }
 
   return valid;
 }
 
-int vd() { // validate dest
-  int valid;
-  int id = board[row_d][col_d];
+int _vt() { // validate target
+  int valid = 1;
+  int id = board[trow][tcol];
 
-  if (id == 0) {
-    valid = 1;
-  } else {
+  if (id != 0) {
     struct Piece piece = getpiece(id);
 
-    if (piece.team != turn) { // take enemy
-      valid = 1;
-    } else { // same team
+    if (piece.team == turn) {
       valid = 0;
-    }
+    } 
   }
 
   return valid;
 }
+
+int vt();
 
 int get_end() {
   int end = 1;
@@ -159,37 +152,42 @@ int main() {
     // choose a piece
     while (1) {
       printBoard();
-      printf("message: %d turn. pick up\n", turn);
+      printf("message: %d turn. choose a piece\n", turn);
 
       // get input 
-      scanf("%c %d", &_col, &_row);
+      scanf("%c%c%c", &_col, &_row, &nl);
       get_idx(_row, _col, &row, &col);
 
-      // validate target
-      int valid = vt();
+      // validate piece
+      int valid = vp();
 
       if (valid) {
         break;
       } else {
-        printf("invalid target.\n");
+        printf("invalid piece.\n");
       }
     }
 
-    // choose destination
+    // choose target
     while (1) {
       printBoard();
-      printf("message: choose dest\n");
+      printf("message: [%c%c] choose target or re-select piece\n", _col, _row);
 
       // get input
-      scanf(" %c %d", &_col_d, &_row_d);
-      get_idx(_row_d, _col_d, &row_d, &col_d);
+      scanf("%c%c%c", &_tcol, &_trow, &nl);
+      get_idx(_trow, _tcol, &trow, &tcol);
       
-      // validate dest
-      int valid = vd();
+      // validate target
+      int r = vt();
 
-      if (valid) {
+      if (r == 1) { // re-select piece
+        _row = _trow;
+        _col = _tcol;
+        row = trow;
+        col = tcol;
+      } else if (r == 2) { // select target
         break;
-      } else {
+      } else { // 0 (invalid)
         printf("invalid movement.\n");
       }
     }
@@ -197,7 +195,7 @@ int main() {
     // movement
     int temp = board[row][col];
     board[row][col] = 0;
-    board[row_d][col_d] = temp;
+    board[trow][tcol] = temp;
   
     // get result
     int end = get_end();
@@ -210,4 +208,61 @@ int main() {
       break;
     }
   }
+}
+
+// ** validate target
+int vt() { 
+  int r = 0;
+  int pieceId = board[row][col];
+  int targetId = board[trow][tcol];
+
+  struct Piece piece = getpiece(pieceId);
+
+  // re-select piece
+  if (targetId) {
+    struct Piece target = getpiece(targetId);
+
+    if (piece.team == target.team) {
+      return 1;
+    }
+  }
+
+  // validate target
+  if (strcmp(piece.name, "pawn") == 0) {
+    if (piece.team == 1) {
+      if (row + 1 == trow && col == tcol) {
+        if (targetId == 0) {
+          r = 2;
+        }
+      }
+
+      if (row + 1 == trow && col - 1 == tcol) {
+        r = 2;
+      }
+
+      if (row + 1 == trow && col + 1 == tcol) {
+        r = 2;
+      }
+    } else {
+      if (row - 1 == trow && col == tcol) {
+        if (targetId == 0) {
+          r = 2;
+        }
+      }
+
+      if (row - 1 == trow && col - 1 == tcol) {
+        r = 2;
+      }
+
+      if (row - 1 == trow && col + 1 == tcol) {
+        r = 2;
+      }
+    }
+  }
+
+  if (strcmp(piece.name, "knight") == 0) {
+    r = 2;
+  }
+
+  return r;
 }
