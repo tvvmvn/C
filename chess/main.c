@@ -15,12 +15,39 @@ struct Piece {
 
 /* constants */
 
-const struct Piece pieces[4] = {
-    // id name team
-  {1, "pawn", "♙", 1},
-  {2, "knight", "♘", 1},
-  {3, "pawn", "♟", 2},
-  {4, "knight", "♞", 2},
+const struct Piece pieces[32] = {
+  {10, "kg", "♔", 1}, // user 1
+  {11, "qn", "♕", 1},
+  {12, "bs", "♗", 1},
+  {13, "bs", "♗", 1},
+  {14, "kn", "♘", 1},
+  {15, "kn", "♘", 1},
+  {16, "rk", "♖", 1},
+  {17, "rk", "♖", 1},
+  {18, "pn", "♙", 1},
+  {19, "pn", "♙", 1},
+  {20, "pn", "♙", 1},
+  {21, "pn", "♙", 1},
+  {22, "pn", "♙", 1},
+  {23, "pn", "♙", 1},
+  {24, "pn", "♙", 1},
+  {25, "pn", "♙", 1},
+  {30, "kg", "♚", 2}, // user 2
+  {31, "qn", "♛", 2},
+  {32, "bs", "♝", 2},
+  {33, "bs", "♝", 2},
+  {34, "kn", "♞", 2},
+  {35, "kn", "♞", 2},
+  {36, "rk", "♜", 2},
+  {37, "rk", "♜", 2},
+  {38, "pn", "♟", 2},
+  {39, "pn", "♟", 2},
+  {40, "pn", "♟", 2},
+  {41, "pn", "♟", 2},
+  {42, "pn", "♟", 2},
+  {43, "pn", "♟", 2},
+  {44, "pn", "♟", 2},
+  {45, "pn", "♟", 2},
 };
 
 /* variables */
@@ -30,33 +57,47 @@ int row, col;
 char _trow, _tcol;
 int trow, tcol;
 char nl;
-int turn = 2;
+int turn = 1;
 
-int board[4][4] = {
-  {1, 0, 2, 0},
-  {0, 0, 0, 0},
-  {0, 0, 0, 0},
-  {0, 3, 0, 4},
+int board[8][8] = {
+  {16, 14, 12, 11, 10, 13, 15, 17}, // row 1
+  // {18, 19, 20, 21, 22, 23, 24, 25},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  {0, 0, 0, 0, 0, 0, 0, 0},
+  // {38, 39, 40, 41, 42, 43, 44, 45},
+  {36, 34, 32, 31, 30, 33, 35, 37}, // row 8
 };
 
 /* functions */ // message
 
 void get_idx(char _row, char _col, int* row, int* col) {
-  if (_row == '4') *row = 0;
-  if (_row == '3') *row = 1;
-  if (_row == '2') *row = 2;
-  if (_row == '1') *row = 3;
+  if (_row == '1') *row = 0;
+  if (_row == '2') *row = 1;
+  if (_row == '3') *row = 2;
+  if (_row == '4') *row = 3;
+  if (_row == '5') *row = 4;
+  if (_row == '6') *row = 5;
+  if (_row == '7') *row = 6;
+  if (_row == '8') *row = 7;
 
   if (_col == 'a') *col = 0;
   if (_col == 'b') *col = 1;
   if (_col == 'c') *col = 2;
   if (_col == 'd') *col = 3;
+  if (_col == 'e') *col = 4;
+  if (_col == 'f') *col = 5;
+  if (_col == 'g') *col = 6;
+  if (_col == 'h') *col = 7;
 }
 
 struct Piece getpiece(int id) {
   struct Piece piece;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 32; i++) {
     if (pieces[i].id == id) {
       piece = pieces[i];    
     }
@@ -100,8 +141,8 @@ int vt();
 int get_end() {
   int end = 1;
 
-  for (int r = 0; r < 4; r++) {
-    for (int c = 0; c < 4; c++) {
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
       int id = board[r][c];
 
       if (id) {
@@ -119,17 +160,15 @@ int get_end() {
 
 /* draw */
 
-char row_name[] = "4321"; 
-
 void printBoard() {
-  printf("=========\n");
+  printf("=================\n");
 
-  for (int r = 0; r < 4; r++) {
-    printf("%c ", row_name[r]);
+  for (int r = 7; r >= 0; r--) {
+    printf("%d ", r + 1);
 
-    for (int c = 0; c < 4; c++) {
+    for (int c = 0; c < 8; c++) {
       if (board[r][c] != 0) {
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<32; i++) {
           if (pieces[i].id == board[r][c]) {
             printf("%s ", pieces[i].symbol);
           }
@@ -141,8 +180,8 @@ void printBoard() {
     printf("\n");
   }
 
-  printf("  a b c d\n");
-  printf("=========\n");
+  printf("  a b c d e f g h\n");
+  printf("=================\n");
 }
 
 /* run the game */
@@ -228,9 +267,9 @@ int vt() {
   }
 
   // validate target
-  if (strcmp(piece.name, "pawn") == 0) {
+  if (strcmp(piece.name, "pn") == 0) {
     if (piece.team == 1) {
-      if (row + 1 == trow && col == tcol) {
+      if (row - 1 == trow && col == tcol) {
         if (targetId == 0) {
           r = 2;
         }
@@ -244,7 +283,7 @@ int vt() {
         r = 2;
       }
     } else {
-      if (row - 1 == trow && col == tcol) {
+      if (row + 1 == trow && col == tcol) {
         if (targetId == 0) {
           r = 2;
         }
@@ -260,7 +299,210 @@ int vt() {
     }
   }
 
-  if (strcmp(piece.name, "knight") == 0) {
+  if (strcmp(piece.name, "kn") == 0) {
+    // up
+    if (board[row + 1][col] == 0) {
+      if (row + 2 == trow && col - 1 == tcol) {
+        r = 2;
+      }
+
+      if (row + 2 == trow && col + 1 == tcol) {
+        r = 2;
+      }
+    }
+
+    // down
+    if (board[row - 1][col] == 0) {
+      if (row - 2 == trow && col - 1 == tcol) {
+        r = 2;
+      }
+
+      if (row - 2 == trow && col + 1 == tcol) {
+        r = 2;
+      }
+    }
+
+    // left
+    if (board[row][col - 1] == 0) {
+      if (row - 1 == trow && col - 2 == tcol) {
+        r = 2;
+      }
+
+      if (row + 1 == trow && col - 2 == tcol) {
+        r = 2;
+      }
+    }
+
+    // right
+    if (board[row][col + 1] == 0) {
+      if (row - 1 == trow && col + 2 == tcol) {
+        r = 2;
+      }
+
+      if (row + 1 == trow && col + 2 == tcol) {
+        r = 2;
+      }
+    }
+  }
+
+  if (strcmp(piece.name, "rk") == 0) {
+    // up
+    if (trow < row && col == tcol) {
+      int tmp = 2;
+
+      for (int r = row - 1; r > trow; r--) {
+        if (board[r][col] != 0) {
+          tmp = 0;
+          break;
+        }
+      }
+
+      r = tmp;
+    }
+
+    // down
+    if (trow > row && col == tcol) {
+      int tmp = 2;
+
+      for (int r = row + 1; r < trow; r++) {
+        if (board[r][col] != 0) {
+          tmp = 0;
+          break;
+        }
+      }
+
+      r = tmp;
+    }
+
+    // left
+    if (row == trow && tcol < col) {
+      int tmp = 2;
+
+      for (int c = col - 1; c > tcol; c--) {
+        if (board[row][c] != 0) {
+          tmp = 0;
+          break;
+        }
+      }
+
+      r = tmp;
+    }
+
+    // right
+    if (row == trow && tcol > col) {
+      int tmp = 2;
+
+      for (int c = col + 1; c < tcol; c++) {
+        if (board[row][c] != 0) {
+          tmp = 0;
+          break;
+        }
+      }
+
+      r = tmp;
+    }
+  }
+
+  if (strcmp(piece.name, "kg") == 0) {
+    // up
+    if (row + 1 == trow && col == tcol) r = 2;
+    // down
+    if (row - 1 == trow && col == tcol) r = 2;
+    // left
+    if (row == trow && col - 1 == tcol) r = 2;
+    // right
+    if (row == trow && col + 1 == tcol) r = 2;
+    // tl
+    if (row + 1 == trow && col - 1 == tcol) r = 2;
+    // tr
+    if (row + 1 == trow && col + 1 == tcol) r = 2;
+    // br
+    if (row - 1 == trow && col + 1 == tcol) r = 2;
+    // bl
+    if (row - 1 == trow && col - 1 == tcol) r = 2;
+  }
+
+  if (strcmp(piece.name, "bs") == 0) {
+    if (abs(tcol - col) == abs(trow - row)) {
+      // tl
+      if (tcol - col < 0 && trow - row > 0) {
+        int x = col - 1;
+        int y = row + 1;
+        int tmp = 2;
+
+        while (x > tcol && y < trow) {
+          if (board[y][x] != 0) {
+            tmp = 0;
+            break;
+          }
+
+          x--;
+          y++;
+        }
+
+        r = tmp;
+      }
+
+      // tr
+      if (tcol - col > 0 && trow - row > 0) {
+        int x = col + 1;
+        int y = row + 1;
+        int tmp = 2;
+
+        while (x < tcol && y < trow) {
+          if (board[y][x] != 0) {
+            tmp = 0;
+            break;
+          }
+
+          x++;
+          y++;
+        }
+
+        r = tmp;
+      }
+
+      // br
+      if (tcol - col > 0 && trow - row < 0) {
+        int x = col + 1;
+        int y = row - 1;
+        int tmp = 2;
+
+        while (x < tcol && y > trow) {
+          if (board[y][x] != 0) {
+            tmp = 0;
+            break;
+          }
+
+          x++;
+          y--;
+        }
+
+        r = tmp;
+      }
+
+      // bl
+      if (tcol - col < 0 && trow - row < 0) {
+        int x = col - 1;
+        int y = row - 1;
+        int tmp = 2;
+
+        while (x > tcol && y > trow) {
+          if (board[y][x] != 0) {
+            tmp = 0;
+            break;
+          }
+
+          x--;
+          y--;
+        }
+
+        r = tmp;
+      }
+    }
+  }
+
+  if (strcmp(piece.name, "qn") == 0) {
     r = 2;
   }
 
