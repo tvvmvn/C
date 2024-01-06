@@ -24,57 +24,58 @@ struct Piece {
   int id;
   enum Pieces name;
   char symbol[4];
-  enum Team team; // 1 or 2
+  enum Team team; 
 };
 
 /* constants */
-const int CELL_CNT = 8;
+const int ROW_CNT = 8;
+const int COL_CNT = 8;
 const int PIECE_CNT = 32;
 const struct Piece PIECES[PIECE_CNT] = {
-  {10, KING, "♔", WHITE}, // user 1
-  {11, QUEEN, "♕", WHITE},
-  {12, BISHOP, "♗", WHITE},
-  {13, BISHOP, "♗", WHITE},
-  {14, KNIGHT, "♘", WHITE},
-  {15, KNIGHT, "♘", WHITE},
-  {16, ROOK, "♖", WHITE},
-  {17, ROOK, "♖", WHITE},
-  {18, PAWN, "♙", WHITE},
-  {19, PAWN, "♙", WHITE},
-  {20, PAWN, "♙", WHITE},
-  {21, PAWN, "♙", WHITE},
-  {22, PAWN, "♙", WHITE},
-  {23, PAWN, "♙", WHITE},
-  {24, PAWN, "♙", WHITE},
-  {25, PAWN, "♙", WHITE},
-  {30, KING, "♚", BLACK}, // user 2
-  {31, QUEEN, "♛", BLACK},
-  {32, BISHOP, "♝", BLACK},
-  {33, BISHOP, "♝", BLACK},
-  {34, KNIGHT, "♞", BLACK},
-  {35, KNIGHT, "♞", BLACK},
-  {36, ROOK, "♜", BLACK},
-  {37, ROOK, "♜", BLACK},
-  {38, PAWN, "♟", BLACK},
-  {39, PAWN, "♟", BLACK},
-  {40, PAWN, "♟", BLACK},
-  {41, PAWN, "♟", BLACK},
-  {42, PAWN, "♟", BLACK},
-  {43, PAWN, "♟", BLACK},
-  {44, PAWN, "♟", BLACK},
-  {45, PAWN, "♟", BLACK},
+  {1, KING, "♔", WHITE}, 
+  {2, QUEEN, "♕", WHITE},
+  {3, BISHOP, "♗", WHITE},
+  {4, BISHOP, "♗", WHITE},
+  {5, KNIGHT, "♘", WHITE},
+  {6, KNIGHT, "♘", WHITE},
+  {7, ROOK, "♖", WHITE},
+  {8, ROOK, "♖", WHITE},
+  {9, PAWN, "♙", WHITE},
+  {10, PAWN, "♙", WHITE},
+  {11, PAWN, "♙", WHITE},
+  {12, PAWN, "♙", WHITE},
+  {13, PAWN, "♙", WHITE},
+  {14, PAWN, "♙", WHITE},
+  {15, PAWN, "♙", WHITE},
+  {16, PAWN, "♙", WHITE},
+  {17, KING, "♚", BLACK},
+  {18, QUEEN, "♛", BLACK},
+  {19, BISHOP, "♝", BLACK},
+  {20, BISHOP, "♝", BLACK},
+  {21, KNIGHT, "♞", BLACK},
+  {22, KNIGHT, "♞", BLACK},
+  {23, ROOK, "♜", BLACK},
+  {24, ROOK, "♜", BLACK},
+  {25, PAWN, "♟", BLACK},
+  {26, PAWN, "♟", BLACK},
+  {27, PAWN, "♟", BLACK},
+  {28, PAWN, "♟", BLACK},
+  {29, PAWN, "♟", BLACK},
+  {30, PAWN, "♟", BLACK},
+  {31, PAWN, "♟", BLACK},
+  {32, PAWN, "♟", BLACK},
 };
 
 /* variables */
-int board[CELL_CNT][CELL_CNT] = {
-  {16, 14, 12, 11, 10, 13, 15, 17}, // 1
-  {18, 19, 20, 21, 22, 23, 24, 25},
+int board[ROW_CNT][COL_CNT] = {
+  {23, 21, 19, 18, 17, 20, 22, 24}, 
+  {25, 26, 27, 28, 29, 30, 31, 32},
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},
   {0, 0, 0, 0, 0, 0, 0, 0},
-  {38, 39, 40, 41, 42, 43, 44, 45},
-  {36, 34, 32, 31, 30, 33, 35, 37}, //  8
+  {9, 10, 11, 12, 13, 14, 15, 16},
+  {7, 5, 9, 2, 1, 4, 6, 8}, 
 };
 char _row, _col;
 int row, col;
@@ -82,6 +83,7 @@ char _trow, _tcol;
 int trow, tcol;
 char nl;
 int turn = WHITE;
+char msg[100];
 
 /* functions */ 
 void get_idx(char, char, int*, int*);
@@ -103,10 +105,10 @@ void printBoard();
 int main() {
   while (1) {  
     // choose a piece
-    while (1) {
-      printBoard();
-      printf("message: %s. choose a piece\n", turn == BLACK ? "Black" : "White");
+    printBoard();
+    printf("► %s choose a piece\n", turn == BLACK ? "Black" : "White");
 
+    while (1) {
       // get input 
       scanf("%c%c%c", &_col, &_row, &nl);
       get_idx(_row, _col, &row, &col);
@@ -114,18 +116,18 @@ int main() {
       // validate piece
       int valid = chkpiece();
 
-      if (valid) {
-        break;
+      if (!valid) {
+        printf("► invalid piece. try again\n");
       } else {
-        printf("invalid piece.\n");
+        break;
       }
     }
 
     // choose target
-    while (1) {
-      printBoard();
-      printf("message: [%c%c] choose target or re-select piece\n", _col, _row);
+    printBoard();
+    printf("► [%c%c] choose target or re-select piece\n", _col, _row);
 
+    while (1) {
       // get input
       scanf("%c%c%c", &_tcol, &_trow, &nl);
       get_idx(_trow, _tcol, &trow, &tcol);
@@ -133,15 +135,14 @@ int main() {
       // validate target
       int r = chktarget();
 
-      if (r == 1) { // re-select piece
-        _row = _trow;
-        _col = _tcol;
+      if (r == 0) { 
+        printf("► invalid movement. try again\n");
+      } else if (r == 1) { 
+        printf("► [%c%c] choose target or re-select piece\n", _tcol, _trow);
         row = trow;
         col = tcol;
-      } else if (r == 2) { // select target
+      } else { // 2
         break;
-      } else { // 0 (invalid)
-        printf("invalid movement.\n");
       }
     }
 
@@ -157,7 +158,7 @@ int main() {
       turn = turn == WHITE ? BLACK : WHITE;
     } else {
       printBoard();
-      printf("%s WIN!\n", turn == BLACK ? "Black" : "White");
+      printf("► %s WIN!\n", turn == BLACK ? "Black" : "White");
       break;
     }
   }
@@ -165,14 +166,14 @@ int main() {
 
 // get index
 void get_idx(char _row, char _col, int* row, int* col) {
-  if (_row == '1') *row = 0;
-  if (_row == '2') *row = 1;
-  if (_row == '3') *row = 2;
-  if (_row == '4') *row = 3;
-  if (_row == '5') *row = 4;
-  if (_row == '6') *row = 5;
-  if (_row == '7') *row = 6;
-  if (_row == '8') *row = 7;
+  if (_row == '1') *row = 7;
+  if (_row == '2') *row = 6;
+  if (_row == '3') *row = 5;
+  if (_row == '4') *row = 4;
+  if (_row == '5') *row = 3;
+  if (_row == '6') *row = 2;
+  if (_row == '7') *row = 1;
+  if (_row == '8') *row = 0;
 
   if (_col == 'a') *col = 0;
   if (_col == 'b') *col = 1;
@@ -217,8 +218,8 @@ int chkpiece() {
 int chkend() {
   int end = 1;
 
-  for (int r = 0; r < CELL_CNT; r++) {
-    for (int c = 0; c < CELL_CNT; c++) {
+  for (int r = 0; r < ROW_CNT; r++) {
+    for (int c = 0; c < COL_CNT; c++) {
       int id = board[r][c];
 
       if (id) {
@@ -284,20 +285,6 @@ int pawn() {
   int r = 0;
 
   if (piece.team == 1) {
-    if (row + 1 == trow && col == tcol) {
-      if (board[trow][tcol] == 0) {
-        r = 2;
-      }
-    }
-
-    if (row + 1 == trow && col - 1 == tcol) {
-      r = 2;
-    }
-
-    if (row + 1 == trow && col + 1 == tcol) {
-      r = 2;
-    }
-  } else {
     if (row - 1 == trow && col == tcol) {
       if (board[trow][tcol] == 0) {
         r = 2;
@@ -309,6 +296,20 @@ int pawn() {
     }
 
     if (row - 1 == trow && col + 1 == tcol) {
+      r = 2;
+    }
+  } else {
+    if (row + 1 == trow && col == tcol) {
+      if (board[trow][tcol] == 0) {
+        r = 2;
+      }
+    }
+
+    if (row + 1 == trow && col - 1 == tcol) {
+      r = 2;
+    }
+
+    if (row + 1 == trow && col + 1 == tcol) {
       r = 2;
     }
   }
@@ -386,23 +387,23 @@ int knight() {
   int r = 0;
 
   // up
-  if (board[row + 1][col] == 0) {
-    if (row + 2 == trow && col - 1 == tcol) {
-      r = 2;
-    }
-
-    if (row + 2 == trow && col + 1 == tcol) {
-      r = 2;
-    }
-  }
-
-  // down
   if (board[row - 1][col] == 0) {
     if (row - 2 == trow && col - 1 == tcol) {
       r = 2;
     }
 
     if (row - 2 == trow && col + 1 == tcol) {
+      r = 2;
+    }
+  }
+
+  // down
+  if (board[row + 1][col] == 0) {
+    if (row + 2 == trow && col - 1 == tcol) {
+      r = 2;
+    }
+
+    if (row + 2 == trow && col + 1 == tcol) {
       r = 2;
     }
   }
@@ -439,44 +440,25 @@ int bishop() {
 
   if (abs(tcol - col) == abs(trow - row)) {
     // tl
-    if (tcol - col < 0 && trow - row > 0) {
+    if (tcol - col < 0 && trow - row < 0) {
       int x = col - 1;
-      int y = row + 1;
+      int y = row - 1;
       int tmp = 2;
 
-      while (x > tcol && y < trow) {
+      while (x > tcol && y > trow) {
         if (board[y][x] != 0) {
           tmp = 0;
           break;
         }
 
         x--;
-        y++;
+        y--;
       }
 
       r = tmp;
     }
 
     // tr
-    if (tcol - col > 0 && trow - row > 0) {
-      int x = col + 1;
-      int y = row + 1;
-      int tmp = 2;
-
-      while (x < tcol && y < trow) {
-        if (board[y][x] != 0) {
-          tmp = 0;
-          break;
-        }
-
-        x++;
-        y++;
-      }
-
-      r = tmp;
-    }
-
-    // br
     if (tcol - col > 0 && trow - row < 0) {
       int x = col + 1;
       int y = row - 1;
@@ -495,20 +477,39 @@ int bishop() {
       r = tmp;
     }
 
-    // bl
-    if (tcol - col < 0 && trow - row < 0) {
-      int x = col - 1;
-      int y = row - 1;
+    // br
+    if (tcol - col > 0 && trow - row > 0) {
+      int x = col + 1;
+      int y = row + 1;
       int tmp = 2;
 
-      while (x > tcol && y > trow) {
+      while (x < tcol && y < trow) {
+        if (board[y][x] != 0) {
+          tmp = 0;
+          break;
+        }
+
+        x++;
+        y++;
+      }
+
+      r = tmp;
+    }
+
+    // bl
+    if (tcol - col < 0 && trow - row > 0) {
+      int x = col - 1;
+      int y = row + 1;
+      int tmp = 2;
+
+      while (x > tcol && y < trow) {
         if (board[y][x] != 0) {
           tmp = 0;
           break;
         }
 
         x--;
-        y--;
+        y++;
       }
 
       r = tmp;
@@ -522,21 +523,21 @@ int king() {
   int r = 0;
 
   // up
-  if (row + 1 == trow && col == tcol) r = 2;
-  // down
   if (row - 1 == trow && col == tcol) r = 2;
+  // down
+  if (row + 1 == trow && col == tcol) r = 2;
   // left
   if (row == trow && col - 1 == tcol) r = 2;
   // right
   if (row == trow && col + 1 == tcol) r = 2;
   // tl
-  if (row + 1 == trow && col - 1 == tcol) r = 2;
-  // tr
-  if (row + 1 == trow && col + 1 == tcol) r = 2;
-  // br
-  if (row - 1 == trow && col + 1 == tcol) r = 2;
-  // bl
   if (row - 1 == trow && col - 1 == tcol) r = 2;
+  // tr
+  if (row - 1 == trow && col + 1 == tcol) r = 2;
+  // br
+  if (row + 1 == trow && col + 1 == tcol) r = 2;
+  // bl
+  if (row + 1 == trow && col - 1 == tcol) r = 2;
 
   return r;
 }
@@ -547,10 +548,10 @@ int queen() {
   int r = 0;
 
   // up
-  if (trow < row && col == tcol) {
+  if (trow > row && col == tcol) {
     int tmp = 2;
 
-    for (int r = row - 1; r > trow; r--) {
+    for (int r = row + 1; r < trow; r++) {
       if (board[r][col] != 0) {
         tmp = 0;
         break;
@@ -561,10 +562,10 @@ int queen() {
   }
 
   // down
-  if (trow > row && col == tcol) {
+  if (trow < row && col == tcol) {
     int tmp = 2;
 
-    for (int r = row + 1; r < trow; r++) {
+    for (int r = row - 1; r > trow; r--) {
       if (board[r][col] != 0) {
         tmp = 0;
         break;
@@ -605,44 +606,25 @@ int queen() {
   // diagonal
   if (abs(tcol - col) == abs(trow - row)) {
     // tl
-    if (tcol - col < 0 && trow - row > 0) {
+    if (tcol - col < 0 && trow - row < 0) {
       int x = col - 1;
-      int y = row + 1;
+      int y = row - 1;
       int tmp = 2;
 
-      while (x > tcol && y < trow) {
+      while (x > tcol && y > trow) {
         if (board[y][x] != 0) {
           tmp = 0;
           break;
         }
 
         x--;
-        y++;
+        y--;
       }
 
       r = tmp;
     }
 
     // tr
-    if (tcol - col > 0 && trow - row > 0) {
-      int x = col + 1;
-      int y = row + 1;
-      int tmp = 2;
-
-      while (x < tcol && y < trow) {
-        if (board[y][x] != 0) {
-          tmp = 0;
-          break;
-        }
-
-        x++;
-        y++;
-      }
-
-      r = tmp;
-    }
-
-    // br
     if (tcol - col > 0 && trow - row < 0) {
       int x = col + 1;
       int y = row - 1;
@@ -661,20 +643,39 @@ int queen() {
       r = tmp;
     }
 
-    // bl
-    if (tcol - col < 0 && trow - row < 0) {
-      int x = col - 1;
-      int y = row - 1;
+    // br
+    if (tcol - col > 0 && trow - row > 0) {
+      int x = col + 1;
+      int y = row + 1;
       int tmp = 2;
 
-      while (x > tcol && y > trow) {
+      while (x < tcol && y < trow) {
+        if (board[y][x] != 0) {
+          tmp = 0;
+          break;
+        }
+
+        x++;
+        y++;
+      }
+
+      r = tmp;
+    }
+
+    // bl
+    if (tcol - col < 0 && trow - row > 0) {
+      int x = col - 1;
+      int y = row + 1;
+      int tmp = 2;
+
+      while (x > tcol && y < trow) {
         if (board[y][x] != 0) {
           tmp = 0;
           break;
         }
 
         x--;
-        y--;
+        y++;
       }
 
       r = tmp;
@@ -686,12 +687,12 @@ int queen() {
 
 // draw board
 void printBoard() {
-  printf("=================\n");
+  printf("\n");
 
-  for (int r = 7; r >= 0; r--) {
-    printf("%d ", r + 1);
+  for (int r = 0; r < ROW_CNT; r++) {
+    printf("%d ", ROW_CNT - r);
 
-    for (int c = 0; c < CELL_CNT; c++) {
+    for (int c = 0; c < COL_CNT; c++) {
       if (board[r][c] != 0) {
         for (int i = 0; i < PIECE_CNT; i++) {
           if (PIECES[i].id == board[r][c]) {
@@ -705,6 +706,5 @@ void printBoard() {
     printf("\n");
   }
 
-  printf("  a b c d e f g h\n");
-  printf("=================\n");
+  printf("  a b c d e f g h\n\n");
 }

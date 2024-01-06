@@ -7,9 +7,9 @@
 
 int main() {
 
-  while (1) {
-    int x = 2; // block scope
-  }
+  char msg[100];
+  // you can't assign values to array
+  strcpy(msg, "hello");
 
-  // printf("%d\n", x);
+  printf("%d\n", strlen(msg) > 0);
 }
