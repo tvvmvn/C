@@ -71,6 +71,7 @@ int main() {
 
   1 strcat
   2 strcmp
+  3 strcpy
 */
 
 
@@ -95,6 +96,16 @@ int main() {
   // > 4
 }
 
+// stcpy: copy string
+
+int main() {
+  char foo[10];
+
+  // foo = "bar" (error, you cannot assign value to array)
+  strcpy(foo, "bar");
+
+  printf("%s\n", foo); // bar
+}
 
 /*
   escape character

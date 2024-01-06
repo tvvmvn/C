@@ -6,10 +6,9 @@
 
 
 int main() {
+  char foo[10];
 
-  char msg[100];
-  // you can't assign values to array
-  strcpy(msg, "hello");
+  strcpy(foo, "bar");
 
-  printf("%d\n", strlen(msg) > 0);
+  printf("%s\n", foo); // bar
 }
