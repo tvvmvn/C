@@ -7,10 +7,9 @@
 
 int main() {
 
-  int x = -2;
+  while (1) {
+    int x = 2; // block scope
+  }
 
-  int y = abs(x);
-
-  printf("%d", y); // 2
-  printf("%d", y == 2); // 1
+  // printf("%d\n", x);
 }

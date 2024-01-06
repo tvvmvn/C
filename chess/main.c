@@ -7,13 +7,22 @@
 /* enums */
 enum Team {
   WHITE = 1,
-  BLACK = 2
+  BLACK
+};
+
+enum Pieces {
+  KING,
+  QUEEN,
+  BISHOP,
+  KNIGHT,
+  ROOK,
+  PAWN
 };
 
 /* struct */
 struct Piece {
   int id;
-  char name[10];
+  enum Pieces name;
   char symbol[4];
   enum Team team; // 1 or 2
 };
@@ -22,47 +31,41 @@ struct Piece {
 const int CELL_CNT = 8;
 const int PIECE_CNT = 32;
 const struct Piece PIECES[PIECE_CNT] = {
-  {10, "kg", "♔", WHITE}, // user 1
-  {11, "qn", "♕", WHITE},
-  {12, "bs", "♗", WHITE},
-  {13, "bs", "♗", WHITE},
-  {14, "kn", "♘", WHITE},
-  {15, "kn", "♘", WHITE},
-  {16, "rk", "♖", WHITE},
-  {17, "rk", "♖", WHITE},
-  {18, "pn", "♙", WHITE},
-  {19, "pn", "♙", WHITE},
-  {20, "pn", "♙", WHITE},
-  {21, "pn", "♙", WHITE},
-  {22, "pn", "♙", WHITE},
-  {23, "pn", "♙", WHITE},
-  {24, "pn", "♙", WHITE},
-  {25, "pn", "♙", WHITE},
-  {30, "kg", "♚", BLACK}, // user 2
-  {31, "qn", "♛", BLACK},
-  {32, "bs", "♝", BLACK},
-  {33, "bs", "♝", BLACK},
-  {34, "kn", "♞", BLACK},
-  {35, "kn", "♞", BLACK},
-  {36, "rk", "♜", BLACK},
-  {37, "rk", "♜", BLACK},
-  {38, "pn", "♟", BLACK},
-  {39, "pn", "♟", BLACK},
-  {40, "pn", "♟", BLACK},
-  {41, "pn", "♟", BLACK},
-  {42, "pn", "♟", BLACK},
-  {43, "pn", "♟", BLACK},
-  {44, "pn", "♟", BLACK},
-  {45, "pn", "♟", BLACK},
+  {10, KING, "♔", WHITE}, // user 1
+  {11, QUEEN, "♕", WHITE},
+  {12, BISHOP, "♗", WHITE},
+  {13, BISHOP, "♗", WHITE},
+  {14, KNIGHT, "♘", WHITE},
+  {15, KNIGHT, "♘", WHITE},
+  {16, ROOK, "♖", WHITE},
+  {17, ROOK, "♖", WHITE},
+  {18, PAWN, "♙", WHITE},
+  {19, PAWN, "♙", WHITE},
+  {20, PAWN, "♙", WHITE},
+  {21, PAWN, "♙", WHITE},
+  {22, PAWN, "♙", WHITE},
+  {23, PAWN, "♙", WHITE},
+  {24, PAWN, "♙", WHITE},
+  {25, PAWN, "♙", WHITE},
+  {30, KING, "♚", BLACK}, // user 2
+  {31, QUEEN, "♛", BLACK},
+  {32, BISHOP, "♝", BLACK},
+  {33, BISHOP, "♝", BLACK},
+  {34, KNIGHT, "♞", BLACK},
+  {35, KNIGHT, "♞", BLACK},
+  {36, ROOK, "♜", BLACK},
+  {37, ROOK, "♜", BLACK},
+  {38, PAWN, "♟", BLACK},
+  {39, PAWN, "♟", BLACK},
+  {40, PAWN, "♟", BLACK},
+  {41, PAWN, "♟", BLACK},
+  {42, PAWN, "♟", BLACK},
+  {43, PAWN, "♟", BLACK},
+  {44, PAWN, "♟", BLACK},
+  {45, PAWN, "♟", BLACK},
 };
 
 /* variables */
-char _row, _col;
-int row, col;
-char _trow, _tcol;
-int trow, tcol;
-char nl;
-int turn = WHITE;
 int board[CELL_CNT][CELL_CNT] = {
   {16, 14, 12, 11, 10, 13, 15, 17}, // 1
   {18, 19, 20, 21, 22, 23, 24, 25},
@@ -73,10 +76,16 @@ int board[CELL_CNT][CELL_CNT] = {
   {38, 39, 40, 41, 42, 43, 44, 45},
   {36, 34, 32, 31, 30, 33, 35, 37}, //  8
 };
+char _row, _col;
+int row, col;
+char _trow, _tcol;
+int trow, tcol;
+char nl;
+int turn = WHITE;
 
 /* functions */ 
-void get_idx(char _row, char _col, int* row, int* col);
-struct Piece getpiece(int id);
+void get_idx(char, char, int*, int*);
+struct Piece getpiece(int);
 int chkend();
 int chkpiece();
 int chktarget();
@@ -175,7 +184,7 @@ void get_idx(char _row, char _col, int* row, int* col) {
   if (_col == 'h') *col = 7;
 }
 
-// get index by id
+// get piece by id
 struct Piece getpiece(int id) {
   struct Piece piece;
 
@@ -242,27 +251,27 @@ int chktarget() {
   }
 
   // validate target
-  if (strcmp(piece.name, "pn") == 0) {
+  if (piece.name == PAWN) {
     r = pawn();
   }
 
-  if (strcmp(piece.name, "rk") == 0) {
+  if (piece.name == ROOK) {
     r = rook();
   }
 
-  if (strcmp(piece.name, "kn") == 0) {
+  if (piece.name == KNIGHT) {
     r = knight();
   }
 
-  if (strcmp(piece.name, "bs") == 0) {
+  if (piece.name == BISHOP) {
     r = bishop();
   }
 
-  if (strcmp(piece.name, "kg") == 0) {
+  if (piece.name == KING) {
     r = king();
   }
 
-  if (strcmp(piece.name, "qn") == 0) {
+  if (piece.name == QUEEN) {
     r = queen();
   }
 
@@ -270,9 +279,9 @@ int chktarget() {
 }
 
 int pawn() {
-  int r = 0;
   int pieceId = board[row][col];
   struct Piece piece = getpiece(pieceId);
+  int r = 0;
 
   if (piece.team == 1) {
     if (row + 1 == trow && col == tcol) {
@@ -308,9 +317,9 @@ int pawn() {
 }
 
 int rook() {
-  int r = 0;
   int pieceId = board[row][col];
   struct Piece piece = getpiece(pieceId);
+  int r = 0;
 
   // up
   if (trow < row && col == tcol) {
@@ -372,9 +381,9 @@ int rook() {
 }
 
 int knight() {
-  int r = 0;
   int pieceId = board[row][col];
   struct Piece piece = getpiece(pieceId);
+  int r = 0;
 
   // up
   if (board[row + 1][col] == 0) {
@@ -675,6 +684,7 @@ int queen() {
   return r;
 }
 
+// draw board
 void printBoard() {
   printf("=================\n");
 
