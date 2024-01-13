@@ -20,6 +20,12 @@ int main() {
   printf("%s\n", foo);
 }
 
+int main() {
+  char foo[] = {'b', 'a', 'r', '\0'};
+
+  printf("%s\n", foo);
+}
+
 
 /*
   access each character

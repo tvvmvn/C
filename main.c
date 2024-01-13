@@ -4,11 +4,22 @@
 #include <stdlib.h>
 #include <time.h>
 
+struct Piece {
+  int id;
+  int mcount;
+};
 
 int main() {
-  char foo[10];
+  struct Piece pieces[3] = {
+    {0, 0},
+    {1, 0},
+    {2, 0},
+  };
 
-  strcpy(foo, "bar");
+  struct Piece p = {4, 0}; // pointer
 
-  printf("%s\n", foo); // bar
+  pieces[2] = p;
+
+  printf("%d\n", pieces[2].id);
 }
+

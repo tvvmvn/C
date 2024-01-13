@@ -68,3 +68,22 @@ int main() {
     3. KONA from Hyundai - 3000
   */
 }
+
+
+/*
+  struct copy
+*/
+
+struct Piece {
+  int id;
+  int mcount;
+};
+
+int main() {
+  struct Piece p1 = {1, 0};
+  struct Piece p2 = p1; // copy p1
+
+  p2.mcount++;
+
+  printf("%d\n", p1.mcount); // 0
+}
