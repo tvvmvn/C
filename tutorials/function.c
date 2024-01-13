@@ -33,6 +33,23 @@ int add(int x, int y) {
   return x + y;
 }
 
+/*
+  array argument
+*/
+
+void f(int arr[3]) {
+  for (int i = 0; i < 3; i++) {
+    printf("%d\n", arr[i]);
+  }
+}
+
+int main() {
+  int arr[3] = {10, 20, 30};
+
+  f(arr);
+  // f({10, 20, 30}); // expected an expression
+} 
+
 
 /*
   References
