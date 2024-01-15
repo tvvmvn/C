@@ -4,10 +4,13 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main() {
-  char c = 'j';
-  char *p = &c;
+struct Piece {
+  int name;
+  int team;
+};
 
-  printf("%c\n", c); // j
-  printf("%p\n", p); // 0x7ff7bfeff32f
+int main() {
+  struct Piece piece;
+
+  printf("%d %d\n", piece.name, piece.team);
 }
