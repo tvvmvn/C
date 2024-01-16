@@ -53,6 +53,10 @@ int main() {
   push and pop
 
   Stack
+
+  You can't resize statically-allocated arrays in C. 
+  Instead, you just keep track of a size variable and 
+  adjust it accordingly and only print what you need to.
 */
 
 #define length 5

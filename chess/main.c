@@ -27,6 +27,7 @@ struct Piece {
   enum Team team; 
   char symbol[4];
   char crds[2];
+  char legal[64][2];
 };
 
 /* constants */
@@ -75,6 +76,7 @@ enum Team turn = WHITE;
 
 /* functions declaration */
 
+void move();
 void printboard();
 
 /* run the game */
@@ -85,16 +87,31 @@ int main() {
 
 /* function definitions */
 
-// define legal movement
-void movement() {
+char pawn() {
+  
+}
+
+void getlegal() {
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].name == PAWN) {
+      char legal[64][2] = pawn(pieces[i].crds, pieces[i].team);
+      
+      // pieces[i].legal = legal;
+    }
+  }
 }
 
 void move() {
   // We will move pawn on (6, 0) to (5, 0).
+  char input[2] = "a7";
+
   int idx = -1;
 
   for (int i = 0; i < PIECE_CNT; i++) {
-    if (pieces[i].crds[0] == 6 && pieces[i].crds[1] == 0) {
+    if (
+        input[0] == pieces[i].crds[0] 
+        && input[1] == pieces[i].crds[1]
+      ) {
       idx = i;
     }
   }
@@ -102,9 +119,12 @@ void move() {
   if (idx > -1) {
     if (pieces[idx].team == turn) {
 
+      char target[2] = "a6";
+
       // check legal move first
-      pieces[idx].crds[0] = 5;
-      pieces[idx].crds[1] = 0;
+      
+      pieces[idx].crds[0] = target[0];
+      pieces[idx].crds[1] = target[1];
     } else {
       // err: you choose opposite piece
     }
@@ -113,29 +133,53 @@ void move() {
   }
 }
 
+char rows[] = "12345678";
+char cols[] = "abcdefgh";
+
 void printboard() {
+  // top space
+  printf("\n");
+
+  // rows
   for (int r = 0; r < ROW_CNT; r++) {
+    printf("%c", rows[r]);
+
     for (int c = 0; c < COL_CNT; c++) {
       int idx = -1;
 
       for (int i = 0; i < PIECE_CNT; i++) {
-        if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+        if (
+          pieces[i].crds[0] == cols[c] 
+          && pieces[i].crds[1] == rows[r]
+        ) {
           idx = i;
           break;
         }
       }
       
       if (idx > -1) {
-        printf("%s ", pieces[idx].symbol);
+        printf(" %s", pieces[idx].symbol);
       } else {
         if ((r + c) % 2 == 0) {
-          printf("◦ ");
+          printf(" ◦");
         } else {
-          printf("• ");
+          printf(" •");
         }
       }
     }
 
     printf("\n");
   }
+
+  // last row
+  printf(" ");
+
+  for (int c = 0; c < COL_CNT; c++) {
+    printf(" %c", cols[c]);
+  }
+
+  printf("\n");
+
+  // bottom space
+  printf("\n");
 }
