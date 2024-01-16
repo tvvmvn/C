@@ -4,37 +4,52 @@
 #include <stdlib.h>
 #include <time.h>
 
+enum Pieces {
+  KING,
+  QUEEN,
+  BISHOP,
+  KNIGHT,
+  ROOK,
+  PAWN
+};
+
+struct Piece {
+  int name;
+  char crds[2];
+  int legal[8][8];
+};
+
+/* contants */
+const char rows[] = "12345678";
+const char cols[] = "abcdefgh";
+
+/* variables */
+
+/* functions */
 
 int main() {
-  struct Piece pieces[32] = {};
 
-  // a pawn in a7 now and it can move to a5, a6
-  char rows[] = "12345678";
-  char cols[] = "abcdefgh";
+  struct Piece pieces[1] = {
+    {PAWN, {6, 0}}
+  };
 
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      for (int i = 0; i < 32; i++) {
-        if (
-          pieces[i].crds[0] == cols[r]
-          && pieces[i].crds[1] == rows[c]
-        ) {
+  for (int i = 0; i < 1; i++) {
+    if (pieces[i].name == PAWN) {      
 
-          // {r, c} is current position.
-          
-          if (pieces[i].name == PAWN) {
-            // 1 step
-            rows[r - 1];
-            cols[c];
-
-            // 2 step
-            rows[r - 2];
-            cols[c];
-
-            pieces[i].legal
+      for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) { // (5, 0) is takeable.
+          if (r == pieces[i].crds[0] - 1 && c == pieces[i].crds[1]) {
+            pieces[i].legal[r][c] = 1;
           }
         }
       }
     }
+  }
+
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      printf("%d ", pieces[0].legal[r][c]);
+    }
+    printf("\n");
   }
 }
