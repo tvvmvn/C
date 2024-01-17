@@ -35,40 +35,39 @@ struct Piece pieces[3] = {
 /* functions */
 
 void pawnmv(struct Piece* pawn) {
-  if (r == pawn->crds[0] - 1 && c == pawn->crds[1]) {
-    pawn->legal[r][c] = 1;
-  }
+  int r = pawn->crds[0];
+  int c = pawn->crds[1];
+
+  pawn->legal[r - 1][c] = 1;
 }
 
 void knightmv(struct Piece* knight) {
-  if (r == knight->crds[0] - 2 && c == knight->crds[1] - 1) {
-    knight->legal[r][c] = 1;
-  }
+  int r = knight->crds[0];
+  int c = knight->crds[1];
 
-  if (r == knight->crds[0] - 2 && c == knight->crds[1] + 1) {
-    knight->legal[r][c] = 1;
-  }
+  // top
+  knight->legal[r - 2][c - 1] = 1;
+  knight->legal[r - 2][c + 1] = 1;
 }
 
-// function to tell that check is takeable or not
+/*
+  3 check state code
+  100 empty, 200 our forces, 300 opposite 
+*/
 
 void rookmv(struct Piece* rook) {
   // up
   for (int r = rook->crds[0]; r >= 0; r--) {
-    if () { // there is a piece
-      break;
-    }
-    rook->legal[r][rook->crds[1]] = 1;
-  }
-}
+    int c = rook->crds[1];
 
-void bishopmv(struct Piece* bishop, int r, int c) {
-  if (bishop->crds[1] == c) {
-    bishop->legal[r][c] = 1;
+    rook->legal[r][c] = 1;
   }
 
-  if (bishop->crds[0] == r) {
-    bishop->legal[r][c] = 1;
+  // left
+  for (int c = rook->crds[1]; c >= 0; c--) {
+    int r = rook->crds[0];
+    
+    rook->legal[r][c] = 1;
   }
 }
 
