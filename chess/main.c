@@ -6,11 +6,6 @@
 
 /* enums */
 
-enum Team {
-  WHITE = 1,
-  BLACK
-};
-
 enum Pieces {
   KING,
   QUEEN,
@@ -20,138 +15,238 @@ enum Pieces {
   PAWN
 };
 
+enum Team {
+  WHITE = 1,
+  BLACK
+};
+
 /* struct */
 
 struct Piece {
   enum Pieces name;
-  enum Team team; 
+  enum Team team;
   char symbol[4];
-  char crds[2];
-  char legal[64][2];
+  int crds[2];
+  int legal[8][8];
 };
 
-/* constants */
+/* contants */
 
-const int ROW_CNT = 8;
-const int COL_CNT = 8;
 const int PIECE_CNT = 32;
 
 /* variables */
 
+char rows[] = "12345678";
+char cols[] = "abcdefgh";
+struct Piece* piece;
+
 struct Piece pieces[PIECE_CNT] = {
-  {KING, WHITE, "♔", "e8"},
-  {QUEEN, WHITE, "♕", "d8"},
-  {BISHOP, WHITE, "♗", "c8"},
-  {BISHOP, WHITE, "♗", "f8"},
-  {KNIGHT, WHITE, "♘", "b8"},
-  {KNIGHT, WHITE, "♘", "g8"},
-  {ROOK, WHITE, "♖", "a8"},
-  {ROOK, WHITE, "♖", "h8"},
-  {PAWN, WHITE, "♙", "a7"},
-  {PAWN, WHITE, "♙", "b7"},
-  {PAWN, WHITE, "♙", "c7"},
-  {PAWN, WHITE, "♙", "d7"},
-  {PAWN, WHITE, "♙", "e7"},
-  {PAWN, WHITE, "♙", "f7"},
-  {PAWN, WHITE, "♙", "g7"},
-  {PAWN, WHITE, "♙", "h7"},
-  {KING, BLACK, "♚", "e1"},
-  {QUEEN, BLACK, "♛", "d1"},
-  {BISHOP, BLACK, "♝", "c1"},
-  {BISHOP, BLACK, "♝", "f1"},
-  {KNIGHT, BLACK, "♞", "b1"},
-  {KNIGHT, BLACK, "♞", "g1"},
-  {ROOK, BLACK, "♜", "a1"},
-  {ROOK, BLACK, "♜", "h1"},
-  {PAWN, BLACK, "♟", "a2"},
-  {PAWN, BLACK, "♟", "b2"},
-  {PAWN, BLACK, "♟", "c2"},
-  {PAWN, BLACK, "♟", "d2"},
-  {PAWN, BLACK, "♟", "e2"},
-  {PAWN, BLACK, "♟", "f2"},
-  {PAWN, BLACK, "♟", "g2"},
-  {PAWN, BLACK, "♟", "h2"},
+  {KING, WHITE, "♔", {7, 4}},
+  {QUEEN, WHITE, "♕", {7, 3}},
+  {BISHOP, WHITE, "♗", {7, 2}},
+  {BISHOP, WHITE, "♗", {7, 5}},
+  {KNIGHT, WHITE, "♘", {7, 1}},
+  {KNIGHT, WHITE, "♘", {7, 6}},
+  {ROOK, WHITE, "♖", {7, 0}},
+  {ROOK, WHITE, "♖", {7, 7}},
+  {PAWN, WHITE, "♙", {6, 0}},
+  {PAWN, WHITE, "♙", {6, 1}},
+  {PAWN, WHITE, "♙", {6, 2}},
+  {PAWN, WHITE, "♙", {6, 3}},
+  {PAWN, WHITE, "♙", {6, 4}},
+  {PAWN, WHITE, "♙", {6, 5}},
+  {PAWN, WHITE, "♙", {6, 6}},
+  {PAWN, WHITE, "♙", {6, 7}},
+  {KING, BLACK, "♚", {0, 4}},
+  {QUEEN, BLACK, "♛", {0, 3}},
+  {BISHOP, BLACK, "♝", {0, 2}},
+  {BISHOP, BLACK, "♝", {0, 5}},
+  {KNIGHT, BLACK, "♞", {0, 1}},
+  {KNIGHT, BLACK, "♞", {0, 6}},
+  {ROOK, BLACK, "♜", {0, 0}},
+  {ROOK, BLACK, "♜", {0, 7}},
+  {PAWN, BLACK, "♟", {1, 0}},
+  {PAWN, BLACK, "♟", {1, 1}},
+  {PAWN, BLACK, "♟", {1, 2}},
+  {PAWN, BLACK, "♟", {1, 3}},
+  {PAWN, BLACK, "♟", {1, 4}},
+  {PAWN, BLACK, "♟", {1, 5}},
+  {PAWN, BLACK, "♟", {1, 6}},
+  {PAWN, BLACK, "♟", {1, 7}},
 };
+
 enum Team turn = WHITE;
 
-/* functions declaration */
+/* function declarations */
 
-void move();
+void setlegal();
+int chkstate(enum Team, int, int);
+void pawnmv(struct Piece*);
+void knightmv(struct Piece*);
+void rookmv(struct Piece*);
 void printboard();
 
 /* run the game */
 
-int main() {  
+int main() {
+  setlegal();
+
+  printboard();
+
+  // we move pawn from (6, 0) to (5, 0).
+  int r = 6;
+  int c = 0;
+
+  // valid check
+  int valid = 0;
+
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+      if (pieces[i].team == turn) {
+        piece = &pieces[i];
+        valid = 1;
+      }
+    }
+  }
+
+  // move
+  if (valid) {
+    if (piece->legal[5][0] == 1) {
+      piece->crds[0] = 5;
+      piece->crds[1] = 0;
+    } else {
+      printf("invalid!\n");
+    }
+  }
+
   printboard();
 }
 
 /* function definitions */
 
-char pawn() {
-  
-}
-
-void getlegal() {
-  for (int i = 0; i < PIECE_CNT; i++) {
+void setlegal() {
+  for (int i = 0; i < PIECE_CNT; i++) {  
     if (pieces[i].name == PAWN) {
-      char legal[64][2] = pawn(pieces[i].crds, pieces[i].team);
-      
-      // pieces[i].legal = legal;
+      pawnmv(&pieces[i]);
+    } else if (pieces[i].name == KNIGHT) {
+      knightmv(&pieces[i]);
+    } else if (pieces[i].name == ROOK) {
+      rookmv(&pieces[i]);
     }
   }
+  
+  // for (int r = 0; r < 8; r++) {
+  //   for (int c = 0; c < 8; c++) {
+  //     printf("%d ", pieces[15].legal[r][c]);
+  //   }
+  //   printf("\n");
+  // }
 }
 
-void move() {
-  // We will move pawn on (6, 0) to (5, 0).
-  char input[2] = "a7";
-
-  int idx = -1;
+int chkstate(enum Team team, int r, int c) {
+  int state = 0;
 
   for (int i = 0; i < PIECE_CNT; i++) {
-    if (
-        input[0] == pieces[i].crds[0] 
-        && input[1] == pieces[i].crds[1]
-      ) {
-      idx = i;
+    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+      if (pieces[i].team == team) {
+        state = 1;
+      } else {
+        state = -1;
+      }
     }
   }
 
-  if (idx > -1) {
-    if (pieces[idx].team == turn) {
+  return state;
+}
 
-      char target[2] = "a6";
+void pawnmv(struct Piece* pawn) {
+  int r = pawn->crds[0];
+  int c = pawn->crds[1];
 
-      // check legal move first
-      
-      pieces[idx].crds[0] = target[0];
-      pieces[idx].crds[1] = target[1];
-    } else {
-      // err: you choose opposite piece
-    }
-  } else {
-    // err: no piece on that crds.
+  // WHITE
+  // up
+  if (chkstate(pawn->team, r - 1, c) == 0) {
+    pawn->legal[r - 1][c] = 1;
+  }
+
+  // top-left
+  if (chkstate(pawn->team, r - 1, c - 1) == -1) {
+    pawn->legal[r - 1][c - 1] = 1;
+  }
+
+  // top-right
+  if (chkstate(pawn->team, r - 1, c + 1) == -1) {
+    pawn->legal[r - 1][c + 1] = 1;
+  }
+
+  // BLACK
+}
+
+void knightmv(struct Piece* knight) {
+  int r = knight->crds[0];
+  int c = knight->crds[1];
+
+  // top
+  if (chkstate(knight->team, r - 2, c - 1) <= 0) {
+    knight->legal[r - 2][c - 1] = 1;
+  }
+
+  if (chkstate(knight->team, r - 2, c + 1) <= 0) {
+    knight->legal[r - 2][c + 1] = 1;
   }
 }
 
-char rows[] = "12345678";
-char cols[] = "abcdefgh";
+void rookmv(struct Piece* rook) {
+  // up
+  for (int r = rook->crds[0] - 1; r >= 0; r--) {
+    int c = rook->crds[1];
+
+    if (chkstate(rook->team, r, c) == -1) {
+      rook->legal[r][c] = 1;
+      break;
+    }
+    
+    if (chkstate(rook->team, r, c) == 1) {
+      break;
+    }
+
+    if (chkstate(rook->team, r, c) == 0) {
+      rook->legal[r][c] = 1;
+    }
+  }
+
+  // left
+  for (int c = rook->crds[1] - 1; c >= 0; c--) {
+    int r = rook->crds[0];
+
+    if (chkstate(rook->team, r, c) == -1) {
+      rook->legal[r][c] = 1;
+      break;
+    }
+    
+    if (chkstate(rook->team, r, c) == 1) {
+      break;
+    }
+
+    if (chkstate(rook->team, r, c) == 0) {
+      rook->legal[r][c] = 1;
+    }
+  }
+}
 
 void printboard() {
   // top space
   printf("\n");
 
   // rows
-  for (int r = 0; r < ROW_CNT; r++) {
+  for (int r = 0; r < strlen(rows); r++) {
     printf("%c", rows[r]);
 
-    for (int c = 0; c < COL_CNT; c++) {
+    for (int c = 0; c < strlen(cols); c++) {
       int idx = -1;
 
       for (int i = 0; i < PIECE_CNT; i++) {
-        if (
-          pieces[i].crds[0] == cols[c] 
-          && pieces[i].crds[1] == rows[r]
-        ) {
+        if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
           idx = i;
           break;
         }
@@ -174,7 +269,7 @@ void printboard() {
   // last row
   printf(" ");
 
-  for (int c = 0; c < COL_CNT; c++) {
+  for (int c = 0; c < strlen(cols); c++) {
     printf(" %c", cols[c]);
   }
 

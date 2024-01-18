@@ -50,3 +50,19 @@ int main() {
     printf("%p\n", gen + i);
     // > e.g) a -> e -> 2
 }
+
+/*
+  pointer and struct
+*/
+
+struct Piece {
+  int id;
+  char name[10];
+};
+
+int main() {
+  struct Piece piece = {1, "pawn"};
+  struct Piece* ptr = &piece;
+
+  printf("%s\n", ptr->name); // pawn
+}
