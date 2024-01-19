@@ -5,17 +5,24 @@
 #include <time.h>
 
 struct Piece {
-  int id; // 4
-  char name[10]; // 11
+  int id;
+  int legal[8][8];
 };
 
 int main() {
-  struct Piece piece;
+  // struct Piece piece;
+  struct Piece pieces[1] = {
+    {1}
+  };
 
-  printf("%lu\n", sizeof(piece)); // 16
-  printf("%lu\n", sizeof(piece.id)); // 4
-  printf("%lu\n", sizeof(piece.name)); // 10
-  printf("%lu\n", strlen(piece.name)); // 2
-  printf("%d\n", piece.id); // random integer
-  printf("%s\n", piece.name); // xf8xf7
+  struct Piece wk = pieces[0];
+
+  wk.legal[6][0] = 1;
+
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      printf("%d", wk.legal[r][c]);
+    }
+    printf("\n");
+  }
 }

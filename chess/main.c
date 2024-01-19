@@ -94,6 +94,7 @@ int main() {
   printboard();
 
   // we move pawn from (6, 0) to (5, 0).
+
   int r = 6;
   int c = 0;
 
@@ -111,7 +112,10 @@ int main() {
 
   // move
   if (valid) {
-    if (piece->legal[5][0] == 1) {
+    int r = 5;
+    int c = 0;
+
+    if (piece->legal[r][c] == 1) {
       piece->crds[0] = 5;
       piece->crds[1] = 0;
     } else {
@@ -124,6 +128,74 @@ int main() {
 
 /* function definitions */
 
+// pawn 2 step forward
+void pawn2step() {
+  // user try 2 step forward.
+
+  // if it is pawn's first movement
+  if (pawn.mcount < 1) {
+    // pawn moved 2 step forward.
+
+    // then increase mcount.
+    pawn.mcount++;
+  }
+};
+
+// special rules - en passant, castling, promotion
+void en_passant() {};
+
+void castling() {};
+
+void promotion() {
+  // WHITE promotion
+
+  // pawn reaches first row.
+  if (pawn.crds[0] == 0) {
+    printf("choose piece to promote: queen, bishop, knight and king.\n");
+  }
+
+  // user chose queen.
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      
+    }
+  }
+};
+
+// check checkmate
+void chkend() {
+  // WHITE checkmate first, copy white King's legal
+  struct Piece wk = pieces[0];
+
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].team == BLACK) {
+      for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) {
+          // in check that king's can take,
+          if (wk.legal[r][c] == 1) {
+            // if opponent piece could take there
+            if (wk.legal[r][c] == pieces[i].legal[r][c]) {
+              wk.legal[r][c] = 0; // remove that check.
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // if king has check to take, game goes on!
+  int checkmate = 1;
+
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      if (wk.legal[r][c] == 1) {
+        checkmate = 0;
+      }
+    }
+  }
+}
+
+// set legal
 void setlegal() {
   for (int i = 0; i < PIECE_CNT; i++) {  
     if (pieces[i].name == PAWN) {
@@ -143,6 +215,7 @@ void setlegal() {
   // }
 }
 
+// checkstate - empty, own or opponent piece
 int chkstate(enum Team team, int r, int c) {
   int state = 0;
 
@@ -159,6 +232,7 @@ int chkstate(enum Team team, int r, int c) {
   return state;
 }
 
+// define movement of each piece.
 void pawnmv(struct Piece* pawn) {
   int r = pawn->crds[0];
   int c = pawn->crds[1];
@@ -234,6 +308,7 @@ void rookmv(struct Piece* rook) {
   }
 }
 
+// print board
 void printboard() {
   // top space
   printf("\n");
