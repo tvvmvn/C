@@ -128,6 +128,9 @@ int main() {
 
 /* function definitions */
 
+// get piece by crds - returns *piece or NULL
+struct Piece getpiece() {}
+
 // pawn 2 step forward
 void pawn2step() {
   // user try 2 step forward.
@@ -144,7 +147,28 @@ void pawn2step() {
 // special rules - en passant, castling, promotion
 void en_passant() {};
 
-void castling() {};
+void castling() {
+  // WHITE castling
+
+  // if user choose king then choose rook 
+  if (piece == king && target == pawn) {};
+
+  // ask user like "would you do castling?"
+  printf("castling or not");
+
+  // if user accept it, there are 2 options - left/right rook.
+
+  // 1 exchange king with right rook
+  if (king.mcount < 1 && rook.mcount < 1) {
+    if (getpiece(7, 5) == NULL && getpiece(7, 6) == NULL) {
+      // ok
+      king.crds[1] += 2;
+      rook.crds[1] -= 2;
+    }
+  }
+
+  // 2 exchange king with left rook
+};
 
 void promotion() {
   // WHITE promotion
@@ -155,11 +179,16 @@ void promotion() {
   }
 
   // user chose queen.
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].crds == pawn.crds) {
+      struct Piece piece = {QUEEN, ..}; // queen
+
+      // change pawn to queen.
+      pieces[i] = queen;
     }
   }
+
+  // then opposite's turn
 };
 
 // check checkmate

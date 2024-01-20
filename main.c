@@ -4,25 +4,29 @@
 #include <stdlib.h>
 #include <time.h>
 
-struct Piece {
+struct S {
   int id;
-  int legal[8][8];
+};
+
+struct S ls[] = {{1}, {2}, {3}};
+
+struct S* f(int id) {
+  for (int i = 0; i < 3; i++) {
+    if (ls[i].id == id) {
+      return &ls[i];
+    }
+  } 
+
+  // NULL pointer: pointer does not point to anything!
+  return NULL;
 };
 
 int main() {
-  // struct Piece piece;
-  struct Piece pieces[1] = {
-    {1}
-  };
+  struct S *s = f(1);
 
-  struct Piece wk = pieces[0];
-
-  wk.legal[6][0] = 1;
-
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      printf("%d", wk.legal[r][c]);
-    }
-    printf("\n");
+  if (s != NULL) {
+    printf("%d\n", s->id);
+  } else {
+    printf("no piece: %p\n", s);
   }
 }
