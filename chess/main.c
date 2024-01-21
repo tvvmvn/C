@@ -145,7 +145,33 @@ void pawn2step() {
 };
 
 // special rules - en passant, castling, promotion
-void en_passant() {};
+void en_passant() {
+  // WHITE en passant
+
+  // user is trying to move pawn for the first time.
+  if (pawn.mcount < 1) {
+    // moves pawn 2 step forward.
+  }
+
+  // if pawn has moved 2 stop forward
+  if (previous_rows + 2 == pawn.crds[0]) { 
+    activated_check = "b3";
+    gcount = 89; // save game count 
+    prev_count = gcount;
+  }
+
+  // opposite turn, so
+  gcount++;
+
+  // opposite pawn just after activated check
+  if (prev_gcount + 1 == gcount) {
+    if (pawn.crds == "b3") {
+      // remove opposite pawn from board.
+    }
+  }
+
+  // game goes on..
+};
 
 void castling() {
   // WHITE castling
