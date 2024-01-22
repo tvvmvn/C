@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* enums */
-
+// chess pieces
 enum Pieces {
   KING,
   QUEEN,
@@ -15,13 +14,13 @@ enum Pieces {
   PAWN
 };
 
+// 2 team - black and white
 enum Team {
   WHITE = 1,
   BLACK
 };
 
-/* struct */
-
+// piece template
 struct Piece {
   enum Pieces name;
   enum Team team;
@@ -30,16 +29,18 @@ struct Piece {
   int legal[8][8];
 };
 
-/* contants */
-
+// total count of pieces 
 const int PIECE_CNT = 32;
 
-/* variables */
 
+// rows and cols
 char rows[] = "12345678";
 char cols[] = "abcdefgh";
+
+// points to a piece
 struct Piece* piece;
 
+// 32 pieces - 16 white, 16 black
 struct Piece pieces[PIECE_CNT] = {
   {KING, WHITE, "♔", {7, 4}},
   {QUEEN, WHITE, "♕", {7, 3}},
@@ -75,64 +76,121 @@ struct Piece pieces[PIECE_CNT] = {
   {PAWN, BLACK, "♟", {1, 7}},
 };
 
+// White always starts first.
 enum Team turn = WHITE;
 
-/* function declarations */
+/*
+  function declarations.
+  .. 
+*/
 
+// basic flow
+void choose_piece();
+void choose_target();
+void move();
+void chkend();
+
+// special rules
+void promotion();
+void en_passant();
+void castling();
+
+// helper
 void setlegal();
+void getpiece(int, int);
 int chkstate(enum Team, int, int);
+
+// define movements
 void pawnmv(struct Piece*);
 void knightmv(struct Piece*);
 void rookmv(struct Piece*);
+
+// render
 void printboard();
 
-/* run the game */
 
-int main() {
-  setlegal();
+// program entry point
+int main() {}
 
-  printboard();
+void choose_piece() {
+  while (1) {
+    // ask user to choose a piece to move.
+    printf("choose piece to move\n");
 
-  // we move pawn from (6, 0) to (5, 0).
+    // White user inputs b7 - pawn.
+    // transform string b7 to integer crds
 
-  int r = 6;
-  int c = 0;
+    struct Piece* piece = getpiece(r, c);
 
-  // valid check
-  int valid = 0;
+    // validation check 
+    if (piece != NULL) {
+      if (piece->team != turn) {
+        printf("wrong piece!");
+      } else {
+        break;
+      }
+    } else {
+      // error message
+      printf("no piece!");
+    }
+  }
+}
+
+void choose_target() {
+  while (1) {
+    printf("choose target");
+
+    // user inputs b6
+    // transforms b6 to integer crds.
+    int tr = 5;
+    int tc = 0;
+
+    if (piece->legal[tr][tc] == 1) {
+      break;
+    } else {
+      printf("wrong target!");
+    }
+  }
+}
+
+void move() {
+  piece->crds[0] = tr;
+  piece->crds[1] = tc;
+}
+
+void chkend() {
+  // WHITE checkmate first, copy white King's legal
+  struct Piece wk = pieces[0];
 
   for (int i = 0; i < PIECE_CNT; i++) {
-    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
-      if (pieces[i].team == turn) {
-        piece = &pieces[i];
-        valid = 1;
+    if (pieces[i].team == BLACK) {
+      for (int r = 0; r < 8; r++) {
+        for (int c = 0; c < 8; c++) {
+          // in check that king's can take,
+          if (wk.legal[r][c] == 1) {
+            // if opponent piece could take there
+            if (wk.legal[r][c] == pieces[i].legal[r][c]) {
+              wk.legal[r][c] = 0; // remove that check.
+            }
+          }
+        }
       }
     }
   }
 
-  // move
-  if (valid) {
-    int r = 5;
-    int c = 0;
+  // if king has check to take, game goes on!
+  int checkmate = 1;
 
-    if (piece->legal[r][c] == 1) {
-      piece->crds[0] = 5;
-      piece->crds[1] = 0;
-    } else {
-      printf("invalid!\n");
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      if (wk.legal[r][c] == 1) {
+        checkmate = 0;
+      }
     }
   }
-
-  printboard();
 }
 
-/* function definitions */
-
-// get piece by crds - returns *piece or NULL
-struct Piece getpiece() {}
-
-// pawn 2 step forward
-void pawn2step() {
+void en_passant() {
   // user try 2 step forward.
 
   // if it is pawn's first movement
@@ -142,10 +200,7 @@ void pawn2step() {
     // then increase mcount.
     pawn.mcount++;
   }
-};
 
-// special rules - en passant, castling, promotion
-void en_passant() {
   // WHITE en passant
 
   // user is trying to move pawn for the first time.
@@ -217,39 +272,6 @@ void promotion() {
   // then opposite's turn
 };
 
-// check checkmate
-void chkend() {
-  // WHITE checkmate first, copy white King's legal
-  struct Piece wk = pieces[0];
-
-  for (int i = 0; i < PIECE_CNT; i++) {
-    if (pieces[i].team == BLACK) {
-      for (int r = 0; r < 8; r++) {
-        for (int c = 0; c < 8; c++) {
-          // in check that king's can take,
-          if (wk.legal[r][c] == 1) {
-            // if opponent piece could take there
-            if (wk.legal[r][c] == pieces[i].legal[r][c]) {
-              wk.legal[r][c] = 0; // remove that check.
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // if king has check to take, game goes on!
-  int checkmate = 1;
-
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      if (wk.legal[r][c] == 1) {
-        checkmate = 0;
-      }
-    }
-  }
-}
-
 // set legal
 void setlegal() {
   for (int i = 0; i < PIECE_CNT; i++) {  
@@ -261,16 +283,10 @@ void setlegal() {
       rookmv(&pieces[i]);
     }
   }
-  
-  // for (int r = 0; r < 8; r++) {
-  //   for (int c = 0; c < 8; c++) {
-  //     printf("%d ", pieces[15].legal[r][c]);
-  //   }
-  //   printf("\n");
-  // }
 }
 
-// checkstate - empty, own or opponent piece
+struct Piece getpiece() {}
+
 int chkstate(enum Team team, int r, int c) {
   int state = 0;
 
@@ -287,7 +303,6 @@ int chkstate(enum Team team, int r, int c) {
   return state;
 }
 
-// define movement of each piece.
 void pawnmv(struct Piece* pawn) {
   int r = pawn->crds[0];
   int c = pawn->crds[1];
@@ -363,7 +378,6 @@ void rookmv(struct Piece* rook) {
   }
 }
 
-// print board
 void printboard() {
   // top space
   printf("\n");
