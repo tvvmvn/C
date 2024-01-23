@@ -78,6 +78,7 @@ struct Piece pieces[PIECE_CNT] = {
 
 // White always starts first.
 enum Team turn = WHITE;
+int r, c, tr, tc;
 
 /*
   function declarations.
@@ -96,8 +97,9 @@ void en_passant();
 void castling();
 
 // helper
+void getcrds(char[2], int*, int*)
+void getpcbycrds(int, int);
 void setlegal();
-void getpiece(int, int);
 int chkstate(enum Team, int, int);
 
 // define movements
@@ -117,10 +119,10 @@ void choose_piece() {
     // ask user to choose a piece to move.
     printf("choose piece to move\n");
 
-    // White user inputs b7 - pawn.
-    // transform string b7 to integer crds
+    // White user inputs b7, convert it to crds
+    getcrds("b7", &r, &c);
 
-    struct Piece* piece = getpiece(r, c);
+    struct Piece* piece = getpcbycrds(r, c);
 
     // validation check 
     if (piece != NULL) {
@@ -140,10 +142,8 @@ void choose_target() {
   while (1) {
     printf("choose target");
 
-    // user inputs b6
-    // transforms b6 to integer crds.
-    int tr = 5;
-    int tc = 0;
+    // user inputs b6, convert it into crds.
+    getcrds("b6", &tr, &tc);
 
     if (piece->legal[tr][tc] == 1) {
       break;
@@ -241,7 +241,7 @@ void castling() {
 
   // 1 exchange king with right rook
   if (king.mcount < 1 && rook.mcount < 1) {
-    if (getpiece(7, 5) == NULL && getpiece(7, 6) == NULL) {
+    if (getpcbycrds(7, 5) == NULL && getpcbycrds(7, 6) == NULL) {
       // ok
       king.crds[1] += 2;
       rook.crds[1] -= 2;
@@ -272,6 +272,23 @@ void promotion() {
   // then opposite's turn
 };
 
+// convert user input to crds
+void getcrds(char input[2], int *r, int *c) {
+  // row
+  char rows[] = "12345678";
+
+  for (int i = 0; i < 8; i++) {
+    if (input[1] == rows[i]) *r = i;
+  }
+
+  // col
+  char cols[] = "abcdefg";
+
+  for (int i = 0; i < 8; i++) {
+    if (input[0] == cols[i]) *c = i;
+  }
+}
+
 // set legal
 void setlegal() {
   for (int i = 0; i < PIECE_CNT; i++) {  
@@ -285,7 +302,15 @@ void setlegal() {
   }
 }
 
-struct Piece getpiece() {}
+struct Piece* getpcbycrds(int r, int c) {
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].legal[0] == r && pieces[i].legal[1] == c) {
+      return &pieces[i];
+    }
+  } 
+
+  return NULL;
+};
 
 int chkstate(enum Team team, int r, int c) {
   int state = 0;

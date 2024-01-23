@@ -360,3 +360,13 @@ int main() {
     printf("no piece: %p\n", s);
   }
 }
+
+int main() {
+  int n;
+  char c;
+
+  printf("%d\n", n); // 1
+  printf("%d\n", n == 1); // true
+  printf("%c\n", c); // x00
+  printf("%d\n", c == '\0'); // true
+}

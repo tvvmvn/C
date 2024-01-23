@@ -4,15 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-int getcrds(char input[2]) {
-  int crds[2] = {6, 1};
-
-  return crds;
-}
-
 int main() {
-  // expected {6, 1}
-  int crds[2] = getcrds("b7"); 
+  int a;
+  int b;
 
-  printf("crds: [%d, %d]", crds[0], crds[1]);
+  printf("%d, %d\n", a, b);
+  // 1, 6298512
 }
