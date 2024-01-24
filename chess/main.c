@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 /*
   CHESS - realworld rules
 
@@ -26,6 +27,7 @@
   1 Checkmate 
   2 Time Over (Draw)
 */
+
 
 enum Pieces {
   KING,
@@ -52,13 +54,16 @@ struct Piece {
 
 enum Team turn = WHITE;
 
+
 /* function declarations */
+
 
 // basic flow
 void choose_piece();
 void choose_target();
 void move();
-void chkend();
+void isckmate(enum Team);
+void draw();
 
 // special rules
 void promotion();
@@ -71,18 +76,22 @@ void pawnmv(struct Piece*);
 void knightmv(struct Piece*);
 void rookmv(struct Piece*);
 
-// get check info 
+// helper
 int getckinfo(enum Team, int, int);
-
-// convert user input to crds
 void getcrds(char[2], int*, int*);
 
 // render
 void printboard();
 
 
-// game entry point
+/* entry point */
+
+
 int main() {}
+
+
+/* basic flow */
+
 
 void choose_piece() {
   while (1) {
@@ -126,22 +135,29 @@ void move() {
   piece->crds[1] = tc;
 }
 
-void chkend() {
+void isckmate(enum Team team) {
   // 1 CHECKMATE
 
-  // WHITE checkmate first, copy white King's legal
-  struct Piece wk = pieces[0];
+  // WHITE isckmate first, copy white King's legal
+  struct Piece king;
 
-  for (int i = 0; i < PIECE_CNT; i++) {
-    if (pieces[i].team == BLACK) {
-      for (int r = 0; r < 8; r++) {
-        for (int c = 0; c < 8; c++) {
-          // in check that king's can take,
-          if (wk.legal[r][c] == 1) {
-            // if opponent piece could take there
-            if (wk.legal[r][c] == pieces[i].legal[r][c]) {
-              wk.legal[r][c] = 0; // remove that check.
-            }
+  if (team == WHITE) {
+    king = pieces[0];
+  } else {
+    king = pieces[16];
+  }
+
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      // In check that king's can take,
+      if (king.legal[r][c] == 1) {
+        for (int i = 0; i < PIECE_CNT; i++) {
+          // if opponent piece could take there
+          if (
+            pieces[i].team != team
+            && pieces[i].legal[r][c] == king.legal[r][c]
+          ) {
+            king.legal[r][c] = 0; // remove that check.
           }
         }
       }
@@ -153,14 +169,27 @@ void chkend() {
 
   for (int r = 0; r < 8; r++) {
     for (int c = 0; c < 8; c++) {
-      if (wk.legal[r][c] == 1) {
+      if (king.legal[r][c] == 1) {
         checkmate = 0;
       }
     }
   }
 
-  // 2 DRAW - get count, when reaching some point, draw!
+  if (checkmate) {
+    return team;
+  } 
+  
+  return 0;
 }
+
+void draw() {
+  // game count bigger than 100 times
+  if (gcount > 100) return 1;
+
+  return 0;
+};
+
+/* Special Rules */
 
 void en_passant() {
   // user try 2 step forward.
@@ -244,24 +273,10 @@ void promotion() {
   // then opposite's turn
 };
 
-// convert user input to crds
-void getcrds(char input[2], int *r, int *c) {
-  // row
-  char rows[] = "12345678";
 
-  for (int i = 0; i < 8; i++) {
-    if (input[1] == rows[i]) *r = i;
-  }
+/* Define movements */
 
-  // col
-  char cols[] = "abcdefg";
 
-  for (int i = 0; i < 8; i++) {
-    if (input[0] == cols[i]) *c = i;
-  }
-}
-
-// set legal
 void setlegal() {
   for (int i = 0; i < PIECE_CNT; i++) {  
     if (pieces[i].name == PAWN) {
@@ -272,32 +287,6 @@ void setlegal() {
       rookmv(&pieces[i]);
     }
   }
-}
-
-struct Piece* getpcbycrds(int r, int c) {
-  for (int i = 0; i < PIECE_CNT; i++) {
-    if (pieces[i].legal[0] == r && pieces[i].legal[1] == c) {
-      return &pieces[i];
-    }
-  } 
-
-  return NULL;
-};
-
-int getckinfo(enum Team team, int r, int c) {
-  int state = 0;
-
-  for (int i = 0; i < PIECE_CNT; i++) {
-    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
-      if (pieces[i].team == team) {
-        state = 1;
-      } else {
-        state = -1;
-      }
-    }
-  }
-
-  return state;
 }
 
 void pawnmv(struct Piece* pawn) {
@@ -374,6 +363,57 @@ void rookmv(struct Piece* rook) {
     }
   }
 }
+
+
+/* Helper */
+
+
+// convert user input to crds
+void getcrds(char input[2], int *r, int *c) {
+  // row
+  char rows[] = "12345678";
+
+  for (int i = 0; i < 8; i++) {
+    if (input[1] == rows[i]) *r = i;
+  }
+
+  // col
+  char cols[] = "abcdefg";
+
+  for (int i = 0; i < 8; i++) {
+    if (input[0] == cols[i]) *c = i;
+  }
+}
+
+struct Piece* getpcbycrds(int r, int c) {
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].legal[0] == r && pieces[i].legal[1] == c) {
+      return &pieces[i];
+    }
+  } 
+
+  return NULL;
+};
+
+int getckinfo(enum Team team, int r, int c) {
+  int state = 0;
+
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+      if (pieces[i].team == team) {
+        state = 1;
+      } else {
+        state = -1;
+      }
+    }
+  }
+
+  return state;
+}
+
+
+/* render */
+
 
 void printboard() {
   // top space
