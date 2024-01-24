@@ -4,10 +4,19 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main() {
-  int a;
-  int b;
+void prt(char input[2]) {
+  printf("► %s\n", input);
+}
 
-  printf("%d, %d\n", a, b);
-  // 1, 6298512
+int main() {
+  char input[2];
+  int i = 0;
+
+  while (1) {
+    printf("%d. type some text.\n", ++i);
+    
+    scanf("%s", input);
+
+    prt(input);
+  }
 }

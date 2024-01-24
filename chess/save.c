@@ -1,34 +1,83 @@
-struct Piece pieces[PIECE_CNT] = {
-  {KING, WHITE, "♔", {7, 4}},
-  {QUEEN, WHITE, "♕", {7, 3}},
-  {BISHOP, WHITE, "♗", {7, 2}},
-  {BISHOP, WHITE, "♗", {7, 5}},
-  {KNIGHT, WHITE, "♘", {7, 1}},
-  {KNIGHT, WHITE, "♘", {7, 6}},
-  {ROOK, WHITE, "♖", {7, 0}},
-  {ROOK, WHITE, "♖", {7, 7}},
-  {PAWN, WHITE, "♙", {6, 0}},
-  {PAWN, WHITE, "♙", {6, 1}},
-  {PAWN, WHITE, "♙", {6, 2}},
-  {PAWN, WHITE, "♙", {6, 3}},
-  {PAWN, WHITE, "♙", {6, 4}},
-  {PAWN, WHITE, "♙", {6, 5}},
-  {PAWN, WHITE, "♙", {6, 6}},
-  {PAWN, WHITE, "♙", {6, 7}},
-  {KING, BLACK, "♚", {0, 4}},
-  {QUEEN, BLACK, "♛", {0, 3}},
-  {BISHOP, BLACK, "♝", {0, 2}},
-  {BISHOP, BLACK, "♝", {0, 5}},
-  {KNIGHT, BLACK, "♞", {0, 1}},
-  {KNIGHT, BLACK, "♞", {0, 6}},
-  {ROOK, BLACK, "♜", {0, 0}},
-  {ROOK, BLACK, "♜", {0, 7}},
-  {PAWN, BLACK, "♟", {1, 0}},
-  {PAWN, BLACK, "♟", {1, 1}},
-  {PAWN, BLACK, "♟", {1, 2}},
-  {PAWN, BLACK, "♟", {1, 3}},
-  {PAWN, BLACK, "♟", {1, 4}},
-  {PAWN, BLACK, "♟", {1, 5}},
-  {PAWN, BLACK, "♟", {1, 6}},
-  {PAWN, BLACK, "♟", {1, 7}},
+
+
+void en_passant() {
+  // user try 2 step forward.
+
+  // if it is pawn's first movement
+  if (pawn.mcount < 1) {
+    // pawn moved 2 step forward.
+
+    // then increase mcount.
+    pawn.mcount++;
+  }
+
+  // WHITE en passant
+
+  // user is trying to move pawn for the first time.
+  if (pawn.mcount < 1) {
+    // moves pawn 2 step forward.
+  }
+
+  // if pawn has moved 2 stop forward
+  if (previous_rows + 2 == pawn.crds[0]) { 
+    activated_check = "b3";
+    gcount = 89; // save game count 
+    prev_count = gcount;
+  }
+
+  // opposite turn, so
+  gcount++;
+
+  // opposite pawn just after activated check
+  if (prev_gcount + 1 == gcount) {
+    if (pawn.crds == "b3") {
+      // remove opposite pawn from board.
+    }
+  }
+
+  // game goes on..
+};
+
+void castling() {
+  // WHITE castling
+
+  // if user choose king then choose rook 
+  if (piece == king && target == pawn) {};
+
+  // ask user like "would you do castling?"
+  printf("castling or not");
+
+  // if user accept it, there are 2 options - left/right rook.
+
+  // 1 exchange king with right rook
+  if (king.mcount < 1 && rook.mcount < 1) {
+    if (getpcbycrds(7, 5) == NULL && getpcbycrds(7, 6) == NULL) {
+      // ok
+      king.crds[1] += 2;
+      rook.crds[1] -= 2;
+    }
+  }
+
+  // 2 exchange king with left rook
+};
+
+void promotion() {
+  // WHITE promotion
+
+  // pawn reaches first row.
+  if (pawn.crds[0] == 0) {
+    printf("choose piece to promote: queen, bishop, knight and king.\n");
+  }
+
+  // user chose queen.
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].crds == pawn.crds) {
+      struct Piece piece = {QUEEN, ..}; // queen
+
+      // change pawn to queen.
+      pieces[i] = queen;
+    }
+  }
+
+  // then opposite's turn
 };
