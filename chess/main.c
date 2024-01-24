@@ -4,7 +4,29 @@
 #include <stdlib.h>
 #include <time.h>
 
-// chess pieces
+/*
+  CHESS - realworld rules
+
+  # Team
+  Black and White,
+  and White always start first
+  
+  # Pieces
+  King, Queen, Bishop, Knight, Rook, Pawn
+
+  # Movement of pieces
+  They have unique movement for each piece.
+
+  # Special Rules
+  1 Promotion
+  2 En passant
+  3 Castling
+
+  # Game end
+  1 Checkmate 
+  2 Time Over (Draw)
+*/
+
 enum Pieces {
   KING,
   QUEEN,
@@ -14,13 +36,12 @@ enum Pieces {
   PAWN
 };
 
-// 2 team - black and white
 enum Team {
   WHITE = 1,
   BLACK
 };
 
-// piece template
+// Piece template
 struct Piece {
   enum Pieces name;
   enum Team team;
@@ -29,61 +50,9 @@ struct Piece {
   int legal[8][8];
 };
 
-// total count of pieces 
-const int PIECE_CNT = 32;
-
-
-// rows and cols
-char rows[] = "12345678";
-char cols[] = "abcdefgh";
-
-// points to a piece
-struct Piece* piece;
-
-// 32 pieces - 16 white, 16 black
-struct Piece pieces[PIECE_CNT] = {
-  {KING, WHITE, "♔", {7, 4}},
-  {QUEEN, WHITE, "♕", {7, 3}},
-  {BISHOP, WHITE, "♗", {7, 2}},
-  {BISHOP, WHITE, "♗", {7, 5}},
-  {KNIGHT, WHITE, "♘", {7, 1}},
-  {KNIGHT, WHITE, "♘", {7, 6}},
-  {ROOK, WHITE, "♖", {7, 0}},
-  {ROOK, WHITE, "♖", {7, 7}},
-  {PAWN, WHITE, "♙", {6, 0}},
-  {PAWN, WHITE, "♙", {6, 1}},
-  {PAWN, WHITE, "♙", {6, 2}},
-  {PAWN, WHITE, "♙", {6, 3}},
-  {PAWN, WHITE, "♙", {6, 4}},
-  {PAWN, WHITE, "♙", {6, 5}},
-  {PAWN, WHITE, "♙", {6, 6}},
-  {PAWN, WHITE, "♙", {6, 7}},
-  {KING, BLACK, "♚", {0, 4}},
-  {QUEEN, BLACK, "♛", {0, 3}},
-  {BISHOP, BLACK, "♝", {0, 2}},
-  {BISHOP, BLACK, "♝", {0, 5}},
-  {KNIGHT, BLACK, "♞", {0, 1}},
-  {KNIGHT, BLACK, "♞", {0, 6}},
-  {ROOK, BLACK, "♜", {0, 0}},
-  {ROOK, BLACK, "♜", {0, 7}},
-  {PAWN, BLACK, "♟", {1, 0}},
-  {PAWN, BLACK, "♟", {1, 1}},
-  {PAWN, BLACK, "♟", {1, 2}},
-  {PAWN, BLACK, "♟", {1, 3}},
-  {PAWN, BLACK, "♟", {1, 4}},
-  {PAWN, BLACK, "♟", {1, 5}},
-  {PAWN, BLACK, "♟", {1, 6}},
-  {PAWN, BLACK, "♟", {1, 7}},
-};
-
-// White always starts first.
 enum Team turn = WHITE;
-int r, c, tr, tc;
 
-/*
-  function declarations.
-  .. 
-*/
+/* function declarations */
 
 // basic flow
 void choose_piece();
@@ -96,22 +65,23 @@ void promotion();
 void en_passant();
 void castling();
 
-// helper
-void getcrds(char[2], int*, int*)
-void getpcbycrds(int, int);
-void setlegal();
-int chkstate(enum Team, int, int);
-
 // define movements
+void setlegal();
 void pawnmv(struct Piece*);
 void knightmv(struct Piece*);
 void rookmv(struct Piece*);
+
+// get check info 
+int getckinfo(enum Team, int, int);
+
+// convert user input to crds
+void getcrds(char[2], int*, int*);
 
 // render
 void printboard();
 
 
-// program entry point
+// game entry point
 int main() {}
 
 void choose_piece() {
@@ -122,18 +92,14 @@ void choose_piece() {
     // White user inputs b7, convert it to crds
     getcrds("b7", &r, &c);
 
-    struct Piece* piece = getpcbycrds(r, c);
-
     // validation check 
-    if (piece != NULL) {
-      if (piece->team != turn) {
-        printf("wrong piece!");
-      } else {
-        break;
-      }
+    int state = getckinfo(turn, r, c);
+
+    if (state == 1) {
+      break;
     } else {
       // error message
-      printf("no piece!");
+      printf("incorrect piece!");
     }
   }
 }
@@ -144,6 +110,8 @@ void choose_target() {
 
     // user inputs b6, convert it into crds.
     getcrds("b6", &tr, &tc);
+
+    struct Piece* piece = getpiecebycrds(r, c);
 
     if (piece->legal[tr][tc] == 1) {
       break;
@@ -159,6 +127,8 @@ void move() {
 }
 
 void chkend() {
+  // 1 CHECKMATE
+
   // WHITE checkmate first, copy white King's legal
   struct Piece wk = pieces[0];
 
@@ -188,6 +158,8 @@ void chkend() {
       }
     }
   }
+
+  // 2 DRAW - get count, when reaching some point, draw!
 }
 
 void en_passant() {
@@ -312,7 +284,7 @@ struct Piece* getpcbycrds(int r, int c) {
   return NULL;
 };
 
-int chkstate(enum Team team, int r, int c) {
+int getckinfo(enum Team team, int r, int c) {
   int state = 0;
 
   for (int i = 0; i < PIECE_CNT; i++) {
@@ -334,17 +306,17 @@ void pawnmv(struct Piece* pawn) {
 
   // WHITE
   // up
-  if (chkstate(pawn->team, r - 1, c) == 0) {
+  if (getckinfo(pawn->team, r - 1, c) == 0) {
     pawn->legal[r - 1][c] = 1;
   }
 
   // top-left
-  if (chkstate(pawn->team, r - 1, c - 1) == -1) {
+  if (getckinfo(pawn->team, r - 1, c - 1) == -1) {
     pawn->legal[r - 1][c - 1] = 1;
   }
 
   // top-right
-  if (chkstate(pawn->team, r - 1, c + 1) == -1) {
+  if (getckinfo(pawn->team, r - 1, c + 1) == -1) {
     pawn->legal[r - 1][c + 1] = 1;
   }
 
@@ -356,11 +328,11 @@ void knightmv(struct Piece* knight) {
   int c = knight->crds[1];
 
   // top
-  if (chkstate(knight->team, r - 2, c - 1) <= 0) {
+  if (getckinfo(knight->team, r - 2, c - 1) <= 0) {
     knight->legal[r - 2][c - 1] = 1;
   }
 
-  if (chkstate(knight->team, r - 2, c + 1) <= 0) {
+  if (getckinfo(knight->team, r - 2, c + 1) <= 0) {
     knight->legal[r - 2][c + 1] = 1;
   }
 }
@@ -370,16 +342,16 @@ void rookmv(struct Piece* rook) {
   for (int r = rook->crds[0] - 1; r >= 0; r--) {
     int c = rook->crds[1];
 
-    if (chkstate(rook->team, r, c) == -1) {
+    if (getckinfo(rook->team, r, c) == -1) {
       rook->legal[r][c] = 1;
       break;
     }
     
-    if (chkstate(rook->team, r, c) == 1) {
+    if (getckinfo(rook->team, r, c) == 1) {
       break;
     }
 
-    if (chkstate(rook->team, r, c) == 0) {
+    if (getckinfo(rook->team, r, c) == 0) {
       rook->legal[r][c] = 1;
     }
   }
@@ -388,16 +360,16 @@ void rookmv(struct Piece* rook) {
   for (int c = rook->crds[1] - 1; c >= 0; c--) {
     int r = rook->crds[0];
 
-    if (chkstate(rook->team, r, c) == -1) {
+    if (getckinfo(rook->team, r, c) == -1) {
       rook->legal[r][c] = 1;
       break;
     }
     
-    if (chkstate(rook->team, r, c) == 1) {
+    if (getckinfo(rook->team, r, c) == 1) {
       break;
     }
 
-    if (chkstate(rook->team, r, c) == 0) {
+    if (getckinfo(rook->team, r, c) == 0) {
       rook->legal[r][c] = 1;
     }
   }
