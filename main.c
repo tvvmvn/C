@@ -15,7 +15,9 @@ int main() {
   while (1) {
     printf("%d. type some text.\n", ++i);
     
-    scanf("%s", input);
+    // scanf("%s", input);
+    input[0] = 'b';
+    input[1] = '7';
 
     prt(input);
   }

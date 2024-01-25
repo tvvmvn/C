@@ -55,7 +55,7 @@ struct Piece {
 const int PIECE_CNT = 32;
 // rows and cols
 const char rows[] = "12345678";
-const char cols[] = "abcdefg";
+const char cols[] = "abcdefgh";
 
 enum Team turn = WHITE;
 struct Piece* piece;
@@ -110,6 +110,7 @@ void setlegal();
 void pawnmv(struct Piece*);
 void knightmv(struct Piece*);
 void rookmv(struct Piece*);
+void kingmv(struct Piece*);
 
 // special rules
 void promotion();
@@ -134,9 +135,9 @@ int end = 0;
 int main() {
   while (end != 1) {
     setlegal();
+    chkend();
     choose_piece();
     choose_target();
-    chkend();
   }
 }
 
@@ -148,11 +149,15 @@ void choose_piece() {
   char input[2];
   int r, c;
 
+  printboard();
+
   while (1) {
     // ask user to choose a piece to move.
-    printf("▶︎ choose piece to move\n");
+    printf("▶︎ %s choose piece to move\n", turn == WHITE ? "WHITE" : "BLACK");
 
-    scanf("%s", input);
+    // scanf("%s", input);
+    input[0] = 'b';
+    input[1] = '7';
 
     // White user inputs b7, convert it to crds
     getcrds(input, &r, &c);
@@ -166,6 +171,7 @@ void choose_piece() {
     } else {
       // error message
       printf("err: incorrect piece!\n");
+      end = 1;
     }
   }
 }
@@ -174,10 +180,14 @@ void choose_target() {
   char input[2];
   int r, c;
 
+  printboard();
+
   while (1) {
     printf("▶︎ choose target\n");
 
-    scanf("%s", input);
+    // scanf("%s", input);
+    input[0] = 'b';
+    input[1] = '6';
 
     // user inputs b6, convert it into crds.
     getcrds(input, &r, &c);
@@ -185,6 +195,8 @@ void choose_target() {
     if (piece->legal[r][c] == 1) {
       piece->crds[0] = r;
       piece->crds[1] = c;
+
+      turn = turn == WHITE ? BLACK : WHITE;
       break;
     } else {
       printf("err: wrong target!\n");
@@ -203,16 +215,19 @@ void chkend() {
       // White WIN
     }
 
+    printboard();
+    printf("▶︎ Checkmate!\n");
+
     end = 1;
   }
 
   if (draw) {
     // drawn
+    printboard();
+    printf("▶︎ Draw!\n");
 
     end = 1;
   }
-
-  printf("Anyway game end!\n");
 }
 
 
@@ -227,6 +242,8 @@ void setlegal() {
       knightmv(&pieces[i]);
     } else if (pieces[i].name == ROOK) {
       rookmv(&pieces[i]);
+    } else if (pieces[i].name == KING) {
+      kingmv(&pieces[i]);
     }
   }
 }
@@ -322,6 +339,52 @@ void rookmv(struct Piece* rook) {
   }
 }
 
+void kingmv(struct Piece* king) {
+  int r = king->crds[0];
+  int c = king->crds[1];
+
+  if (r > 0 && c > 0) {
+    if (getckinfo(king->team, r - 1, c - 1) <= 0) {
+      king->legal[r - 1][c - 1] = 1;
+    }
+  }
+  if (r > 0) {
+    if (getckinfo(king->team, r - 1, c) <= 0) {
+      king->legal[r - 1][c] = 1;
+    }
+  }
+  if (r > 0 && c < 7) {
+    if (getckinfo(king->team, r - 1, c + 1) <= 0) {
+      king->legal[r - 1][c + 1] = 1;
+    }
+  }
+  if (c < 7) {
+    if (getckinfo(king->team, r, c + 1) <= 0) {
+      king->legal[r][c + 1] = 1;
+    }
+  }
+  if (r < 7 && c < 7) {
+    if (getckinfo(king->team, r + 1, c + 1) <= 0) {
+      king->legal[r + 1][c + 1] = 1;
+    }
+  }
+  if (r < 7) {
+    if (getckinfo(king->team, r + 1, c) <= 0) {
+      king->legal[r + 1][c] = 1;
+    }
+  }
+  if (r < 7 && c > 0) {
+    if (getckinfo(king->team, r + 1, c - 1) <= 0) {
+      king->legal[r + 1][c - 1] = 1;
+    }
+  }
+  if (c > 0) {
+    if (getckinfo(king->team, r, c - 1) <= 0) {
+      king->legal[r][c - 1] = 1;
+    }
+  }
+}
+
 /* Special Rules */
 
 
@@ -367,9 +430,6 @@ int getckinfo(enum Team team, int r, int c) {
 }
 
 int isckmate(enum Team team) {
-  // 1 CHECKMATE
-
-  // WHITE isckmate first, copy white King's legal
   struct Piece king;
 
   if (team == WHITE) {
@@ -400,6 +460,7 @@ int isckmate(enum Team team) {
 
   for (int r = 0; r < 8; r++) {
     for (int c = 0; c < 8; c++) {
+      // 1/25 king has no legal movement initially!
       if (king.legal[r][c] == 1) {
         checkmate = 0;
       }
@@ -427,7 +488,6 @@ void printboard() {
   // top space
   printf("\n");
 
-  // rows
   for (int r = 0; r < strlen(rows); r++) {
     printf("%c", rows[r]);
 
