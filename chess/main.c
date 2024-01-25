@@ -103,8 +103,7 @@ struct Piece pieces[PIECE_CNT] = {
 // basic flow
 void choose_piece();
 void choose_target();
-void isckmate(enum Team);
-void draw();
+void chkend();
 
 // define movements
 void setlegal();
@@ -121,6 +120,8 @@ void castling();
 void getcrds(char[2], int*, int*);
 int getckinfo(enum Team, int, int);
 struct Piece* getpcbycrds(int, int);
+int isckmate(enum Team);
+int isdrawn();
 
 // render
 void printboard();
@@ -128,9 +129,15 @@ void printboard();
 
 /* entry point */
 
+int end = 0;
 
 int main() {
-  // ..
+  while (end != 1) {
+    setlegal();
+    choose_piece();
+    choose_target();
+    chkend();
+  }
 }
 
 
@@ -143,7 +150,7 @@ void choose_piece() {
 
   while (1) {
     // ask user to choose a piece to move.
-    printf("choose piece to move\n");
+    printf("▶︎ choose piece to move\n");
 
     scanf("%s", input);
 
@@ -158,7 +165,7 @@ void choose_piece() {
       break;
     } else {
       // error message
-      printf("incorrect piece!\n");
+      printf("err: incorrect piece!\n");
     }
   }
 }
@@ -168,7 +175,7 @@ void choose_target() {
   int r, c;
 
   while (1) {
-    printf("choose target\n");
+    printf("▶︎ choose target\n");
 
     scanf("%s", input);
 
@@ -180,64 +187,33 @@ void choose_target() {
       piece->crds[1] = c;
       break;
     } else {
-      printf("wrong target!");
+      printf("err: wrong target!\n");
     }
   }
 }
 
-void isckmate(enum Team team) {
-  // 1 CHECKMATE
+void chkend() {
+  int checkmate = isckmate(turn);
+  int draw = isdrawn();
 
-  // WHITE isckmate first, copy white King's legal
-  struct Piece king;
-
-  if (team == WHITE) {
-    king = pieces[0];
-  } else {
-    king = pieces[16];
-  }
-
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      // In check that king's can take,
-      if (king.legal[r][c] == 1) {
-        for (int i = 0; i < PIECE_CNT; i++) {
-          // if opponent piece could take there
-          if (
-            pieces[i].team != team
-            && pieces[i].legal[r][c] == king.legal[r][c]
-          ) {
-            king.legal[r][c] = 0; // remove that check.
-          }
-        }
-      }
+  if (checkmate != 0) {
+    if (checkmate == 1) {
+      // Black WIN
+    } else {
+      // White WIN
     }
+
+    end = 1;
   }
 
-  // if king has check to take, game goes on!
-  int checkmate = 1;
+  if (draw) {
+    // drawn
 
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      if (king.legal[r][c] == 1) {
-        checkmate = 0;
-      }
-    }
+    end = 1;
   }
 
-  if (checkmate) {
-    return team;
-  } 
-  
-  return 0;
+  printf("Anyway game end!\n");
 }
-
-void draw() {
-  // game count bigger than 100 times
-  if (gcount > 100) return 1;
-
-  return 0;
-};
 
 
 /* Define movements */
@@ -349,8 +325,6 @@ void rookmv(struct Piece* rook) {
 /* Special Rules */
 
 
-
-
 /* Helper */
 
 
@@ -392,6 +366,59 @@ int getckinfo(enum Team team, int r, int c) {
   return state;
 }
 
+int isckmate(enum Team team) {
+  // 1 CHECKMATE
+
+  // WHITE isckmate first, copy white King's legal
+  struct Piece king;
+
+  if (team == WHITE) {
+    king = pieces[0];
+  } else {
+    king = pieces[16];
+  }
+
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      // In check that king's can take,
+      if (king.legal[r][c] == 1) {
+        for (int i = 0; i < PIECE_CNT; i++) {
+          // if opponent piece could take there
+          if (
+            pieces[i].team != team
+            && pieces[i].legal[r][c] == king.legal[r][c]
+          ) {
+            king.legal[r][c] = 0; // remove that check.
+          }
+        }
+      }
+    }
+  }
+
+  // if king has check to take, game goes on!
+  int checkmate = 1;
+
+  for (int r = 0; r < 8; r++) {
+    for (int c = 0; c < 8; c++) {
+      if (king.legal[r][c] == 1) {
+        checkmate = 0;
+      }
+    }
+  }
+
+  if (checkmate) {
+    return team;
+  } 
+  
+  return 0;
+}
+
+int isdrawn() {
+  // game count bigger than 100 times
+  if (gcount > 100) return 1;
+
+  return 0;
+};
 
 /* render */
 
