@@ -155,9 +155,7 @@ void choose_piece() {
     // ask user to choose a piece to move.
     printf("▶︎ %s choose piece to move\n", turn == WHITE ? "WHITE" : "BLACK");
 
-    // scanf("%s", input);
-    input[0] = 'b';
-    input[1] = '7';
+    scanf("%s", input);
 
     // White user inputs b7, convert it to crds
     getcrds(input, &r, &c);
@@ -171,7 +169,6 @@ void choose_piece() {
     } else {
       // error message
       printf("err: incorrect piece!\n");
-      end = 1;
     }
   }
 }
@@ -185,9 +182,7 @@ void choose_target() {
   while (1) {
     printf("▶︎ choose target\n");
 
-    // scanf("%s", input);
-    input[0] = 'b';
-    input[1] = '6';
+    scanf("%s", input);
 
     // user inputs b6, convert it into crds.
     getcrds(input, &r, &c);
@@ -448,21 +443,28 @@ int isckmate(enum Team team) {
             pieces[i].team != team
             && pieces[i].legal[r][c] == king.legal[r][c]
           ) {
-            king.legal[r][c] = 0; // remove that check.
+            king.legal[r][c] = -1; // danger zone
           }
         }
       }
     }
   }
 
-  // if king has check to take, game goes on!
-  int checkmate = 1;
+  int checkmate = 0;
 
   for (int r = 0; r < 8; r++) {
     for (int c = 0; c < 8; c++) {
-      // 1/25 king has no legal movement initially!
-      if (king.legal[r][c] == 1) {
-        checkmate = 0;
+      // If opponent pieces is threatning the king (-1), 
+      // king must have safe place to escape (1)!
+      if (king.legal[r][c] == - 1) {
+        checkmate = 1;
+      }
+
+      if (checkmate) {
+        if (king.legal[r][c] == 1) {
+          checkmate = 0;
+          break;
+        }
       }
     }
   }
