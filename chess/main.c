@@ -133,11 +133,18 @@ void printboard();
 int end = 0;
 
 int main() {
-  while (end != 1) {
+  while (1) {
     setlegal();
     chkend();
-    choose_piece();
-    choose_target();
+
+    if (end) {
+      break;
+    } else {
+      choose_piece();
+      choose_target();
+
+      turn = turn == WHITE ? BLACK : WHITE;
+    }
   }
 }
 
@@ -190,8 +197,6 @@ void choose_target() {
     if (piece->legal[r][c] == 1) {
       piece->crds[0] = r;
       piece->crds[1] = c;
-
-      turn = turn == WHITE ? BLACK : WHITE;
       break;
     } else {
       printf("err: wrong target!\n");
@@ -252,15 +257,11 @@ void pawnmv(struct Piece* pawn) {
     // front
     if (getckinfo(pawn->team, r - 1, c) == 0) {
       pawn->legal[r - 1][c] = 1;
-    }
-
     // left
-    if (getckinfo(pawn->team, r - 1, c - 1) == -1) {
+    } else if (getckinfo(pawn->team, r - 1, c - 1) == 1) {
       pawn->legal[r - 1][c - 1] = 1;
-    }
-
     // right
-    if (getckinfo(pawn->team, r - 1, c + 1) == -1) {
+    } else if (getckinfo(pawn->team, r - 1, c + 1) == 1) {
       pawn->legal[r - 1][c + 1] = 1;
     }
   } else { // BLACK
@@ -270,12 +271,12 @@ void pawnmv(struct Piece* pawn) {
     }
 
     // left
-    if (getckinfo(pawn->team, r + 1, c - 1) == -1) {
+    if (getckinfo(pawn->team, r + 1, c - 1) == 1) {
       pawn->legal[r + 1][c - 1] = 1;
     }
 
     // right
-    if (getckinfo(pawn->team, r + 1, c + 1) == -1) {
+    if (getckinfo(pawn->team, r + 1, c + 1) == 1) {
       pawn->legal[r + 1][c + 1] = 1;
     }
   }
@@ -285,13 +286,10 @@ void knightmv(struct Piece* knight) {
   int r = knight->crds[0];
   int c = knight->crds[1];
 
-  // north west
-  if (getckinfo(knight->team, r - 2, c - 1) <= 0) {
+  // north 
+  if (getckinfo(knight->team, r - 2, c - 1) >= 0) {
     knight->legal[r - 2][c - 1] = 1;
-  }
-
-  // north east
-  if (getckinfo(knight->team, r - 2, c + 1) <= 0) {
+  } else if (getckinfo(knight->team, r - 2, c + 1) >= 0) {
     knight->legal[r - 2][c + 1] = 1;
   }
 }
@@ -301,16 +299,12 @@ void rookmv(struct Piece* rook) {
   for (int r = rook->crds[0] - 1; r >= 0; r--) {
     int c = rook->crds[1];
 
-    if (getckinfo(rook->team, r, c) == -1) {
+    if (getckinfo(rook->team, r, c) == 1) {
       rook->legal[r][c] = 1;
       break;
-    }
-    
-    if (getckinfo(rook->team, r, c) == 1) {
+    } else if (getckinfo(rook->team, r, c) == -1) {
       break;
-    }
-
-    if (getckinfo(rook->team, r, c) == 0) {
+    } else if (getckinfo(rook->team, r, c) == 0) {
       rook->legal[r][c] = 1;
     }
   }
@@ -319,16 +313,12 @@ void rookmv(struct Piece* rook) {
   for (int c = rook->crds[1] - 1; c >= 0; c--) {
     int r = rook->crds[0];
 
-    if (getckinfo(rook->team, r, c) == -1) {
+    if (getckinfo(rook->team, r, c) == 1) {
       rook->legal[r][c] = 1;
       break;
-    }
-    
-    if (getckinfo(rook->team, r, c) == 1) {
+    } else if (getckinfo(rook->team, r, c) == -1) {
       break;
-    }
-
-    if (getckinfo(rook->team, r, c) == 0) {
+    } else if (getckinfo(rook->team, r, c) == 0) {
       rook->legal[r][c] = 1;
     }
   }
@@ -338,47 +328,44 @@ void kingmv(struct Piece* king) {
   int r = king->crds[0];
   int c = king->crds[1];
 
-  if (r > 0 && c > 0) {
-    if (getckinfo(king->team, r - 1, c - 1) <= 0) {
+  // clockwise from top-left to middle-left
+  if (getckinfo(king->team, r - 1, c - 1) >= 0) {
+    if (!isdanger(king->team, r - 1, c - 1)) {
       king->legal[r - 1][c - 1] = 1;
     }
-  }
-  if (r > 0) {
-    if (getckinfo(king->team, r - 1, c) <= 0) {
-      king->legal[r - 1][c] = 1;
-    }
-  }
-  if (r > 0 && c < 7) {
-    if (getckinfo(king->team, r - 1, c + 1) <= 0) {
-      king->legal[r - 1][c + 1] = 1;
-    }
-  }
-  if (c < 7) {
-    if (getckinfo(king->team, r, c + 1) <= 0) {
-      king->legal[r][c + 1] = 1;
-    }
-  }
-  if (r < 7 && c < 7) {
-    if (getckinfo(king->team, r + 1, c + 1) <= 0) {
-      king->legal[r + 1][c + 1] = 1;
-    }
-  }
-  if (r < 7) {
-    if (getckinfo(king->team, r + 1, c) <= 0) {
-      king->legal[r + 1][c] = 1;
-    }
-  }
-  if (r < 7 && c > 0) {
-    if (getckinfo(king->team, r + 1, c - 1) <= 0) {
-      king->legal[r + 1][c - 1] = 1;
-    }
-  }
-  if (c > 0) {
-    if (getckinfo(king->team, r, c - 1) <= 0) {
-      king->legal[r][c - 1] = 1;
-    }
+  } else if (getckinfo(king->team, r - 1, c) >= 0) {
+    king->legal[r - 1][c] = 1;
+  } else if (getckinfo(king->team, r - 1, c + 1) >= 0) {
+    king->legal[r - 1][c + 1] = 1;
+  } else if (getckinfo(king->team, r, c + 1) >= 0) {
+    king->legal[r][c + 1] = 1;
+  } else if (getckinfo(king->team, r + 1, c + 1) >= 0) {
+    king->legal[r + 1][c + 1] = 1;
+  } else if (getckinfo(king->team, r + 1, c) >= 0) {
+    king->legal[r + 1][c] = 1;
+  } else if (getckinfo(king->team, r + 1, c - 1) >= 0) {
+    king->legal[r + 1][c - 1] = 1;
+  } else if (getckinfo(king->team, r, c - 1) >= 0) {
+    king->legal[r][c - 1] = 1;
   }
 }
+
+// additionlly, king should not moves to danger zone.
+int isdanger(enum Team team, int r, int c) {
+  int danger = 0;
+
+  // for WHITE King
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].team != team) {
+      if (pieces[i].legal[r][c] == 1) {
+        danger = 1;
+      }
+    }
+  }
+
+  return danger;
+}
+
 
 /* Special Rules */
 
@@ -409,15 +396,23 @@ struct Piece* getpcbycrds(int r, int c) {
 };
 
 int getckinfo(enum Team team, int r, int c) {
-  int state = 0;
+  // error
+  if (r < 0 && r > 7 && c < 0 && c > 7) {
+    return -2;
+  } 
 
+  int state = 0;
+  
   for (int i = 0; i < PIECE_CNT; i++) {
     if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
-      if (pieces[i].team == team) {
+      if (pieces[i].team != team) {
         state = 1;
       } else {
+        // same team
         state = -1;
       }
+
+      break;
     }
   }
 
@@ -425,55 +420,36 @@ int getckinfo(enum Team team, int r, int c) {
 }
 
 int isckmate(enum Team team) {
-  struct Piece king;
+  struct Piece king = team == WHITE ? pieces[0] : pieces[16];
+  int r = king.crds[0];
+  int c = king.crds[1];
 
-  if (team == WHITE) {
-    king = pieces[0];
-  } else {
-    king = pieces[16];
+  // 1. Is king in danger zone now?
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].team != team) {
+      if (pieces[i].legal[r][c] == 1) {
+        // yes
+        break; 
+      }
+    }
   }
 
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      // In check that king's can take,
-      if (king.legal[r][c] == 1) {
-        for (int i = 0; i < PIECE_CNT; i++) {
-          // if opponent piece could take there
-          if (
-            pieces[i].team != team
-            && pieces[i].legal[r][c] == king.legal[r][c]
-          ) {
-            king.legal[r][c] = -1; // danger zone
+  // 2. no where to avoid?
+  {
+    for (int i = 0; i < PIECE_CNT; i++) {
+      if (pieces[i].team != team) {
+        for (int r = 0; r < 8; r++) {
+          for (int c = 0; c < 8; c++) {
+            if (pieces[i].legal[r][c] == king.legal[r][c]) {
+              king.legal[r][c] = 0;
+            }
           }
         }
       }
     }
   }
 
-  int checkmate = 0;
-
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      // If opponent pieces is threatning the king (-1), 
-      // king must have safe place to escape (1)!
-      if (king.legal[r][c] == - 1) {
-        checkmate = 1;
-      }
-
-      if (checkmate) {
-        if (king.legal[r][c] == 1) {
-          checkmate = 0;
-          break;
-        }
-      }
-    }
-  }
-
-  if (checkmate) {
-    return team;
-  } 
-  
-  return 0;
+  // 3. Do removing threat by peers has no effect?
 }
 
 int isdrawn() {
