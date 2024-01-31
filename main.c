@@ -4,21 +4,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-void prt(char input[2]) {
-  printf("► %s\n", input);
-}
+struct S {
+  int id;
+};
 
 int main() {
-  char input[2];
-  int i = 0;
+  struct S list[3] = {{1}, {2}, {3}};
 
-  while (1) {
-    printf("%d. type some text.\n", ++i);
-    
-    // scanf("%s", input);
-    input[0] = 'b';
-    input[1] = '7';
+  struct S s = {4};
+  list[2] = s;
 
-    prt(input);
-  }
+  printf("%d\n", list[2].id); // expected 4;
 }

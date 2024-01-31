@@ -1,0 +1,35 @@
+---
+triple:          'x86_64-apple-darwin'
+binary-path:     '/Users/jintaemin/workspace/C/chess/__main'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100001C30, symSize: 0x2C0 }
+  - { offsetInCU: 0x3F, offset: 0x3F, size: 0x8, addend: 0x0, symName: _ROW_CNT, symObjAddr: 0x2190, symBinAddr: 0x100003DE0, symSize: 0x0 }
+  - { offsetInCU: 0x60, offset: 0x60, size: 0x8, addend: 0x0, symName: _COL_CNT, symObjAddr: 0x2194, symBinAddr: 0x100003DE4, symSize: 0x0 }
+  - { offsetInCU: 0x75, offset: 0x75, size: 0x8, addend: 0x0, symName: _PIECE_CNT, symObjAddr: 0x2198, symBinAddr: 0x100003DE8, symSize: 0x0 }
+  - { offsetInCU: 0x8A, offset: 0x8A, size: 0x8, addend: 0x0, symName: _pieces, symObjAddr: 0x21A0, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x14F, offset: 0x14F, size: 0x8, addend: 0x0, symName: _board, symObjAddr: 0x23A0, symBinAddr: 0x100008200, symSize: 0x0 }
+  - { offsetInCU: 0x176, offset: 0x176, size: 0x8, addend: 0x0, symName: _turn, symObjAddr: 0x24A0, symBinAddr: 0x100008300, symSize: 0x0 }
+  - { offsetInCU: 0x18B, offset: 0x18B, size: 0x8, addend: 0x0, symName: __row, symBinAddr: 0x100008305, symSize: 0x0 }
+  - { offsetInCU: 0x1A0, offset: 0x1A0, size: 0x8, addend: 0x0, symName: __col, symBinAddr: 0x100008304, symSize: 0x0 }
+  - { offsetInCU: 0x1B5, offset: 0x1B5, size: 0x8, addend: 0x0, symName: _row, symBinAddr: 0x100008310, symSize: 0x0 }
+  - { offsetInCU: 0x1CA, offset: 0x1CA, size: 0x8, addend: 0x0, symName: _col, symBinAddr: 0x100008308, symSize: 0x0 }
+  - { offsetInCU: 0x1DF, offset: 0x1DF, size: 0x8, addend: 0x0, symName: __trow, symBinAddr: 0x100008307, symSize: 0x0 }
+  - { offsetInCU: 0x1F4, offset: 0x1F4, size: 0x8, addend: 0x0, symName: __tcol, symBinAddr: 0x100008306, symSize: 0x0 }
+  - { offsetInCU: 0x209, offset: 0x209, size: 0x8, addend: 0x0, symName: _trow, symBinAddr: 0x100008318, symSize: 0x0 }
+  - { offsetInCU: 0x21E, offset: 0x21E, size: 0x8, addend: 0x0, symName: _tcol, symBinAddr: 0x100008314, symSize: 0x0 }
+  - { offsetInCU: 0x233, offset: 0x233, size: 0x8, addend: 0x0, symName: _nl, symBinAddr: 0x10000830C, symSize: 0x0 }
+  - { offsetInCU: 0x23C, offset: 0x23C, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x100001C30, symSize: 0x2C0 }
+  - { offsetInCU: 0x2B8, offset: 0x2B8, size: 0x8, addend: 0x0, symName: _get_idx, symObjAddr: 0x2C0, symBinAddr: 0x100001EF0, symSize: 0x140 }
+  - { offsetInCU: 0x35A, offset: 0x35A, size: 0x8, addend: 0x0, symName: _chkpiece, symObjAddr: 0x400, symBinAddr: 0x100002030, symSize: 0x70 }
+  - { offsetInCU: 0x390, offset: 0x390, size: 0x8, addend: 0x0, symName: _chkend, symObjAddr: 0x470, symBinAddr: 0x1000020A0, symSize: 0xD0 }
+  - { offsetInCU: 0x40C, offset: 0x40C, size: 0x8, addend: 0x0, symName: _chktarget, symObjAddr: 0x540, symBinAddr: 0x100002170, symSize: 0x140 }
+  - { offsetInCU: 0x47A, offset: 0x47A, size: 0x8, addend: 0x0, symName: _pawn, symObjAddr: 0x680, symBinAddr: 0x1000022B0, symSize: 0x460 }
+  - { offsetInCU: 0x4C2, offset: 0x4C2, size: 0x8, addend: 0x0, symName: _promotion, symObjAddr: 0xAE0, symBinAddr: 0x100002710, symSize: 0x370 }
+  - { offsetInCU: 0x620, offset: 0x620, size: 0x8, addend: 0x0, symName: _rook, symObjAddr: 0xE50, symBinAddr: 0x100002A80, symSize: 0x2F0 }
+  - { offsetInCU: 0x750, offset: 0x750, size: 0x8, addend: 0x0, symName: _getknight, symObjAddr: 0x1140, symBinAddr: 0x100002D70, symSize: 0x10 }
+  - { offsetInCU: 0x789, offset: 0x789, size: 0x8, addend: 0x0, symName: _knight, symObjAddr: 0x1150, symBinAddr: 0x100002D80, symSize: 0x250 }
+  - { offsetInCU: 0x7D1, offset: 0x7D1, size: 0x8, addend: 0x0, symName: _bishop, symObjAddr: 0x13A0, symBinAddr: 0x100002FD0, symSize: 0x420 }
+  - { offsetInCU: 0x908, offset: 0x908, size: 0x8, addend: 0x0, symName: _king, symObjAddr: 0x17C0, symBinAddr: 0x1000033F0, symSize: 0x1F0 }
+  - { offsetInCU: 0x932, offset: 0x932, size: 0x8, addend: 0x0, symName: _queen, symObjAddr: 0x19B0, symBinAddr: 0x1000035E0, symSize: 0x6B0 }
+  - { offsetInCU: 0xB59, offset: 0xB59, size: 0x8, addend: 0x0, symName: _printBoard, symObjAddr: 0x2060, symBinAddr: 0x100003C90, symSize: 0x12E }
+...
