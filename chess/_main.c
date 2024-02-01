@@ -27,7 +27,8 @@ struct Piece {
   enum Pieces name;
   enum Team team; 
   char symbol[4];
-  int mcount; // castling, 2 move
+  int mcount;
+  int legal[8][8];
 };
 
 /* constants */
@@ -89,24 +90,21 @@ char cols[] = "abcdefgh";
 /* function declarations */ 
 
 // basic flow
-void chkend();
 void choose_piece();
 void choose_target();
-int pawn();
+void chkend();
 
 // special rules
 void promotion();
 
 // helper
 void getcrds(char[2], int*, int*);
+struct Piece* getpcbyid(int);
+int getckstate(enum Team, int, int);
 
 // movement of each piece;
 void setlegal();
-int rook();
-int knight();
-int bishop();
-int queen();
-int king();
+void kingmv(struct Piece*, int, int);
 
 // print board
 void printBoard();
@@ -137,9 +135,9 @@ void choose_piece() {
     getcrds(input, &r, &c);
     
     // validate piece
-    int valid = chkpiece();
+    struct Piece* piece = getpcbyid(board[r][c]);
     
-    if (!valid) {
+    if (piece == NULL || piece->team != turn) {
       printf("► invalid piece. try again\n");
     } else {
       break;
@@ -154,33 +152,48 @@ void choose_target() {
 
     // choose target
     printBoard();
-    printf("► [%c%c] choose target");
+    printf("► choose target");
     
     // user inputs b6, convert it into crds.
     scanf("%s", input);
     getcrds(input, &r, &c);
     
     // validate target
-    int r = 1;
+    struct Piece* piece = getpcbyid(board[r][c]);
 
-    if (r == 0) { 
+    int valid = piece->legal[r][c];
+
+    if (valid) { 
+      // movement
+      int id = board[r][c];
+      board[r][c] = 0;
+      board[r][c] = id;
+
+      // + prediction and prevention in King
+      setlegal(); // needed if taken danger zone
+
+      if (piece->name == KING) {
+        int valid = 1;
+
+        // when moved to empty or taken danger zone, make it invalid
+        for (int i = 0; i < PIECE_CNT; i++) {
+          if (pieces[i].team != turn) {
+            if (pieces[i].legal[r][c] == 1) {
+              valid = 0;
+            }
+          }
+        }
+
+        if (valid) {
+          break;
+        } else {
+          printf("invalid");
+        }
+      }
+    } else {  
       printf("► invalid movement. try again\n");
-    } else if (r == 1) { 
-      printf("► [%c%c] choose target or re-select piece\n", _tcol, _trow);
-      row = trow;
-      col = tcol;
-    } else { // 2
-      break;
     }
   }
-
-
-  // movement
-  int id = board[row][col];
-  board[row][col] = -1;
-  board[trow][tcol] = id;
-  // increase mcount 
-  pieces[id].mcount++;
 }
 
 void chkend() {
@@ -192,6 +205,7 @@ void chkend() {
   }
 }
 
+
 // get crds from user input
 void getcrds(char input[2], int* r, int* c) {
   for (int i = 0; i < 8; i++) {
@@ -200,6 +214,61 @@ void getcrds(char input[2], int* r, int* c) {
 
   for (int i = 0; i < 8; i++) {
     if (input[0] == cols[i]) *c = i;
+  }
+}
+
+struct Piece* getpcbyid(int id) {
+  for (int i = 0; i <PIECE_CNT; i++) {
+    if (pieces[i].id == id) {
+      return &pieces[i];
+    }
+  }
+
+  return NULL;
+}
+
+// movements
+
+void setlegal() {
+  for (int r = 0; r < 8; r++) {
+    for (int c = 9; c < 8; c++) {
+      if (board[r][c] != 0) {
+        for (int i = 0; i < PIECE_CNT; i++) {
+          if (pieces[i].id == board[r][c]) {
+            if (pieces[i].name == PAWN) {
+              pawnmv(&pieces[i], r, c);
+            } else if (pieces[i].name == KNIGHT) {
+              knightmv(&pieces[i], r, c);
+            } else if (pieces[i].name == ROOK) {
+              rookmv(&pieces[i], r, c);
+            } else if (pieces[i].name == KING) {
+              kingmv(&pieces[i], r, c);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+void kingmv(struct Piece* king, int r, int c) {
+  // clockwise from top-left to middle-left
+  if (getckstate(king->team, r - 1, c - 1) >= 0) {
+    king->legal[r - 1][c - 1] = 1;
+  } else if (getckstate(king->team, r - 1, c) >= 0) {
+    king->legal[r - 1][c] = 1;
+  } else if (getckstate(king->team, r - 1, c + 1) >= 0) {
+    king->legal[r - 1][c + 1] = 1;
+  } else if (getckstate(king->team, r, c + 1) >= 0) {
+    king->legal[r][c + 1] = 1;
+  } else if (getckstate(king->team, r + 1, c + 1) >= 0) {
+    king->legal[r + 1][c + 1] = 1;
+  } else if (getckstate(king->team, r + 1, c) >= 0) {
+    king->legal[r + 1][c] = 1;
+  } else if (getckstate(king->team, r + 1, c - 1) >= 0) {
+    king->legal[r + 1][c - 1] = 1;
+  } else if (getckstate(king->team, r, c - 1) >= 0) {
+    king->legal[r][c - 1] = 1;
   }
 }
 

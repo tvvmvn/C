@@ -112,17 +112,17 @@ void knightmv(struct Piece*);
 void rookmv(struct Piece*);
 void kingmv(struct Piece*);
 
-// special rules
-void promotion();
-void en_passant();
-void castling();
-
 // helper
 void getcrds(char[2], int*, int*);
 int getckstate(enum Team, int, int);
 struct Piece* getpcbycrds(int, int);
 int isckmate(enum Team);
 int isdrawn();
+
+// special rules
+void promotion();
+void en_passant();
+void castling();
 
 // render
 void printboard();
@@ -208,7 +208,7 @@ void choose_target() {
       if (piece->name == KING) {
         setlegal();
 
-        
+
       }
 
       break;
