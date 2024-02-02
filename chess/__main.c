@@ -4,11 +4,30 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* enums */
-enum Team {
-  WHITE = 1,
-  BLACK
-};
+
+/*
+  CHESS - realworld rules
+
+  # Team
+  Black and White,
+  and White always start first
+  
+  # Pieces
+  King, Queen, Bishop, Knight, Rook, Pawn
+
+  # Movement of pieces
+  They have unique movement for each piece.
+
+  # Special Rules
+  1 Promotion
+  2 En passant
+  3 Castling
+
+  # Game end
+  1 Checkmate 
+  2 Time Over (Draw)
+*/
+
 
 enum Pieces {
   KING,
@@ -19,760 +38,490 @@ enum Pieces {
   PAWN
 };
 
-/* struct */
+enum Team {
+  WHITE = 1,
+  BLACK
+};
+
+// Piece template
 struct Piece {
   enum Pieces name;
-  enum Team team; 
+  enum Team team;
   char symbol[4];
-  int mcount; // castling, 2 move
+  int crds[2];
+  int legal[8][8];
 };
 
-/* constants */
-const int ROW_CNT = 8;
-const int COL_CNT = 8;
 const int PIECE_CNT = 32;
+// rows and cols
+const char rows[] = "12345678";
+const char cols[] = "abcdefgh";
+
+enum Team turn = WHITE;
+struct Piece* piece;
+int gcount = 0;
+
 struct Piece pieces[PIECE_CNT] = {
-  {KING, WHITE, "♔", 0},
-  {QUEEN, WHITE, "♕", 0},
-  {BISHOP, WHITE, "♗", 0},
-  {BISHOP, WHITE, "♗", 0},
-  {KNIGHT, WHITE, "♘", 0},
-  {KNIGHT, WHITE, "♘", 0},
-  {ROOK, WHITE, "♖", 0},
-  {ROOK, WHITE, "♖", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {PAWN, WHITE, "♙", 0},
-  {KING, BLACK, "♚", 0},
-  {QUEEN, BLACK, "♛", 0},
-  {BISHOP, BLACK, "♝", 0},
-  {BISHOP, BLACK, "♝", 0},
-  {KNIGHT, BLACK, "♞", 0},
-  {KNIGHT, BLACK, "♞", 0},
-  {ROOK, BLACK, "♜", 0},
-  {ROOK, BLACK, "♜", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
-  {PAWN, BLACK, "♟", 0},
+  {KING, WHITE, "♔", {7, 4}},
+  {QUEEN, WHITE, "♕", {7, 3}},
+  {BISHOP, WHITE, "♗", {7, 2}},
+  {BISHOP, WHITE, "♗", {7, 5}},
+  {KNIGHT, WHITE, "♘", {7, 1}},
+  {KNIGHT, WHITE, "♘", {7, 6}},
+  {ROOK, WHITE, "♖", {7, 0}},
+  {ROOK, WHITE, "♖", {7, 7}},
+  {PAWN, WHITE, "♙", {6, 0}},
+  {PAWN, WHITE, "♙", {6, 1}},
+  {PAWN, WHITE, "♙", {6, 2}},
+  {PAWN, WHITE, "♙", {6, 3}},
+  {PAWN, WHITE, "♙", {6, 4}},
+  {PAWN, WHITE, "♙", {6, 5}},
+  {PAWN, WHITE, "♙", {6, 6}},
+  {PAWN, WHITE, "♙", {6, 7}},
+  {KING, BLACK, "♚", {0, 4}},
+  {QUEEN, BLACK, "♛", {0, 3}},
+  {BISHOP, BLACK, "♝", {0, 2}},
+  {BISHOP, BLACK, "♝", {0, 5}},
+  {KNIGHT, BLACK, "♞", {0, 1}},
+  {KNIGHT, BLACK, "♞", {0, 6}},
+  {ROOK, BLACK, "♜", {0, 0}},
+  {ROOK, BLACK, "♜", {0, 7}},
+  {PAWN, BLACK, "♟", {1, 0}},
+  {PAWN, BLACK, "♟", {1, 1}},
+  {PAWN, BLACK, "♟", {1, 2}},
+  {PAWN, BLACK, "♟", {1, 3}},
+  {PAWN, BLACK, "♟", {1, 4}},
+  {PAWN, BLACK, "♟", {1, 5}},
+  {PAWN, BLACK, "♟", {1, 6}},
+  {PAWN, BLACK, "♟", {1, 7}},
 };
 
-/* variables */
-int board[ROW_CNT][COL_CNT] = {
-  {22, 20, 18, 17, 16, 19, 21, 23}, 
-  {24, 25, 26, 27, 28, 29, 30, 31},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {-1, -1, -1, -1, -1, -1, -1, -1},
-  {8, 9, 10, 11, 12, 13, 14, 15},
-  {6, 4, 8, 1, 0, 3, 5, 7}, 
-};
-char _row, _col;
-int row, col;
-char _trow, _tcol;
-int trow, tcol;
-char nl;
-int turn = WHITE;
 
-/* functions */ 
-void get_idx(char, char, int*, int*);
-int chkend();
-int chkpiece();
-int chktarget();
-int pawn();
+/* function declarations */
+
+
+// basic flow
+void choose_piece();
+void choose_target();
+void chkend();
+
+// define movements
+void setlegal();
+void pawnmv(struct Piece*);
+void knightmv(struct Piece*);
+void rookmv(struct Piece*);
+void kingmv(struct Piece*);
+
+// helper
+void getcrds(char[2], int*, int*);
+int getckstate(enum Team, int, int);
+struct Piece* getpcbycrds(int, int);
+int isckmate(enum Team);
+int isdrawn();
+
+// special rules
 void promotion();
-int rook();
-int knight();
-int bishop();
-int queen();
-int king();
+void en_passant();
+void castling();
 
-/* draw */
-void printBoard();
+// render
+void printboard();
 
-/* run the game */
+
+/* entry point */
+
+int end = 0;
+
 int main() {
-  while (1) {  
-    // choose a piece
-    printBoard();
-    printf("► %s choose a piece\n", turn == BLACK ? "Black" : "White");
+  while (1) {
+    setlegal();
+    chkend();
 
-    while (1) {
-      // get input 
-      scanf("%c%c%c", &_col, &_row, &nl);
-      get_idx(_row, _col, &row, &col);
-      
-      // validate piece
-      int valid = chkpiece();
-      
-      if (!valid) {
-        printf("► invalid piece. try again\n");
-      } else {
-        break;
-      }
-    }
-
-    // choose target
-    printBoard();
-    printf("► [%c%c] choose target or re-select piece\n", _col, _row);
-
-    while (1) {
-      // get input
-      scanf("%c%c%c", &_tcol, &_trow, &nl);
-      get_idx(_trow, _tcol, &trow, &tcol);
-      
-      // validate target
-      int r = chktarget();
-
-      if (r == 0) { 
-        printf("► invalid movement. try again\n");
-      } else if (r == 1) { 
-        printf("► [%c%c] choose target or re-select piece\n", _tcol, _trow);
-        row = trow;
-        col = tcol;
-      } else { // 2
-        break;
-      }
-    }
-
-    // movement
-    int id = board[row][col];
-    board[row][col] = -1;
-    board[trow][tcol] = id;
-    
-    // increase mcount 
-    pieces[id].mcount++;
-
-    // get result
-    int end = chkend();
-
-    // check promotion
-    // promotion();
-
-    if (!end) {
-      turn = turn == WHITE ? BLACK : WHITE;
+    if (end) {
+      break;
     } else {
-      printBoard();
-      printf("► %s WIN!\n", turn == BLACK ? "Black" : "White");
+      choose_piece();
+      choose_target();
+
+      turn = turn == WHITE ? BLACK : WHITE;
+    }
+  }
+}
+
+
+/* basic flow */
+
+
+void choose_piece() {
+  char input[2];
+  int r, c;
+
+  printboard();
+
+  while (1) {
+    // ask user to choose a piece to move.
+    printf("▶︎ %s choose piece to move\n", turn == WHITE ? "WHITE" : "BLACK");
+
+    scanf("%s", input);
+
+    // White user inputs b7, convert it to crds
+    getcrds(input, &r, &c);
+
+    // validation check 
+    int state = getckstate(turn, r, c);
+
+    if (state == -1) {
+      piece = getpcbycrds(r, c);
+      break;
+    } else {
+      // error message
+      printf("err: incorrect piece!\n");
+    }
+  }
+}
+
+void choose_target() {
+  char input[2];
+  int r, c;
+
+  printboard();
+
+  while (1) {
+    printf("▶︎ choose target\n");
+
+    scanf("%s", input);
+
+    // user inputs b6, convert it into crds.
+    getcrds(input, &r, &c);
+
+    if (piece->legal[r][c] == 1) {
+
+      /*
+        In case of king,
+        check updated crds of king before printing board
+        to make sure it's legal movement
+      */
+
+      piece->crds[0] = r;
+      piece->crds[1] = c;
+
+      if (piece->name == KING) {
+        setlegal();
+
+
+      }
+
+      break;
+    } else {
+      printf("err: wrong target!\n");
+    }
+  }
+}
+
+void chkend() {
+  int checkmate = isckmate(turn);
+  int draw = isdrawn();
+
+  if (checkmate != 0) {
+    if (checkmate == 1) {
+      // Black WIN
+    } else {
+      // White WIN
+    }
+
+    printboard();
+    printf("▶︎ Checkmate!\n");
+
+    end = 1;
+  }
+
+  if (draw) {
+    // drawn
+    printboard();
+    printf("▶︎ Draw!\n");
+
+    end = 1;
+  }
+}
+
+
+/* Define movements */
+
+
+void setlegal() {
+  for (int i = 0; i < PIECE_CNT; i++) {  
+    if (pieces[i].name == PAWN) {
+      pawnmv(&pieces[i]);
+    } else if (pieces[i].name == KNIGHT) {
+      knightmv(&pieces[i]);
+    } else if (pieces[i].name == ROOK) {
+      rookmv(&pieces[i]);
+    } else if (pieces[i].name == KING) {
+      kingmv(&pieces[i]);
+    }
+  }
+}
+
+void pawnmv(struct Piece* pawn) {
+  int r = pawn->crds[0];
+  int c = pawn->crds[1];
+
+  // WHITE
+  if (pawn->team == WHITE) {
+    // front
+    if (getckstate(pawn->team, r - 1, c) == 0) {
+      pawn->legal[r - 1][c] = 1;
+    // left
+    } else if (getckstate(pawn->team, r - 1, c - 1) == 1) {
+      pawn->legal[r - 1][c - 1] = 1;
+    // right
+    } else if (getckstate(pawn->team, r - 1, c + 1) == 1) {
+      pawn->legal[r - 1][c + 1] = 1;
+    }
+  } else { // BLACK
+    // front
+    if (getckstate(pawn->team, r + 1, c) == 0) {
+      pawn->legal[r + 1][c] = 1;
+    }
+
+    // left
+    if (getckstate(pawn->team, r + 1, c - 1) == 1) {
+      pawn->legal[r + 1][c - 1] = 1;
+    }
+
+    // right
+    if (getckstate(pawn->team, r + 1, c + 1) == 1) {
+      pawn->legal[r + 1][c + 1] = 1;
+    }
+  }
+}
+
+void knightmv(struct Piece* knight) {
+  int r = knight->crds[0];
+  int c = knight->crds[1];
+
+  // north 
+  if (getckstate(knight->team, r - 2, c - 1) >= 0) {
+    knight->legal[r - 2][c - 1] = 1;
+  } else if (getckstate(knight->team, r - 2, c + 1) >= 0) {
+    knight->legal[r - 2][c + 1] = 1;
+  }
+}
+
+void rookmv(struct Piece* rook) {
+  // north
+  for (int r = rook->crds[0] - 1; r >= 0; r--) {
+    int c = rook->crds[1];
+
+    if (getckstate(rook->team, r, c) == 1) {
+      rook->legal[r][c] = 1;
+      break;
+    } else if (getckstate(rook->team, r, c) == -1) {
+      break;
+    } else if (getckstate(rook->team, r, c) == 0) {
+      rook->legal[r][c] = 1;
+    }
+  }
+
+  // west
+  for (int c = rook->crds[1] - 1; c >= 0; c--) {
+    int r = rook->crds[0];
+
+    if (getckstate(rook->team, r, c) == 1) {
+      rook->legal[r][c] = 1;
+      break;
+    } else if (getckstate(rook->team, r, c) == -1) {
+      break;
+    } else if (getckstate(rook->team, r, c) == 0) {
+      rook->legal[r][c] = 1;
+    }
+  }
+}
+
+void kingmv(struct Piece* king) {
+  int r = king->crds[0];
+  int c = king->crds[1];
+
+  // clockwise from top-left to middle-left
+  if (getckstate(king->team, r - 1, c - 1) >= 0) {
+    king->legal[r - 1][c - 1] = 1;
+  } else if (getckstate(king->team, r - 1, c) >= 0) {
+    king->legal[r - 1][c] = 1;
+  } else if (getckstate(king->team, r - 1, c + 1) >= 0) {
+    king->legal[r - 1][c + 1] = 1;
+  } else if (getckstate(king->team, r, c + 1) >= 0) {
+    king->legal[r][c + 1] = 1;
+  } else if (getckstate(king->team, r + 1, c + 1) >= 0) {
+    king->legal[r + 1][c + 1] = 1;
+  } else if (getckstate(king->team, r + 1, c) >= 0) {
+    king->legal[r + 1][c] = 1;
+  } else if (getckstate(king->team, r + 1, c - 1) >= 0) {
+    king->legal[r + 1][c - 1] = 1;
+  } else if (getckstate(king->team, r, c - 1) >= 0) {
+    king->legal[r][c - 1] = 1;
+  }
+}
+
+// additionlly, king should not moves to danger zone.
+int isdanger(enum Team team, int r, int c) {
+  int danger = 0;
+
+  // for WHITE King
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].team != team) {
+      if (pieces[i].legal[r][c] == 1) {
+        danger = 1;
+      }
+    }
+  }
+
+  return danger;
+}
+
+
+/* Special Rules */
+
+
+/* Helper */
+
+
+// convert user input to crds
+void getcrds(char input[2], int *r, int *c) {
+  for (int i = 0; i < 8; i++) {
+    if (input[1] == rows[i]) *r = i;
+  }
+
+
+  for (int i = 0; i < 8; i++) {
+    if (input[0] == cols[i]) *c = i;
+  }
+}
+
+struct Piece* getpcbycrds(int r, int c) {
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+      return &pieces[i];
+    }
+  } 
+
+  return NULL;
+};
+
+int getckstate(enum Team team, int r, int c) {
+  /*
+    -2 error
+    ---
+    -1 same team
+    0 empty
+    1 opponent
+  */
+
+  // error
+  if (r < 0 && r > 7 && c < 0 && c > 7) {
+    return -2;
+  } 
+
+  int state = 0;
+  
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+      if (pieces[i].team != team) {
+        state = 1;
+      } else {
+        // same team
+        state = -1;
+      }
+
       break;
     }
   }
+
+  return state;
 }
 
-// get index
-void get_idx(char _row, char _col, int* row, int* col) {
-  char rows[] = "12345678";
-  char cols[] = "abcdefgh";
+int isckmate(enum Team team) {
+  struct Piece king = team == WHITE ? pieces[0] : pieces[16];
+  int r = king.crds[0];
+  int c = king.crds[1];
 
-  for (int i = 0; i < strlen(rows); i++) {
-    if (_row == rows[i]) *row = (strlen(rows) - 1) - i;
-  }
-
-  for (int i = 0; i < strlen(cols); i++) {
-    if (_col == cols[i]) *col = i;
-  }
-}
-
-// check piece
-int chkpiece() { 
-  int id = board[row][col]; 
-  int valid = 0;
-
-  if (id > -1) {
-    if (pieces[id].team == turn) {
-      valid = 1;
-    } 
-  }
-
-  return valid;
-}
-
-// check end
-int chkend() {
-  int end = 1;
-
-  for (int r = 0; r < ROW_CNT; r++) {
-    for (int c = 0; c < COL_CNT; c++) {
-      int id = board[r][c];
-
-      if (id > -1) {
-        if (pieces[id].name == KING && pieces[id].team != turn) {
-          end = 0;
-        }
+  // 1. Is king in danger zone now?
+  for (int i = 0; i < PIECE_CNT; i++) {
+    if (pieces[i].team != team) {
+      if (pieces[i].legal[r][c] == 1) {
+        // yes
+        break; 
       }
     }
   }
 
-  return end;
-}
-
-// check target
-int chktarget() { 
-  int id = board[row][col];
-  struct Piece piece = pieces[id];
-  int target = board[trow][tcol];
-  int r;
-
-  // there a piece on target
-  if (target > -1) {
-    struct Piece taker = pieces[target];
-
-    if (piece.team == taker.team) {
-      return 1;
-    }
-  }
-
-  // validate target
-  if (piece.name == PAWN) {
-    r = pawn();
-  }
-
-  if (piece.name == ROOK) {
-    r = rook();
-  }
-
-  if (piece.name == KNIGHT) {
-    r = knight();
-  }
-
-  if (piece.name == BISHOP) {
-    r = bishop();
-  }
-
-  if (piece.name == KING) {
-    r = king();
-  }
-
-  if (piece.name == QUEEN) {
-    r = queen();
-  }
-
-  return r;
-}
-
-int pawn() {
-  int id = board[row][col];
-  struct Piece piece = pieces[id];
-  int r = 0;
-
-  if (piece.team == WHITE) {
-    if (row - 1 == trow && col == tcol) {
-      if (board[trow][tcol] == -1) {
-        r = 2;
-      }
-    } 
-
-    if (row - 1 == trow && col - 1 == tcol) {
-      if (board[trow][tcol] > -1) {
-        r = 2;
-      }
-    }
-
-    if (row - 1 == trow && col + 1 == tcol) {
-      if (board[trow][tcol] > -1) {
-        r = 2;
-      }
-    }
-
-    // 2 steps forward
-    if (row - 2 == trow && col == tcol) {
-      if (
-        piece.mcount < 1
-        && board[row - 1][col] == -1 
-        && board[trow][tcol] == -1
-      ) {
-        r = 2;
-      }
-    }
-  } 
-  
-  if (piece.team == BLACK) {
-    if (row + 1 == trow && col == tcol) {
-      if (board[trow][tcol] == -1) {
-        r = 2;
-      }
-    }
-
-    if (row + 1 == trow && col - 1 == tcol) {
-      if (board[trow][tcol] > -1) {
-        r = 2;
-      }
-    }
-
-    if (row + 1 == trow && col + 1 == tcol) {
-      if (board[trow][tcol] > -1) {
-        r = 2;
-      }
-    }
-
-    // 2 steps forward
-    if (row + 2 == trow && col == tcol) {
-      if (
-        piece.mcount < 1
-        && board[row + 1][col] == -1 
-        && board[trow][tcol] == -1
-      ) {
-        r = 2;
-      }
-    }
-  }
-
-  return r;
-}
-
-void promotion() {
-  int id = board[trow][tcol];
-  struct Piece piece = pieces[id];
-
-  if (  
-    piece.team == WHITE
-    && piece.name == PAWN
-    && trow == 0
-  ) {
-    printf("Which piece do you want to promote?\n");
-    printf("1. queen\n 2. bishop\n 3. knight\n 4. rook\n");
-
-    int n;
-
-    scanf("%d", &n);
-
-    if (n == 1) {
-      struct Piece queen = {QUEEN, WHITE, "♕", 0};
-      pieces[id] = queen;
-    } else if (n == 2) {
-      struct Piece bishop = {BISHOP, WHITE, "♗", 0};
-      pieces[id] = bishop;
-    } else if (n == 3) {
-      struct Piece knight = {KNIGHT, WHITE, "♘", 0};
-      pieces[id] = knight;
-    } else if (n == 4) {
-      struct Piece rook = {ROOK, WHITE, "♖", 0};
-      pieces[id] = rook;
-    }
-  }
-
-  if (  
-    piece.team == BLACK
-    && piece.name == PAWN
-    && trow == ROW_CNT - 1
-  ) {
-    printf("Which piece do you want to promote?\n");
-    printf("1. queen\n 2. bishop\n 3. knight\n 4. rook\n");
-
-    int n;
-
-    scanf("%d", &n);
-
-    if (n == 1) {
-      struct Piece queen = {QUEEN, BLACK, "♛", 0};
-      pieces[id] = queen;
-    } else if (n == 2) {
-      struct Piece bishop = {BISHOP, BLACK, "♝", 0};
-      pieces[id] = bishop;
-    } else if (n == 3) {
-      struct Piece knight = {KNIGHT, BLACK, "♞", 0};
-      pieces[id] = knight;
-    } else if (n == 4) {
-      struct Piece rook = {ROOK, BLACK, "♜", 0};
-      pieces[id] = rook;
-    }
-  }
-}
-
-int rook() {
-  int id = board[row][col];
-  struct Piece piece = pieces[id];
-  int r = 0;
-
-  // up
-  if (trow < row && col == tcol) {
-    int tmp = 2;
-
-    for (int r = row - 1; r > trow; r--) {
-      if (board[r][col] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // down
-  if (trow > row && col == tcol) {
-    int tmp = 2;
-
-    for (int r = row + 1; r < trow; r++) {
-      if (board[r][col] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // left
-  if (row == trow && tcol < col) {
-    int tmp = 2;
-
-    for (int c = col - 1; c > tcol; c--) {
-      if (board[row][c] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // right
-  if (row == trow && tcol > col) {
-    int tmp = 2;
-
-    for (int c = col + 1; c < tcol; c++) {
-      if (board[row][c] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  return r;
-}
-
-int getknight(int row, int col) {
-
-}
-
-int knight() {
-  int id = board[row][col];
-  struct Piece piece = pieces[id];
-  int r = 0;
-
-  // up
-  if (row - 2 == trow && col - 1 == tcol) {
-    r = 2;
-  }
-
-  if (row - 2 == trow && col + 1 == tcol) {
-    r = 2;
-  }
-
-  // down
-  if (row + 2 == trow && col - 1 == tcol) {
-    r = 2;
-  }
-
-  if (row + 2 == trow && col + 1 == tcol) {
-    r = 2;
-  }
-
-  // left
-  if (row - 1 == trow && col - 2 == tcol) {
-    r = 2;
-  }
-
-  if (row + 1 == trow && col - 2 == tcol) {
-    r = 2;
-  }
-
-  // right
-  if (row - 1 == trow && col + 2 == tcol) {
-    r = 2;
-  }
-
-  if (row + 1 == trow && col + 2 == tcol) {
-    r = 2;
-  }
-
-  return r;
-}
-
-int bishop() {
-  int id = board[row][col];
-  struct Piece piece = pieces[id];
-  int r = 0;
-
-  if (abs(tcol - col) == abs(trow - row)) {
-    // tl
-    if (tcol - col < 0 && trow - row < 0) {
-      int x = col - 1;
-      int y = row - 1;
-      int tmp = 2;
-
-      while (x > tcol && y > trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x--;
-        y--;
-      }
-
-      r = tmp;
-    }
-
-    // tr
-    if (tcol - col > 0 && trow - row < 0) {
-      int x = col + 1;
-      int y = row - 1;
-      int tmp = 2;
-
-      while (x < tcol && y > trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x++;
-        y--;
-      }
-
-      r = tmp;
-    }
-
-    // br
-    if (tcol - col > 0 && trow - row > 0) {
-      int x = col + 1;
-      int y = row + 1;
-      int tmp = 2;
-
-      while (x < tcol && y < trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x++;
-        y++;
-      }
-
-      r = tmp;
-    }
-
-    // bl
-    if (tcol - col < 0 && trow - row > 0) {
-      int x = col - 1;
-      int y = row + 1;
-      int tmp = 2;
-
-      while (x > tcol && y < trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x--;
-        y++;
-      }
-
-      r = tmp;
-    }
-  }
-
-  return r;
-}
-
-int king() {
-  int r = 0;
-
-  // up
-  if (row - 1 == trow && col == tcol) r = 2;
-  // down
-  if (row + 1 == trow && col == tcol) r = 2;
-  // left
-  if (row == trow && col - 1 == tcol) r = 2;
-  // right
-  if (row == trow && col + 1 == tcol) r = 2;
-  // tl
-  if (row - 1 == trow && col - 1 == tcol) r = 2;
-  // tr
-  if (row - 1 == trow && col + 1 == tcol) r = 2;
-  // br
-  if (row + 1 == trow && col + 1 == tcol) r = 2;
-  // bl
-  if (row + 1 == trow && col - 1 == tcol) r = 2;
-
-  return r;
-}
-
-int queen() {
-  int id = board[row][col];
-  struct Piece piece = pieces[id];
-  int r = 0;
-
-  // up
-  if (trow > row && col == tcol) {
-    int tmp = 2;
-
-    for (int r = row + 1; r < trow; r++) {
-      if (board[r][col] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // down
-  if (trow < row && col == tcol) {
-    int tmp = 2;
-
-    for (int r = row - 1; r > trow; r--) {
-      if (board[r][col] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // left
-  if (row == trow && tcol < col) {
-    int tmp = 2;
-
-    for (int c = col - 1; c > tcol; c--) {
-      if (board[row][c] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // right
-  if (row == trow && tcol > col) {
-    int tmp = 2;
-
-    for (int c = col + 1; c < tcol; c++) {
-      if (board[row][c] > -1) {
-        tmp = 0;
-        break;
-      }
-    }
-
-    r = tmp;
-  }
-
-  // diagonal
-  if (abs(tcol - col) == abs(trow - row)) {
-    // tl
-    if (tcol - col < 0 && trow - row < 0) {
-      int x = col - 1;
-      int y = row - 1;
-      int tmp = 2;
-
-      while (x > tcol && y > trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x--;
-        y--;
-      }
-
-      r = tmp;
-    }
-
-    // tr
-    if (tcol - col > 0 && trow - row < 0) {
-      int x = col + 1;
-      int y = row - 1;
-      int tmp = 2;
-
-      while (x < tcol && y > trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x++;
-        y--;
-      }
-
-      r = tmp;
-    }
-
-    // br
-    if (tcol - col > 0 && trow - row > 0) {
-      int x = col + 1;
-      int y = row + 1;
-      int tmp = 2;
-
-      while (x < tcol && y < trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x++;
-        y++;
-      }
-
-      r = tmp;
-    }
-
-    // bl
-    if (tcol - col < 0 && trow - row > 0) {
-      int x = col - 1;
-      int y = row + 1;
-      int tmp = 2;
-
-      while (x > tcol && y < trow) {
-        if (board[y][x] > -1) {
-          tmp = 0;
-          break;
-        }
-
-        x--;
-        y++;
-      }
-
-      r = tmp;
-    }
-  }
-
-  return r;
-}
-
-// draw board
-void printBoard() {
-  printf("\n");
-
-  for (int r = 0; r < ROW_CNT; r++) {
-    printf("%d ", ROW_CNT - r);
-
-    for (int c = 0; c < COL_CNT; c++) {
-      if (board[r][c] > -1) {
-        for (int i = 0; i < PIECE_CNT; i++) {
-          if (i == board[r][c]) {
-            printf("%s ", pieces[i].symbol);
+  // 2. no where to avoid?
+  {
+    for (int i = 0; i < PIECE_CNT; i++) {
+      if (pieces[i].team != team) {
+        for (int r = 0; r < 8; r++) {
+          for (int c = 0; c < 8; c++) {
+            if (pieces[i].legal[r][c] == king.legal[r][c]) {
+              king.legal[r][c] = 0;
+            }
           }
         }
-      } else {
-        printf("∙ ");
       }
     }
+  }
+
+  // 3. Do removing threat by peers has no effect?
+}
+
+int isdrawn() {
+  // game count bigger than 100 times
+  if (gcount > 100) return 1;
+
+  return 0;
+};
+
+/* render */
+
+
+void printboard() {
+  // top space
+  printf("\n");
+
+  for (int r = 0; r < strlen(rows); r++) {
+    printf("%c", rows[r]);
+
+    for (int c = 0; c < strlen(cols); c++) {
+      int idx = -1;
+
+      for (int i = 0; i < PIECE_CNT; i++) {
+        if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+          idx = i;
+          break;
+        }
+      }
+      
+      if (idx > -1) {
+        printf(" %s", pieces[idx].symbol);
+      } else {
+        if ((r + c) % 2 == 0) {
+          printf(" ◦");
+        } else {
+          printf(" •");
+        }
+      }
+    }
+
     printf("\n");
   }
 
-  printf("  a b c d e f g h\n\n");
+  // last row
+  printf(" ");
+
+  for (int c = 0; c < strlen(cols); c++) {
+    printf(" %c", cols[c]);
+  }
+
+  printf("\n");
+
+  // bottom space
+  printf("\n");
 }

@@ -92,7 +92,7 @@ char cols[] = "abcdefgh";
 // basic flow
 void choose_piece();
 void choose_target();
-void chkend();
+void isckmate();
 
 // special rules
 void promotion();
@@ -169,26 +169,34 @@ void choose_target() {
       board[r][c] = 0;
       board[r][c] = id;
 
-      // + prediction and prevention in King
-      setlegal(); // needed if taken danger zone
+      { // turn back if not valid
+        setlegal(); 
 
-      if (piece->name == KING) {
-        int valid = 1;
+        for (int r = 0; r < 8; r++) {
+          for (int c = 0; c < 8; c++) {
+            if (board[r][c] == 1) {
+              // white king 
+            }
 
-        // when moved to empty or taken danger zone, make it invalid
-        for (int i = 0; i < PIECE_CNT; i++) {
-          if (pieces[i].team != turn) {
-            if (pieces[i].legal[r][c] == 1) {
-              valid = 0;
+            if (board[r][c] == 16) {
+              // black king
             }
           }
         }
 
-        if (valid) {
-          break;
-        } else {
-          printf("invalid");
+        int valid = 1;
+
+        // when moved to danger zone, make it invalid
+        for (int i = 0; i < PIECE_CNT; i++) {
+          if (pieces[i].team != turn) {
+            if (pieces[i].legal[r][c] == 1) {
+              // compare with king's crds
+              valid = 0;
+            }
+          }
         }
+        
+        // ..
       }
     } else {  
       printf("► invalid movement. try again\n");
@@ -196,13 +204,10 @@ void choose_target() {
   }
 }
 
-void chkend() {
-  if (!end) {
-    turn = turn == WHITE ? BLACK : WHITE;
-  } else {
-    printBoard();
-    printf("► %s WIN!\n", turn == BLACK ? "Black" : "White");
-  }
+void isckmate() {
+  // 1 danger zone now
+  // 2 king no where to avoid
+  // 3 no hero
 }
 
 
