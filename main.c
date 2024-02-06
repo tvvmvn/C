@@ -8,41 +8,35 @@
 int main() {
 
   // CHECKMATE
+  // king has 3 states unlike other pieces: -1, 0, 1 
+  // when no 1, it's checkmate.
 
-  // 1. king has place to avoid ?
+  // top-left
+  setstate(king.crds[0] - 1, king.crds[1] - 1);
+  // top-center
+  setstate(king.crds[0] - 1, king.crds[1]);
+  // top-right
+  setstate(king.crds[0] - 1, king.crds[1] + 1);
+}
 
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
-      if (king.legal[r][c] == 1) {
-        for (int i = 0; i < 32; i++) {
-          if (pieces[i].legal[r][c] == 1) {
-            king.legal[r][c] = 0;
-          }
-        }
-      }
-    }
-  }
-
-  // .. if king has legal, not checkmate!
-
-
-  // 2. can't remove threat?
-
-  for (int r = 0; r < 8; r++) {
-    for (int c = 0; c < 8; c++) {
+int setstate(r, c) {
+  for (int i = 0; i < 32; i++) {
+    if (pieces[i].team == BLACK) {
       if (pieces[i].legal[r][c] == 1) {
-        if (king.crds[0] == r && king.crds[1] == c) {
-          threat = pieces[i];
-        }
+        king.legal[r][c] = -1;
       }
     }
-  }
 
-  if (pieces[i].legal[r][c] == 1) {
-    if (threat.crds[0] == r && threat.crds[1] == c) {
-      // removing threat's done!
-      pieces[i].crds[0] = r;
-      pieces[i].crds[1] = c;
+    if (pieces[i].team == WHITE) {
+      if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+        king.legal[r][c] = 0;
+      }
+    }
+
+    if (pieces[i].team == BLACK) {
+      if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
+        king.legal[r][c] = 1;
+      }
     }
   }
 }
