@@ -5,38 +5,55 @@
 #include <time.h>
 
 
-int main() {
+int main() {}
 
-  // CHECKMATE
-  // king has 3 states unlike other pieces: -1, 0, 1 
-  // when no 1, it's checkmate.
+// # whether check is danger zone or not
+void isdangerzone(int r, int c) {
+  int n = 0;
 
-  // top-left
-  setstate(king.crds[0] - 1, king.crds[1] - 1);
-  // top-center
-  setstate(king.crds[0] - 1, king.crds[1]);
-  // top-right
-  setstate(king.crds[0] - 1, king.crds[1] + 1);
-}
-
-int setstate(r, c) {
   for (int i = 0; i < 32; i++) {
     if (pieces[i].team == BLACK) {
-      if (pieces[i].legal[r][c] == 1) {
-        king.legal[r][c] = -1;
+      if (pieces[i].points[r][c] == 1) {
+        n = 1;
       }
     }
+  }
 
-    if (pieces[i].team == WHITE) {
-      if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
-        king.legal[r][c] = 0;
-      }
-    }
+  return n;
+}
 
-    if (pieces[i].team == BLACK) {
-      if (pieces[i].crds[0] == r && pieces[i].crds[1] == c) {
-        king.legal[r][c] = 1;
-      }
+// # Get points of king
+void getpoints() {
+  // top-left
+  int r = king.crds[0] - 1;
+  int c = king.crds[1] - 1;
+
+  int id = board[r][c];
+
+  // empty
+  if (!id) {
+    int dangerzone = isdangerzone(r, c);
+
+    if (dangerzone) {
+      king.points[r][c] = 0;
+    } else {
+      king.points[r][c] = 1;
     }
+  } else {
+    struct Piece piece = getpiecebyid(id);
+
+    if (piece.team == WHITE) {
+      king.points[r][c] = 0;
+    } else {
+      king.points[r][c] = 1;
+    }
+  }
+}
+
+// # checkmate
+void isckmate() {
+  // king in danger zone now
+  if (isdangerzone(king.crds[0], king.crds[1])) {
+    // and no place to avoid! -> all 0
   }
 }
