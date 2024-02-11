@@ -46,7 +46,16 @@ void getpoints() {
 void isckmate() {
   // king in danger zone now
   if (isdangerzone(king.crds[0], king.crds[1])) {
-    // and no place to avoid! -> all 0
+      /*
+        if [1] exists, escape function
+
+        no [1] exists (king cannot move)
+          only 1 threat
+            hero or protector -> freeze others
+            no hero or protector -> checkmate
+
+          more than 2 threats -> checkmate
+      */
   }
 }
 
@@ -67,3 +76,4 @@ void isdangerzone(int r, int c) {
 
   return n;
 }
+
