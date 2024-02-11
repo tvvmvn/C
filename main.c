@@ -9,7 +9,7 @@
 
   0 not legal
   1 (takeable) empty or opponent
-  2 same team
+  2 same team (potentially takeable by opponent)
 */
 
 int main() {}
@@ -43,19 +43,32 @@ void getpoints() {
 }
 
 // # checkmate
-void isckmate() {
-  // king in danger zone now
+void ischeckmate() {
+  // 1 king in threat now, then
   if (isdangerzone(king.crds[0], king.crds[1])) {
-      /*
-        if [1] exists, escape function
+    /*
+    2 freeze all
 
-        no [1] exists (king cannot move)
-          only 1 threat
-            hero or protector -> freeze others
-            no hero or protector -> checkmate
+    3 
+    3-1. only 1 threat
+      3-1-1. saver exists
+        3-1-1-1. king has [1]
+        unfreeze him.
+        3-1-1-2. king has no [1]
+        unfreeze him.
+      
+      3-1-2. saver doesn't exists
+        3-1-2-1. king has [1]
+        keep playing
+        3-1-2-2. king has no [1]
+        checkmate!
 
-          more than 2 threats -> checkmate
-      */
+    3-2. more than 2 threats 
+      3-2-1. king has [1]
+      keep playing
+      3-2-2. king has no [1] 
+      checkmate!
+    */
   }
 }
 
