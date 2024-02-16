@@ -8,7 +8,7 @@
 /*
   C Operator
 
-  1 Arithmetic Operator
+  1 Arithmatic Operator
   2 Assignment Operator
   3 Comparison Operator
   4 Logical Operator
@@ -19,24 +19,50 @@
 /*
   Arithmetic Operator
 
-  1 4 Rules
-  + - * /
-
-  2 Modulus
-  %
-
-  3 Increment
-  ++
-
-  4 Decrement
-  --
+  1 4 Rules operator
+  2 Modulus operator
+  3 Increment operator
+  4 Decrement operator
 */
+
+
+// 4 rules operator
+int main() {
+  printf("%d\n", 1 + 2);
+  printf("%d\n", 1 - 2);
+  printf("%d\n", 1 * 2);
+  printf("%d\n", 1 / 2);
+}
+
+// 2 Modulus operator
+
+int main() {
+  // dividend % divisor
+  printf("%d\n", 5 % 2);
+}
+
+// 3 Increament operator
+// it increases variable by 1
 
 int main() {
   int x = 1;
 
-  printf("%d", ++x);
+  x++;
+
+  printf("%d", x);
   // > 2
+}
+
+// 4 Decreament operator
+// it decreases variable by 1
+
+int main() {
+  int x = 1;
+
+  x--;
+
+  printf("%d", x);
+  // > 0
 }
 
 

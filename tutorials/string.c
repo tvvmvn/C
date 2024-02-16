@@ -3,7 +3,7 @@
   a sequance of characters.
 
   1 declaration
-  2 acess each character
+  2 access each character
   3 change string
   4 get count of string
   5 string function
@@ -81,7 +81,7 @@ int main() {
 */
 
 
-// strcat: concatenate strings
+// 1 strcat: concatenate strings
 int main() {
   char s1[20] = "Hello ";
   char s2[] = "World";

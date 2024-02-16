@@ -1,5 +1,6 @@
 /*
   format specifier
+  you should input this to first argument of printf function.
 
   1 integer
   %d or %i
@@ -8,7 +9,7 @@
   %f
 
   3 double 
-  %lf
+  %lf (long float)
 
   4 character
   %c
