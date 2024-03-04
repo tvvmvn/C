@@ -69,47 +69,48 @@ int main() {
 /*
   Assignment Operator
 
-  1 assignment operator
-  =
-  
-  2 4 rules assignment operator
-  +=, -=, *=, /=
-  
-  3 modulus assignment operator
-  %=
-  
+  1 variables assignment operator
+  2 addition and others assignment operator  
+  ...
   4 bitwise assignment operator
   &= \= ^= >>= <<=
 */
+
+
+// 1 variables assignment operator
+int main() {
+  int n = 1;
+}
+
+// 2 addition and others assignment operator
+// +=, -=, *=, /=, %=
+int main() {
+  int n = 1;
+
+  n += 1; // n = n + 1
+}
 
 
 /*
   Comparison Operator
 
   1 equal operator
-  ==
-  
   2 not equal operator
-  !=
-
   3 gt (greater than)
-  >
-
-  4 lt (less than)
-  <
-
-  5 greater than or equal to
-  >=
-
-  6 less than or equal to
-  <=
+  4 gte (greater than or equal to) 
+  5 lt (less than)
+  6 lte (less than or equal to)
 */
 
 
 int main() {
+  // equal, not equal operator
   printf("%d\n", 0 == NULL); // 1
   printf("%d\n", 0 == false); // 1
   printf("%d\n", NULL == false); // 1
+  printf("%d\n", 0 != NULL); // 0
+  // gt operator
+  printf("%d\n", 1 > 0);
 }
 
 
