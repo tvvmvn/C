@@ -3,6 +3,13 @@
 #include <math.h>
 #include <stdlib.h>
 
+while (1) {
+  
+};
+
 int main() {
-  printf("hello tutorials!");
+  
+  int year = 2024;
+
+  printf("%d\n", year);
 }

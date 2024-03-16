@@ -1,5 +1,17 @@
 # C Tutorials
 
 ## `Table Of Contents`
-1. DATA TYPE
-2. 
+1. Data Type
+1. Format Specifier
+1. Pointer
+1. String
+1. Operator
+1. Conditional Statements
+1. Loop
+1. Variables Scope
+1. Function
+1. Array
+1. Struct
+1. Constant
+1. User Input
+1. File Handling

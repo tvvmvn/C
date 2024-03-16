@@ -5,20 +5,42 @@
 #include <time.h>
 
 /* 
-  variable 
+  variable scope
 
-  1 scope
+  1 global variable
+  2 local variable
 */
 
 
-/* scope */
+/* 
+  global variable
+
+  not declared in any function or block
+  accessible from anywhere in codes
+*/
+
+
+int year = 2024; 
 
 int main() {
+  printf("%d\n", year) ;
+  // 2024
+}
 
-  if (1) {
-    // variables has block scope
-    int year = 2024; 
+
+/*
+  local variable
+
+  declared in function or block
+  not accessible from outside
+*/
+
+
+int main() {
+  {
+    int year = 2024;
   }
 
-  printf("%d\n", year) // error
+  printf("%d\n", year); 
+  // error
 }
