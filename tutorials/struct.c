@@ -73,7 +73,7 @@ int main() {
   };
 
   printf("Hybrid Car list\n");
-  for (int i=0; i<3; i++) {
+  for (int i = 0; i < 3; i++) {
     printf("%d. %s from %s - %d\n", i+1, table[i].model, table[i].brand, table[i].price);
   }
 
