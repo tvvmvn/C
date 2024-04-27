@@ -1,7 +1,7 @@
 # C Programming
 
 
-### Table Of Contents
+### Tutorials
 1. Data Type
 1. Format Specifier
 1. Pointer
