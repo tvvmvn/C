@@ -1,17 +1,11 @@
 /*
   String
   a sequance of characters.
-
-  1 declaration
-  2 access each character
-  3 change string
-  4 get count of string
-  5 string function
-  6 escape character
 */
 
+
 /*
-  declaration
+declaration
 */
 
 int main() {
@@ -28,7 +22,7 @@ int main() {
 
 
 /*
-  access each character
+access each character
 */
 
 
@@ -45,7 +39,7 @@ int main() {
 
 
 /*
-  change string
+change string
 */
 
 
@@ -60,7 +54,7 @@ int main() {
 
 
 /*
-  get count of string
+get count of string
 */
 
 
@@ -73,15 +67,15 @@ int main() {
 
 
 /*
-  string function
+string function
 
-  1 strcat
-  2 strcmp
-  3 strcpy
+1 strcat
+2 strcmp
+3 strcpy
 */
 
 
-// 1 strcat: concatenate strings
+// strcat: concatenate strings
 int main() {
   char s1[20] = "Hello ";
   char s2[] = "World";
@@ -112,6 +106,35 @@ int main() {
 
   printf("%s\n", foo); // bar
 }
+
+
+/*
+string with pointer
+*/
+
+
+int main() {
+  char* s = "hello C!";
+
+  printf("%s\n", s); // hello C!
+}
+
+
+/*
+A function which returns string
+*/
+
+
+char* getS() {
+  return "hello C!";
+}
+
+int main() {
+  char* s = getS();
+
+  printf("%s\n", s);
+}
+
 
 /*
   escape character

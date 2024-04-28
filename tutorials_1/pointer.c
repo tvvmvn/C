@@ -37,7 +37,7 @@ int main() {
 int main() {
   char abc[] = "ABC";
 
-  for (int i=0; i<3; i++)
+  for (int i = 0; i < 3; i++)
     printf("%p\n", abc + i); 
     // > e.g) a -> b -> c
 }
@@ -46,7 +46,7 @@ int main() {
 int main() {
   int gen[] = {10, 20, 30};
 
-  for (int i=0; i<3; i++)
+  for (int i = 0; i < 3; i++)
     printf("%p\n", gen + i);
     // > e.g) a -> e -> 2
 }

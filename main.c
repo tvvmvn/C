@@ -1,12 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Car {
-  char* name;
-  int price;
-};
 
+char* getS() {
+  char* s = "hello C!";
+
+  printf("adr1: %p\n", s); // f83
+  
+  return s;
+}
 
 int main() {
-  struct Car* p;
+  char* s = getS();
+
+  printf("adr2: %p\n", s); // f83
+  printf("%s\n", s);
 }
