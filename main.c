@@ -1,5 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {}
+struct Car {
+  char* name;
+  int price;
+};
 
+
+int main() {
+  struct Car* p;
+}

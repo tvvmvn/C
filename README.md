@@ -18,8 +18,22 @@
 1. File Handling
 
 
-### Deep Dive
-1. Dynamic Array
-2. Hash Table
-3. Linked List
+### Memory Management
+1. Allocate
+2. Access
+3. Deallocate
+4. Reallocate
+5. Example
+
+
+### Data Structure
+1. Stack
+2. Linked List
+3. Binary Tree
+4. Graph
+5. Hash Table
+
+
+### Algorithm
+1. Bubble Sort
 
