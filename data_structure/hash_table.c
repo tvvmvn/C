@@ -27,7 +27,9 @@ void add(const char *value) {
   Node *newNode = (Node *)malloc(sizeof(Node));
 
   // Manually allocate memory and copy the string
-  newNode->value = (char *)malloc(strlen(value) + 1); // +1 for the null terminator
+  // +1 for the null terminator
+  newNode->value = (char *)malloc(strlen(value) + 1); 
+  
   strcpy(newNode->value, value);
 
   newNode->next = NULL;
@@ -67,7 +69,8 @@ void freeHashSet() {
     while (current != NULL) {
       Node *temp = current;
       current = current->next;
-      free(temp->value); // Free the manually allocated string memory
+      // Free the manually allocated string memory
+      free(temp->value); 
       free(temp);
     }
   }

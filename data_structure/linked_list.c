@@ -7,22 +7,37 @@ typedef struct Node {
   struct Node* next;
 } Node;
 
-int main() {
-  Node node4;
-  node4.value = 40;
-  node4.next = NULL;
+void printList(struct Node* node) {
+  while (node) {
+    printf("%d -> ", node->value);
+    node = node->next;
+  }
+  printf("null\n");
+}
 
-  Node node3;
-  node3.value = 30;
-  node3.next = &node4;
+int main() {
+  Node node1;
+  node1.value = 10;
 
   Node node2;
   node2.value = 20;
-  node2.next = &node3;
 
-  Node node1;
-  node1.value = 10;
+  Node node3;
+  node3.value = 30;
+
+  Node node4;
+  node4.value = 40;
+
   node1.next = &node2;
+  node2.next = &node3;
+  node3.next = &node4;
+  node4.next = NULL;
 
-  printf("%d", node1.next->next->next->value); // 40
+  printList(&node1);
+
+  // free the memory
+  // free(node1);
+  // free(node2);
+  // free(node3);
+  // free(node4);
 }

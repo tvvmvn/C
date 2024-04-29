@@ -133,6 +133,30 @@ int main() {
 }
 
 
+/*
+struct as parameter
+*/
+
+
+struct Car {
+  char* name;
+  int price;
+};
+
+void isPremium(struct Car car) {
+  if (car.price > 4000) {
+    printf("Preminum");
+  } else {
+    printf("Not a preminum");
+  }
+}
+
+int main() {
+  struct Car car = {"XM3", 3000};
+
+  isPremium(car);
+}
+
 
 /*
 A function which returns structure

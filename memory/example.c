@@ -13,7 +13,7 @@ struct list {
 // This function adds an item to a list
 void addToList(struct list *myList, int item) {
 
-  // If the list is full then resize the memory to fit 10 more items
+  // If list is full, resize the memory to fit 10 more items
   if (myList->numItems == myList->size) {
     myList->size += 10;
     myList->data = realloc( myList->data, myList->size * sizeof(int) );
