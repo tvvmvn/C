@@ -21,11 +21,11 @@ int main() {
   const struct Car car = {"Avante", 2500};
 
   /*
-    - lvalue 
-    object that persists beyond a single expression. 
-    
-    - rvalue 
-    temporary value that does not persist beyond the expression that uses it.
+  - lvalue 
+  object that persists beyond a single expression. 
+  
+  - rvalue 
+  temporary value that does not persist beyond the expression that uses it.
   */
   
   // car.price = 3000;

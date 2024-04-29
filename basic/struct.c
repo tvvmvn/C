@@ -4,6 +4,7 @@ data type than can holds multiple type of values.
 */
 
 
+// definition
 struct HybridCar {
   char model[30];
   char brand[10];
@@ -63,18 +64,36 @@ int main() {
 
 
 /*
+struct with array value
+*/
+
+
+typedef struct {
+  char* brand;
+  int size[3];
+} Suitcase;
+
+int main() {
+  Suitcase suitcase = {"Samsonite", {20, 24, 28}};
+
+  for (int i = 0; i < 3; i++) 
+    printf("%d ", suitcase.size[i]); // 20 24 28
+}
+
+
+/*
 nested struct
 */
 
 
-typedef struct Display {
+typedef struct {
   int resolution;
   int refresh_rate;
 } Display;
 
-typedef struct Computer {
+typedef struct {
   int ram;
-  struct Display display;
+  Display display;
 } Computer;
 
 int main() {
@@ -83,6 +102,36 @@ int main() {
   
   printf("%d\n", com.display.resolution); // 1080
 }
+
+
+/*
+complex structure
+*/
+
+
+typedef struct {
+  char* instrument;
+  int career;
+} Member;
+
+typedef struct {
+  char* genre;
+  Member members[3];
+} Band;
+
+int main() {
+  Band band = {"Rock", {
+    {"Guitar", 10}, 
+    {"Keyboard", 8}, 
+    {"Drum", 12}, 
+  }};
+
+  printf("Band with ");
+  for (int i = 0; i < 3; i++)
+    printf("%s ", band.members[i].instrument);
+    // Band with Guitar Keyboard Drum 
+}
+
 
 
 /*
@@ -130,21 +179,19 @@ int main() {
 
 
 /*
-struct with pointer
+typedef with struct
 */
 
 
-struct Car {
-  int price;
-  int year;
-};
+typedef struct {
+  char* name;
+} Car;
 
 int main() {
-  struct Car* p;
+  Car car = {"XM3"};
 
-  p->price = 3000;
-  p->year = 2020;
-
-  printf("price: %d\n", p->price);
-  printf("year: %d\n", p->year);
+  printf("%s\n", car.name); // XM3
 }
+
+
+

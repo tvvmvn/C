@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 int main() {
-  // Allocate memory
-  int *ptr;
-  ptr = calloc(4, sizeof(*ptr));
+  int *gen;
 
-  // Write to the memory
-  *ptr = 2;
-  ptr[1] = 4;
-  ptr[2] = 6;
+  // malloc(size)
+  gen = malloc(3 * sizeof(*gen));
 
-  // Read from the memory
-  printf("%d\n", *ptr);
-  printf("%d %d %d", ptr[1], ptr[2], ptr[3]);
+  gen[0] = 10;
+  gen[1] = 20;
+  gen[2] = 30;
 
-  return 0;
+  for (int i = 0; i < 3; i++)
+    printf("%d ", gen[i]); // 10 20 30
 }

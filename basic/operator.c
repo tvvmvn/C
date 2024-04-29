@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdbool.h>
 
+
 /*
   C Operator
 
@@ -35,7 +36,6 @@ int main() {
 }
 
 // 2 Modulus operator
-
 int main() {
   // dividend % divisor
   printf("%d\n", 5 % 2);
@@ -43,7 +43,6 @@ int main() {
 
 // 3 Increament operator
 // it increases variable by 1
-
 int main() {
   int x = 1;
 
@@ -55,7 +54,6 @@ int main() {
 
 // 4 Decreament operator
 // it decreases variable by 1
-
 int main() {
   int x = 1;
 
@@ -67,13 +65,13 @@ int main() {
 
 
 /*
-  Assignment Operator
+Assignment Operator
 
-  1 variables assignment operator
-  2 addition and others assignment operator  
-  ...
-  4 bitwise assignment operator
-  &= \= ^= >>= <<=
+1 variables assignment operator
+2 addition and others assignment operator  
+...
+4 bitwise assignment operator
+&= \= ^= >>= <<=
 */
 
 
@@ -92,14 +90,14 @@ int main() {
 
 
 /*
-  Comparison Operator
+Comparison Operator
 
-  1 equal operator
-  2 not equal operator
-  3 gt (greater than)
-  4 gte (greater than or equal to) 
-  5 lt (less than)
-  6 lte (less than or equal to)
+1 equal operator
+2 not equal operator
+3 gt (greater than)
+4 gte (greater than or equal to) 
+5 lt (less than)
+6 lte (less than or equal to)
 */
 
 
@@ -115,16 +113,16 @@ int main() {
 
 
 /*
-  Logical Operator
+Logical Operator
 
-  1 AND
-  &&
+1 AND
+&&
 
-  2 OR
-  |
+2 OR
+|
 
-  3 NOT
-  !
+3 NOT
+!
 */
 
 
@@ -134,7 +132,7 @@ int main() {
 
 
 /*
-  sizeof
+sizeof
 */
 
 

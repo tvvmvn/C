@@ -2,17 +2,14 @@
 #include <stdlib.h>
 
 
-char* getS() {
-  char* s = "hello C!";
-
-  printf("adr1: %p\n", s); // f83
-  
-  return s;
-}
+typedef struct {
+  char* name;
+  int price;
+} Car;
 
 int main() {
-  char* s = getS();
+  Car car = {"XM3", 3000};
+  Car* p = &car;
 
-  printf("adr2: %p\n", s); // f83
-  printf("%s\n", s);
+  printf("%s\n", p->name);
 }

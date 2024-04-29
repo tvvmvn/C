@@ -1,4 +1,7 @@
-// header files
+/*
+header files
+*/
+
 
 // standard input and output
 #include <stdio.h>
@@ -11,8 +14,9 @@
 // time and date
 #include <time.h>
 
+
 /*
-  Basic 
+Basic 
 */
 
 int main() {

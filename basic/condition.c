@@ -2,11 +2,12 @@
 #include <string.h>
 
 /*
-  Condition
+Condition
 
-  1 if/else
-  2 switch
+1 if/else
+2 switch
 */
+
 
 int main() {
   switch (2023) {

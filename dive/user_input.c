@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /*
-  User input
+User input
 
-  1 scanf(format specifier, reference operator)
-  2 getchar
+1 scanf(format specifier, reference operator)
+2 getchar
 
-  * reference operator
-  stores the memory address of the variable.
+* reference operator
+stores the memory address of the variable.
 */
 
 

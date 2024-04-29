@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
 /*
 Error handling
 Suppose there is an error deep down in a function nested in many other functions and error handling makes sense only in the top level function.
@@ -24,59 +23,63 @@ EDIT:
 It could be that it actually is undefined behaviour to do a longjmp down the callstack (see comment of MikeMB; though I have not yet had opportunity to verify that).
 */
 
-
 #include <stdio.h>
 #include <setjmp.h>
 
 jmp_buf bufferA, bufferB;
 
-void routineB(); // forward declaration 
+void routineB(); // forward declaration
 
 void routineA()
 {
-    int r ;
+  int r;
 
-    printf("- 12 : (A1)\n");
+  printf("- 12 : (A1)\n");
 
-    r = setjmp(bufferA);
-    if (r == 0) routineB();
+  r = setjmp(bufferA);
+  if (r == 0)
+    routineB();
 
-    printf("- 17 : (A2) r=%d\n",r);
+  printf("- 17 : (A2) r=%d\n", r);
 
-    r = setjmp(bufferA);
-    if (r == 0) longjmp(bufferB, 20001);
+  r = setjmp(bufferA);
+  if (r == 0)
+    longjmp(bufferB, 20001);
 
-    printf("- 22 : (A3) r=%d\n",r);
+  printf("- 22 : (A3) r=%d\n", r);
 
-    r = setjmp(bufferA);
-    if (r == 0) longjmp(bufferB, 20002);
+  r = setjmp(bufferA);
+  if (r == 0)
+    longjmp(bufferB, 20002);
 
-    printf("- 27 : (A4) r=%d\n",r);
+  printf("- 27 : (A4) r=%d\n", r);
 }
 
 void routineB()
 {
-    int r;
+  int r;
 
-    printf("- 34 : (B1)\n");
+  printf("- 34 : (B1)\n");
 
-    r = setjmp(bufferB);
-    if (r == 0) longjmp(bufferA, 10001);
+  r = setjmp(bufferB);
+  if (r == 0)
+    longjmp(bufferA, 10001);
 
-    printf("- 39 : (B2) r=%d\n", r);
+  printf("- 39 : (B2) r=%d\n", r);
 
-    r = setjmp(bufferB);
-    if (r == 0) longjmp(bufferA, 10002);
+  r = setjmp(bufferB);
+  if (r == 0)
+    longjmp(bufferA, 10002);
 
-    printf("- 44 : (B3) r=%d\n", r);
+  printf("- 44 : (B3) r=%d\n", r);
 
-    r = setjmp(bufferB);
-    if (r == 0) longjmp(bufferA, 10003);
+  r = setjmp(bufferB);
+  if (r == 0)
+    longjmp(bufferA, 10003);
 }
 
-
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
-    routineA();
-    return 0;
+  routineA();
+  return 0;
 }

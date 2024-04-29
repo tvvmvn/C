@@ -1,7 +1,7 @@
 /* 
-  * enums (enumeration)
+* enums (enumeration)
 
-  a group of constants
+a group of constants
 */
 
 enum StatusCode {

@@ -1,9 +1,7 @@
 /*
-  function
+function
 
-  a block of code when it is invoked
-
-  1 declaration
+a block of code when it is invoked
 */
 
 
@@ -33,9 +31,11 @@ int add(int x, int y) {
   return x + y;
 }
 
+
 /*
-  array argument
+array argument
 */
+
 
 void f(int arr[3]) {
   for (int i = 0; i < 3; i++) {
@@ -52,10 +52,10 @@ int main() {
 
 
 /*
-  References
+References
 
-  callback
-  return multiple values
+callback
+return multiple values
 */
 
 

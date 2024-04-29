@@ -1,12 +1,11 @@
 # C Programming
 
 
-### Tutorials 1
+### Basic 
 1. Data Type
 1. Format Specifier
 1. Variables Scope
 1. Operator
-1. Pointer
 1. Array
 1. String
 1. Loop
@@ -15,12 +14,14 @@
 1. Function
 
 
-### Tutorials 2
+### Dive
+1. Pointer
 1. Constant
+1. Enums
 1. User Input
 1. File Handling
+1. Utils
 1. jmp
-
 
 
 ### Memory Management

@@ -1,6 +1,6 @@
 /*
-  String
-  a sequance of characters.
+String
+a sequance of characters.
 */
 
 
@@ -97,7 +97,6 @@ int main() {
 }
 
 // stcpy: copy string
-
 int main() {
   char foo[10];
 
@@ -105,34 +104,6 @@ int main() {
   strcpy(foo, "bar");
 
   printf("%s\n", foo); // bar
-}
-
-
-/*
-string with pointer
-*/
-
-
-int main() {
-  char* s = "hello C!";
-
-  printf("%s\n", s); // hello C!
-}
-
-
-/*
-A function which returns string
-*/
-
-
-char* getS() {
-  return "hello C!";
-}
-
-int main() {
-  char* s = getS();
-
-  printf("%s\n", s);
 }
 
 

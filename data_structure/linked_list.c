@@ -1,47 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// linked list
 typedef struct Node {
-  int data;
-  struct Node *next;
+  int value;
+  struct Node* next;
 } Node;
 
-Node *createNode(int data) {
-  Node *newNode = (Node *)malloc(sizeof(Node));
-  
-  if (!newNode) {
-    printf("Memory allocation failed!\n");
-    exit(1);
-  }
-  
-  newNode->data = data;
-  newNode->next = NULL;
-  return newNode;
-}
-
-void printList(Node *node) {
-  while (node) {
-    printf("%d -> ", node->data);
-    node = node->next;
-  }
-  printf("null\n");
-}
-
 int main() {
-  Node *node1 = createNode(3);
-  Node *node2 = createNode(5);
-  Node *node3 = createNode(13);
-  Node *node4 = createNode(2);
+  Node node4;
+  node4.value = 40;
+  node4.next = NULL;
 
-  node1->next = node2;
-  node2->next = node3;
-  node3->next = node4;
+  Node node3;
+  node3.value = 30;
+  node3.next = &node4;
 
-  printList(node1);
+  Node node2;
+  node2.value = 20;
+  node2.next = &node3;
 
-  // Free the memory
-  free(node1);
-  free(node2);
-  free(node3);
-  free(node4);
+  Node node1;
+  node1.value = 10;
+  node1.next = &node2;
+
+  printf("%d", node1.next->next->next->value); // 40
 }

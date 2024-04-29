@@ -1,33 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
-  int *students;
-  int numStudents = 12;
+/*
+The malloc() and calloc() functions allocate some memory and 
+return a pointer to its address.
 
-  /*
-  The malloc() and calloc() functions allocate some memory and 
-  return a pointer to its address.
-  
-  # malloc(size)
-  size: specifies how much memory to allocate, measured in bytes.
+# malloc(size)
+size: specifies how much memory to allocate, measured in bytes.
 
-  # calloc(amount, size)
+# calloc(amount, size)
 
-  amount: Specifies the amount of items to allocate
-  size: Specifies the size of each item measured in bytes
+amount: Specifies the amount of items to allocate
+size: Specifies the size of each item measured in bytes
 
-  # Note
-  The data in the memory allocated by malloc() is unpredictable. 
-  To avoid unexpected values, make sure to write something into the memory 
-  before reading it.
+# Note
+The data in the memory allocated by malloc() is unpredictable. 
+To avoid unexpected values, make sure to write something into the memory 
+before reading it.
 
-  Unlike malloc(), the calloc() function writes zeroes into all of the allocated memory. 
-  However, this makes calloc() slightly less efficient.
-  */
-
-  students = calloc(numStudents, sizeof(*students));
-
-  // 48
-  printf("%d", numStudents * sizeof(*students));
-}
+Unlike malloc(), the calloc() function writes zeroes into all of the allocated memory. 
+However, this makes calloc() slightly less efficient.
+*/

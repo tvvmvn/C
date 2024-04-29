@@ -2,12 +2,27 @@
 #include <stdlib.h>
 
 struct list {
-  int *data; // Points to the memory where the list items are stored
-  int numItems; // Indicates how many items are currently in the list
-  int size; // Indicates how many items fit in the allocated memory
+  // Points to the memory where the list items are stored
+  int *data; 
+  // Indicates how many items are currently in the list
+  int numItems; 
+  // Indicates how many items fit in the allocated memory
+  int size; 
 };
 
-void addToList(struct list *myList, int item);
+// This function adds an item to a list
+void addToList(struct list *myList, int item) {
+
+  // If the list is full then resize the memory to fit 10 more items
+  if (myList->numItems == myList->size) {
+    myList->size += 10;
+    myList->data = realloc( myList->data, myList->size * sizeof(int) );
+  }
+
+  // Add the item to the end of the list
+  myList->data[myList->numItems] = item;
+  myList->numItems++;
+};
 
 int main() {
   struct list myList;
@@ -21,7 +36,9 @@ int main() {
   // Find out if memory allocation was successful
   if (myList.data == NULL) {
     printf("Memory allocation failed");
-    return 1; // Exit the program with an error code
+
+    // Exit the program with an error code
+    return 1; 
   }
   
   // Add any number of items to the list specified by the amount variable
@@ -38,19 +55,5 @@ int main() {
   // Free the memory when it is no longer needed
   free(myList.data);
   myList.data = NULL;
-  return 0;
 }
 
-// This function adds an item to a list
-void addToList(struct list *myList, int item) {
-
-  // If the list is full then resize the memory to fit 10 more items
-  if (myList->numItems == myList->size) {
-    myList->size += 10;
-    myList->data = realloc( myList->data, myList->size * sizeof(int) );
-  }
-
-  // Add the item to the end of the list
-  myList->data[myList->numItems] = item;
-  myList->numItems++;
-}

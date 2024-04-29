@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+
 // Create a file.
 int main() {
   FILE *fptr;

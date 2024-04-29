@@ -3,11 +3,13 @@
 
 int main() {
   int *ptr;
-  ptr = malloc(sizeof(*ptr)); // Allocate memory for one integer
+  // Allocate memory for one integer
+  ptr = malloc(sizeof(*ptr)); 
 
   // If memory cannot be allocated, print a message and end the main() function
   if (ptr == NULL) {
     printf("Unable to allocate memory");
+    
     return 1;
   }
 
@@ -22,5 +24,4 @@ int main() {
 
   // Set the pointer to NULL to prevent it from being accidentally used
   ptr = NULL; 
-  return 0;
 }

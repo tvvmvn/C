@@ -15,6 +15,4 @@ int main() {
   ptr2 = realloc(ptr1, size);
 
   printf("%d bytes reallocated at address %p \n", size, ptr2);
- 
-  return 0;
 }
