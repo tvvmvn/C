@@ -1,102 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#define HASH_SET_SIZE 10
+/*
+hash table
+collision is not covered
+*/
 
-typedef struct Node {
-  char *value;
-  struct Node *next;
-} Node;
+const int size = 10;
+int buckets[size];
 
-Node *myHashSet[HASH_SET_SIZE] = {NULL};
-
-int hashFunction(const char *value) {
+int hashf(char* key) {
   int sum = 0;
-  
-  for (int i = 0; value[i] != '\0'; i++) {
-    sum += value[i];
+
+  for (int i = 0; key[i] != '\0'; i++) {
+    sum += key[i];
   }
 
-  return sum % HASH_SET_SIZE;
+  return sum % size;
 }
 
-void add(const char *value) {
-  int index = hashFunction(value);
+void add(char* key, int item) {
+  int hash = hashf(key);
 
-  Node *newNode = (Node *)malloc(sizeof(Node));
+  buckets[hash] = item;
+};
 
-  // Manually allocate memory and copy the string
-  // +1 for the null terminator
-  newNode->value = (char *)malloc(strlen(value) + 1); 
-  
-  strcpy(newNode->value, value);
+int search(char* key) {
+  int hash = hashf(key);
 
-  newNode->next = NULL;
+  int value = buckets[hash];
 
-  if (myHashSet[index] == NULL) {
-    myHashSet[index] = newNode;
-  } else {
-    Node *current = myHashSet[index];
-
-    while (current->next != NULL) {
-      current = current->next;
-    }
-
-    current->next = newNode;
-  }
-}
-
-int contains(const char *value) {
-  int index = hashFunction(value);
-
-  Node *current = myHashSet[index];
-
-  while (current != NULL) {
-    if (strcmp(current->value, value) == 0) {
-      return 1; // True
-    }
-
-    current = current->next;
-  }
-  return 0; // False
-}
-
-void freeHashSet() {
-  for (int i = 0; i < HASH_SET_SIZE; i++) {
-    Node *current = myHashSet[i];
-    
-    while (current != NULL) {
-      Node *temp = current;
-      current = current->next;
-      // Free the manually allocated string memory
-      free(temp->value); 
-      free(temp);
-    }
-  }
+  return value;
 }
 
 int main() {
-  add("Jones");
-  add("Lisa");
-  add("Bob");
-  add("Siri");
-  add("Pete");
-  add("Stuart");
+  // add
+  add("Ray", 2000);
+  add("Avante", 2500);
+  add("XM3", 3000);
 
-  for (int i = 0; i < HASH_SET_SIZE; i++) {
-    printf("Bucket %d: ", i);
 
-    Node *current = myHashSet[i];
+  // looping buckets
+  // for (int i = 0; i < size; i++)
+  //   printf("%d\n", buckets[i]);
 
-    while (current != NULL) {
-      printf("%s -> ", current->value);
-      current = current->next;
-    }
-    printf("NULL\n");
-  }
 
-  printf("\nContains Stuart: %s\n", contains("Stuart") ? "true" : "false");
+  // search
+  int value = search("Ray");
 
-  freeHashSet(); // Cleanup allocated memory
+  printf("Ray: %d", value); // Ray: 2000
 }

@@ -2,26 +2,13 @@
 #include <stdlib.h>
 
 int main() {
-  int *ptr;
-  // Allocate memory for one integer
-  ptr = malloc(sizeof(*ptr)); 
+  int *p;
+  p = malloc(sizeof(*p));
 
-  // If memory cannot be allocated, print a message and end the main() function
-  if (ptr == NULL) {
-    printf("Unable to allocate memory");
-    
-    return 1;
-  }
+  printf("%p is capable of 4 bytes\n", p);
 
-  // Set the value of the integer
-  *ptr = 20;
+  free(p);
+  p = NULL;
 
-  // Print the integer value
-  printf("Integer value: %d\n", *ptr);
-
-  // Free allocated memory
-  free(ptr);
-
-  // Set the pointer to NULL to prevent it from being accidentally used
-  ptr = NULL; 
+  printf("%p", p);
 }

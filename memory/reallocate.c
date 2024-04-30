@@ -2,17 +2,18 @@
 #include <stdlib.h>
 
 int main() {
-  int *ptr1, *ptr2, size;
+  int* p;
+  int size;
 
-  // Allocate memory for four integers
-  size = 4 * sizeof(*ptr1);
-  ptr1 = malloc(size);
+  // allocate
+  size = sizeof(*p);
+  p = malloc(size);
 
-  printf("%d bytes allocated at address %p \n", size, ptr1);
+  printf("%p is capable of %d byte(s)\n", p, size);
 
-  // Resize the memory to hold six integers
-  size = 6 * sizeof(*ptr1);
-  ptr2 = realloc(ptr1, size);
+  // reallocate
+  size = 3 * sizeof(*p);
+  p = realloc(p, size);
 
-  printf("%d bytes reallocated at address %p \n", size, ptr2);
+  printf("%p is now capable of %d byte(s)\n", p, size);
 }

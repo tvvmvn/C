@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// dynamic array
 
 char stack[5];
 int top = 0;

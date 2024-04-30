@@ -1,52 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct TreeNode {
-  char data;
-  struct TreeNode* left;
-  struct TreeNode* right;
-} TreeNode;
-
-TreeNode* createNewNode(char data) {
-  TreeNode* newNode = (TreeNode*)malloc(sizeof(TreeNode));
-  
-  newNode->data = data;
-  newNode->left = NULL;
-  newNode->right = NULL;
-
-  return newNode;
-}
+typedef struct Node {
+  char value;
+  struct Node* left;
+  struct Node* right;
+} Node;
 
 int main() {
-  TreeNode* root = createNewNode('R');
-  TreeNode* nodeA = createNewNode('A');
-  TreeNode* nodeB = createNewNode('B');
-  TreeNode* nodeC = createNewNode('C');
-  TreeNode* nodeD = createNewNode('D');
-  TreeNode* nodeE = createNewNode('E');
-  TreeNode* nodeF = createNewNode('F');
-  TreeNode* nodeG = createNewNode('G');
+  Node root;
+  root.value = 'R';
 
-  root->left = nodeA;
-  root->right = nodeB;
+  Node nodeA;
+  nodeA.value = 'A';
 
-  nodeA->left = nodeC;
-  nodeA->right = nodeD;
+  Node nodeB;
+  nodeB.value = 'B';
 
-  nodeB->left = nodeE;
-  nodeB->right = nodeF;
+  Node nodeC;
+  nodeC.value = 'C';
 
-  nodeF->left = nodeG;
+  Node nodeD;
+  nodeD.value = 'D';
 
-  // Test
-  printf("%c\n", root->right->left->data);
+  Node nodeE;
+  nodeE.value = 'E';
 
-  free(nodeG);
-  free(nodeF);
-  free(nodeE);
-  free(nodeB);
-  free(nodeC);
-  free(nodeD);
-  free(nodeA);
-  free(root);
+  // connect
+  root.left = &nodeA;
+  root.right = &nodeB;
+
+  nodeA.left = &nodeC;
+  nodeA.right = &nodeD;
+
+  nodeB.left = &nodeE;
+  nodeB.right = NULL;
 }

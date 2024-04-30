@@ -10,8 +10,8 @@
 1. String
 1. Loop
 1. Conditional Statements
-1. Struct
 1. Function
+1. Struct
 
 
 ### Dive
@@ -29,7 +29,6 @@
 2. Access
 3. Deallocate
 4. Reallocate
-5. Example
 
 
 ### Data Structure
