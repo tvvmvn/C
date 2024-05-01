@@ -1,31 +1,31 @@
 #include <stdio.h>
-
-void printAdjacencyMatrix(int matrix[4][4], int size) {
-  printf("\nAdjacency Matrix:\n");
-
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
-      printf("%d ", matrix[i][j]);
-    }
-    printf("\n");
-  }
-}
+#include <stdlib.h>
 
 int main() {
   char vertexData[4] = {'A', 'B', 'C', 'D'};
 
   int adjacencyMatrix[4][4] = {
-    {0, 1, 1, 1}, // Edges for A
-    {1, 0, 1, 0}, // Edges for B
-    {1, 1, 0, 0}, // Edges for C
-    {1, 0, 0, 0}  // Edges for D
+    {0, 1, 1, 1},
+    {1, 0, 1, 0},
+    {1, 1, 0, 0},
+    {1, 0, 0, 0},
   };
 
-  printf("vertexData: ");
-  for (int i = 0; i < 4; i++) {
-    printf("%c ", vertexData[i]);
-  }
-  printf("\n");
+  printf("Connections for each vertex\n");
 
-  printAdjacencyMatrix(adjacencyMatrix, 4);
+  for (int r = 0; r < 4; r++) {
+    printf("%c: ", vertexData[r]);
+    for (int c = 0; c < 4; c++) {
+      if (adjacencyMatrix[r][c]) {
+        printf("%c ", vertexData[c]);
+      }
+    }
+    printf("\n");
+  }
+
+  // Connections for each vertex
+  // A: B C D 
+  // B: A C 
+  // C: A B 
+  // D: A 
 }

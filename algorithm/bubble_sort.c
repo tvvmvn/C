@@ -1,24 +1,22 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int main() {
-    int my_array[] = {64, 34, 25, 12, 22, 11, 90, 5};
-    int n = sizeof(my_array) / sizeof(my_array[0]);
+  int arr[] = {5, 3, 1, 4, 2};
+  int length = sizeof(arr) / sizeof(arr[0]);
 
-    for (int i = 0; i < n-1; i++) {
-        for (int j = 0; j < n-i-1; j++) {
-            if (my_array[j] > my_array[j+1]) {
-                int temp = my_array[j];
-                my_array[j] = my_array[j+1];
-                my_array[j+1] = temp;
-            }
-        }
+  // 4 times
+  for (int n = 1; n < length; n++) { 
+    // 4 > 3 > 2 > 1 time(s)
+    for (int i = 0; i < length - n; i++) { 
+      if (arr[i] > arr[i + 1]) {
+        int temp = arr[i];
+        arr[i] = arr[i + 1];
+        arr[i + 1] = temp;
+      }
     }
+  }
 
-    printf("Sorted array: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", my_array[i]);
-    }
-    printf("\n");
-
-    return 0;
+  for (int i = 0; i < length; i++)
+    printf("%d ", arr[i]);
 }
