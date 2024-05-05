@@ -40,3 +40,8 @@
 
 
 ### Algorithm
+1. Bubble Sort
+1. Linear Search
+1. Binary Search
+1. Binary Tree Traversal
+1. Eucliean Algorithm

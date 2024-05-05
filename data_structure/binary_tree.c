@@ -7,32 +7,28 @@ typedef struct Node {
   struct Node* right;
 } Node;
 
+Node createNode(char value) {
+  Node node;
+  node.value = value;
+
+  return node;
+}
+
 int main() {
-  Node root;
-  root.value = 'R';
+  // create nodes
+  Node root = createNode('R');
+  Node nodeA = createNode('A');
+  Node nodeB = createNode('B');
+  Node nodeC = createNode('C');
 
-  Node nodeA;
-  nodeA.value = 'A';
-
-  Node nodeB;
-  nodeB.value = 'B';
-
-  Node nodeC;
-  nodeC.value = 'C';
-
-  Node nodeD;
-  nodeD.value = 'D';
-
-  Node nodeE;
-  nodeE.value = 'E';
-
-  // connect
+  // connect nodes
   root.left = &nodeA;
   root.right = &nodeB;
-
   nodeA.left = &nodeC;
-  nodeA.right = &nodeD;
 
-  nodeB.left = &nodeE;
-  nodeB.right = NULL;
+  // access nodes
+  printf("%c\n", root.value); // R
+  printf("%c\n", root.left->value); // A
+  printf("%c\n", root.right->value); // B
+  printf("%c\n", root.left->left->value); // C
 }
