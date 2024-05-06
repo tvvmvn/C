@@ -4,6 +4,7 @@
 // linked list
 typedef struct Node {
   int value;
+  // address of next node
   struct Node* next;
 } Node;
 

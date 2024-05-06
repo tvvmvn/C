@@ -3,6 +3,7 @@
 
 typedef struct Node {
   char value;
+  // address of child node
   struct Node* left;
   struct Node* right;
 } Node;
@@ -24,6 +25,7 @@ int main() {
   // connect nodes
   root.left = &nodeA;
   root.right = &nodeB;
+  
   nodeA.left = &nodeC;
 
   // access nodes

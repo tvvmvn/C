@@ -1,8 +1,9 @@
 # vscode config
 .vscode
 
-# exe
-/main.dSYM
-
 # misc
+/main.dSYM
 .DS_Store
+
+# lab for application
+/lab

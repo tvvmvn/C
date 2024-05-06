@@ -44,4 +44,5 @@
 1. Linear Search
 1. Binary Search
 1. Binary Tree Traversal
+1. Array Deletion
 1. Eucliean Algorithm
