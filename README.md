@@ -18,6 +18,8 @@
 1. Pointer
 1. Constant
 1. Enums
+1. Static Variable
+1. Static Function
 1. User Input
 1. File Handling
 1. Utils
