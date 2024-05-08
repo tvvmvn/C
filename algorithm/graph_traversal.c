@@ -3,6 +3,10 @@
 
 #define SIZE 4
 
+/*
+DFS (Depth First Search) Traversal
+*/
+
 void dfsUtil(char vertices[SIZE], int adjacencyMatrix[SIZE][SIZE], int index, int visited[]) {
   // update visit to 1
   visited[index] = 1;
