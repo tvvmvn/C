@@ -2,9 +2,12 @@
 #include <stdlib.h>
 
 /*
-Static variables preserve their value even after they are out of their scope! 
-Hence, a static variable preserves its previous value in its previous scope 
+A static variable preserves its previous value in its previous scope 
 and is not initialized again in the new scope. 
+
+A static int variable remains in memory while the program is running. 
+A normal or auto variable is destroyed when a function call 
+where the variable was declared is over. 
 */
 
 int fun() {
