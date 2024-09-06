@@ -31,21 +31,3 @@
 2. Access
 3. Deallocate
 4. Reallocate
-
-
-### Data Structure
-1. Stack
-2. Linked List
-3. Binary Tree
-4. Graph
-5. Hash Table
-
-
-### Algorithm
-1. Bubble Sort
-1. Linear Search
-1. Binary Search
-1. Array Deletion
-1. Binary Tree Traversal
-1. Graph Traversal
-1. Eucliean Algorithm
