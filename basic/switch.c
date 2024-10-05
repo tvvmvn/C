@@ -1,14 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/*
-Condition
-
-1 if/else
-2 switch
-*/
-
-
 int main() {
   switch (2023) {
     case 2022:
