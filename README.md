@@ -1,7 +1,9 @@
-# C Programming
+## C Programming
 
 > Presentation address here..
 
+1. Intro
+1. Operator
 1. String
 1. Array
 1. if statements
