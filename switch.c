@@ -2,6 +2,7 @@
 #include <string.h>
 
 int main() {
+
   switch (2023) {
     case 2022:
       printf("Last year");

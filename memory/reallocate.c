@@ -2,23 +2,30 @@
 #include <stdlib.h>
 
 int main() {
+
   int *ptr1, *ptr2;
 
-  // Allocate memory
+  // Allocating 4 bytes of memory to ptr1.
   ptr1 = malloc(4);
 
-  // Attempt to resize the memory
+  // Reallocating 8 bytes of memory to pointer.
   ptr2 = realloc(ptr1, 8);
 
-  // Check whether realloc is able to resize the memory or not
+  // error checking for reallocating memory
   if (ptr2 == NULL) {
-    // If reallocation fails
-    printf("Failed. Unable to resize memory");
-  } else {
-    // If reallocation is sucessful
-    printf("Success. 8 bytes reallocated at address %p \n", ptr2);
-    ptr1 = ptr2; // Update ptr1 to point to the newly allocated memory
-  }
+    
+    // reallocation fails
+    printf("Unable to resize memory.");
+    
+    // Exit the program with an error code
+    return 1; 
+  } 
+  
+  // If reallocation is sucessful
+  printf("Success. 8 bytes are reallocated at address %p \n", ptr2);
+
+  // Update ptr1 to point to the newly allocated memory
+  ptr1 = ptr2; 
  
   return 0;
 }

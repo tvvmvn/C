@@ -2,12 +2,17 @@
 #include <stdlib.h>
 
 int main() {
-  int *ptr;
-  ptr = malloc(sizeof(*ptr)); // Allocate memory for one integer
 
-  // If memory cannot be allocated, print a message and end the main() function
+  int *ptr;
+
+  // Allocate memory for an integer
+  ptr = malloc(sizeof(*ptr)); 
+
+  // error checking for allocating memory
   if (ptr == NULL) {
     printf("Unable to allocate memory");
+    
+    // end the main() function
     return 1;
   }
 
@@ -22,5 +27,6 @@ int main() {
 
   // Set the pointer to NULL to prevent it from being accidentally used
   ptr = NULL; 
+  
   return 0;
 }

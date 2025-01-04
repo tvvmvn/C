@@ -1,11 +1,19 @@
 #include <stdio.h>
 
-int sum = 0;
+int main(int argc, char const *argv[])
+{
 
-while (i <= 10) {
-  sum += i;
+  int i = 0;
+  int sum = 0;
 
-  i++;
+  while (i <= 10) {
+    sum += i;
+
+    i++;
+  }
+
+  /* code */
+  return 0;
 }
 
 

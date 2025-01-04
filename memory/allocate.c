@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 int main() {
+
   int *ptr;
 
   // Allocate memory
@@ -10,6 +11,7 @@ int main() {
   // Find out if memory allocation was successful
   if (ptr == NULL) {
     printf("Memory allocation failed");
+    
     return 1; // Exit the program with an error code
   } 
 
