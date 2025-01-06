@@ -1,7 +1,10 @@
 #include <stdio.h>
 
 int main() {
-  int myNum = 5;               
+  const int n = 2;  
+
+  // error
+  // n = 3;
   
   return 0;
 }
