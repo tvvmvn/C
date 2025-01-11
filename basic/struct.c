@@ -7,9 +7,11 @@ struct Person {
 };
 
 int main() {
+
   struct Person person;
 
   strcpy(person.name, "John");
+  
   person.age = 20;
 
   printf("%s, %d years old", person.name, person.age);

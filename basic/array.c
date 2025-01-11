@@ -1,7 +1,7 @@
 #include <stdio.h>
 
+// print only adult
 int main() {
-  // print only adult
 
   int ages[] = {14, 18, 34};
 
