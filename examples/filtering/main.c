@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
 
   int nums[] = {10, 20, 30};
+
   int length = sizeof(nums) / sizeof(nums[0]);
 
   for (int i = 0; i < length; i++) {
@@ -12,7 +12,6 @@ int main(int argc, char const *argv[])
     }
   }
 
-  /* code */
   return 0;
 }
 
